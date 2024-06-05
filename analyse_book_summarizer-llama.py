@@ -1,7 +1,7 @@
 import pandas as pd
 from transformers import LlamaTokenizer
 from UniTok import Column, UniTok, Vocab
-from UniTok.tok import BaseTok, BertTok, IdTok
+from UniTok.tok import BaseTok, IdTok
 
 save_path = 'data/goodreads/book_summarizer.log'
 

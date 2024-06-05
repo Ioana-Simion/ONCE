@@ -3,7 +3,7 @@ import time
 
 from tqdm import tqdm
 
-from processor.mind.prompter import MindColdUser, MindCoT, MindPrompter
+from processor.mind.prompter import MindCoT, MindPrompter
 from utils.openai.chat_service import ChatService
 
 MIN_INTERVAL = 0
