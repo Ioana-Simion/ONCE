@@ -3,7 +3,7 @@ import time
 
 from tqdm import tqdm
 
-from processor.goodreads.prompter import GoodreadsPrompter, GoodreadsColdUser
+from processor.goodreads.prompter import GoodreadsColdUser, GoodreadsPrompter
 from utils.openai.chat_service import ChatService
 
 MIN_INTERVAL = 0
