@@ -2,8 +2,8 @@ import json
 import os
 
 import pandas as pd
-from UniTok import UniDep
 from tqdm import tqdm
+from UniTok import UniDep
 
 
 class MovieLensPrompter:
