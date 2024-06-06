@@ -2,8 +2,8 @@ import json
 import os.path
 
 import numpy as np
-from UniTok import UniDep
 from pigmento import pnt
+from UniTok import UniDep
 
 from utils.rand import Rand
 
@@ -23,10 +23,12 @@ class CachingDep(UniDep):
         self.col_filters = dict()
 
         # cached status
-        self.filters_base_path = os.path.join(self.store_dir, 'filters')
+        self.filters_base_path = os.path.join(self.store_dir, "filters")
         os.makedirs(self.filters_base_path, exist_ok=True)
 
-        self.cached_filters_path = os.path.join(self.filters_base_path, 'filter_cache.json')
+        self.cached_filters_path = os.path.join(
+            self.filters_base_path, "filter_cache.json"
+        )
         self.cached_filters = []
         self.load_cache()
         self.attempt_update()
@@ -34,20 +36,29 @@ class CachingDep(UniDep):
     def attempt_update(self):
         flag = False
         for cached_filter in self.cached_filters:
-            if cached_filter['path'].endswith('.json'):
-                json_data = json.load(open(os.path.join(self.filters_base_path, cached_filter['path'])))
+            if cached_filter["path"].endswith(".json"):
+                json_data = json.load(
+                    open(os.path.join(self.filters_base_path, cached_filter["path"]))
+                )
                 numpy_data = np.array(json_data)
-                np.save(os.path.join(
-                    self.filters_base_path, cached_filter['path'].replace('.json', '.npy')), numpy_data)
-                os.remove(os.path.join(self.filters_base_path, cached_filter['path']))
-                cached_filter['path'] = cached_filter['path'].replace('.json', '.npy')
-                pnt(f'update filter cache {cached_filter["path"]} on {str(self)} to npy format')
+                np.save(
+                    os.path.join(
+                        self.filters_base_path,
+                        cached_filter["path"].replace(".json", ".npy"),
+                    ),
+                    numpy_data,
+                )
+                os.remove(os.path.join(self.filters_base_path, cached_filter["path"]))
+                cached_filter["path"] = cached_filter["path"].replace(".json", ".npy")
+                pnt(
+                    f'update filter cache {cached_filter["path"]} on {str(self)} to npy format'
+                )
                 flag = True
         if flag:
-            json.dump(self.cached_filters, open(self.cached_filters_path, 'w'))
+            json.dump(self.cached_filters, open(self.cached_filters_path, "w"))
 
     def is_same_filter(self, other: dict):
-        other_global, other_col = other['global'], other['col']
+        other_global, other_col = other["global"], other["col"]
         # compare other_global with self.global_filters
         # value order is not important
         if len(other_global) != len(self.global_filters):
@@ -74,18 +85,20 @@ class CachingDep(UniDep):
         return True
 
     def store_cache(self):
-        pnt(f'store filter cache on {str(self)}')
+        pnt(f"store filter cache on {str(self)}")
 
-        filter_name = f'{Rand()[6]}.json'
+        filter_name = f"{Rand()[6]}.json"
         filter_path = os.path.join(self.filters_base_path, filter_name)
         self._indexes = [int(i) for i in self._indexes]
-        json.dump(self._indexes, open(filter_path, 'w'))
-        self.cached_filters.append({
-            'global': self.global_filters,
-            'col': self.col_filters,
-            'path': filter_name
-        })
-        json.dump(self.cached_filters, open(self.cached_filters_path, 'w'))
+        json.dump(self._indexes, open(filter_path, "w"))
+        self.cached_filters.append(
+            {
+                "global": self.global_filters,
+                "col": self.col_filters,
+                "path": filter_name,
+            }
+        )
+        json.dump(self.cached_filters, open(self.cached_filters_path, "w"))
         self.load_cache()
 
     def load_cache(self):
@@ -94,7 +107,7 @@ class CachingDep(UniDep):
             return
         if os.path.exists(self.cached_filters_path):
             self.cached_filters = json.load(open(self.cached_filters_path))
-        pnt(f'load {len(self.cached_filters)} filter caches on {str(self)}')
+        pnt(f"load {len(self.cached_filters)} filter caches on {str(self)}")
 
     def filter(self, filter_func: str, col=None):
         if self.filter_cache:
@@ -109,7 +122,11 @@ class CachingDep(UniDep):
 
             for cached_filter in self.cached_filters:
                 if self.is_same_filter(cached_filter):
-                    self._indexes = list(np.load(os.path.join(self.filters_base_path, cached_filter['path'])))
+                    self._indexes = list(
+                        np.load(
+                            os.path.join(self.filters_base_path, cached_filter["path"])
+                        )
+                    )
                     self.sample_size = len(self._indexes)
                     return self
 

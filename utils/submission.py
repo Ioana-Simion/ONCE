@@ -2,8 +2,8 @@ import os
 import subprocess
 
 import pandas as pd
-from UniTok import UniDep
 from tqdm import tqdm
+from UniTok import UniDep
 
 from loader.column_map import ColumnMap
 from utils.timing import Timing
@@ -11,12 +11,12 @@ from utils.timing import Timing
 
 class Submission:
     def __init__(
-            self,
-            depot: UniDep,
-            column_map: ColumnMap,
-            group_worker=5,
+        self,
+        depot: UniDep,
+        column_map: ColumnMap,
+        group_worker=5,
     ):
-        self.base_dir = 'submission'
+        self.base_dir = "submission"
         os.makedirs(self.base_dir, exist_ok=True)
 
         self.depot = depot
@@ -34,7 +34,7 @@ class Submission:
         #         index = 0
         #     index += 1
         #     self.group_dict[sample[self.column_map.group_col]][sample[self.column_map.candidate_col]] = str(index)
-        self.group_dict_path = os.path.join(self.base_dir, 'group_dict.pkl')
+        self.group_dict_path = os.path.join(self.base_dir, "group_dict.pkl")
         self.group_dict = self.get_group_dict()
 
     def get_group_dict(self):
@@ -50,7 +50,9 @@ class Submission:
                 group_dict[sample[self.column_map.group_col]] = dict()
                 index = 0
             index += 1
-            group_dict[sample[self.column_map.group_col]][sample[self.column_map.candidate_col]] = str(index)
+            group_dict[sample[self.column_map.group_col]][
+                sample[self.column_map.candidate_col]
+            ] = str(index)
         pd.to_pickle(group_dict, self.group_dict_path)
         return group_dict
 
@@ -64,14 +66,14 @@ class Submission:
         return group_id, reverse_rank
 
     def run(self, groups, scores, items, model_name):
-        timestamp = Timing()['str']
-        export_dir = os.path.join(self.base_dir, f'{model_name}_{timestamp}')
+        timestamp = Timing()["str"]
+        export_dir = os.path.join(self.base_dir, f"{model_name}_{timestamp}")
         os.makedirs(export_dir, exist_ok=True)
 
         df = pd.DataFrame(dict(groups=groups, scores=scores, news=items))
-        df.to_csv(os.path.join(export_dir, 'prediction.csv'), index=False, header=False)
+        df.to_csv(os.path.join(export_dir, "prediction.csv"), index=False, header=False)
 
-        groups = df.groupby('groups')
+        groups = df.groupby("groups")
 
         # tasks = []
         # pool = Pool(processes=self.group_worker)
@@ -83,7 +85,7 @@ class Submission:
         # pool.close()
         # pool.join()
 
-        export_path = os.path.join(export_dir, 'prediction.txt')
+        export_path = os.path.join(export_dir, "prediction.txt")
 
         # with open(export_path, 'w') as f:
         #     for t in tasks:
@@ -92,7 +94,7 @@ class Submission:
         #         items_str = ','.join(items)
         #         f.write(f'{group_str} [{items_str}]\n')
 
-        with open(export_path, 'w') as f:
+        with open(export_path, "w") as f:
             for g in tqdm(groups):
                 group_id = g[0]
                 group = g[1]
@@ -100,10 +102,10 @@ class Submission:
                 g_scores = group.scores.tolist()
                 _, items = self.group_sort(group_id, g_news, g_scores)
                 group_str = self.group_vocab.i2o[group_id]
-                items_str = ','.join(map(str, items))
-                f.write(f'{group_str} [{items_str}]\n')
+                items_str = ",".join(map(str, items))
+                f.write(f"{group_str} [{items_str}]\n")
 
-        subprocess.run(['zip', '-j', f'{export_dir}.zip', '-r', export_path])
-        subprocess.run(['rm', '-rf', export_dir])
+        subprocess.run(["zip", "-j", f"{export_dir}.zip", "-r", export_path])
+        subprocess.run(["rm", "-rf", export_dir])
 
-        return f'{export_dir}.zip'
+        return f"{export_dir}.zip"

@@ -21,11 +21,11 @@ class ChatService:
             messages=self.dialog,
             api_key=self.keys.get_apikey(),
         )
-        self.dialog.append(resp['choices'][0]['message'])
-        return resp['choices'][0]['message']['content']
+        self.dialog.append(resp["choices"][0]["message"])
+        return resp["choices"][0]["message"]["content"]
 
 
-if __name__ == '__main__':
-    service = ChatService('You are a Chinese poet.')
+if __name__ == "__main__":
+    service = ChatService("You are a Chinese poet.")
     print(service.ask('"举头望明月"的下一句是？'))
-    print(service.ask('这首诗是？'))
+    print(service.ask("这首诗是？"))

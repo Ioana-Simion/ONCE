@@ -1,10 +1,10 @@
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
 import torch
-from UniTok import Vocab, UniDep
+from UniTok import Vocab
 
-from loader.embedding.embedding_hub import EmbeddingHub
 from loader.data_hub import DataHub
+from loader.embedding.embedding_hub import EmbeddingHub
 
 
 class BaseInputer:
@@ -17,6 +17,7 @@ class BaseInputer:
     3. user clicks (item ids) -> 20 x 64
     4. user clicks (title, category) -> 20 x 64 -> 64
     """
+
     def __init__(self, hub: DataHub, embedding_manager: EmbeddingHub, **kwargs):
         self.depot = hub.depot  # type: UniDep
         self.order = hub.order  # type: list
@@ -32,8 +33,8 @@ class BaseInputer:
         raise NotImplementedError
 
     def get_embeddings(
-            self,
-            batched_samples: Dict[str, torch.Tensor],
+        self,
+        batched_samples: Dict[str, torch.Tensor],
     ):
         raise NotImplementedError
 

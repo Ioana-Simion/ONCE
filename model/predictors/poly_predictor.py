@@ -1,4 +1,3 @@
-from typing import Type
 
 import torch
 
@@ -8,11 +7,11 @@ from utils.function import combine_config
 
 class PolyPredictorConfig(BasePredictorConfig):
     def __init__(
-            self,
-            num_layers,
-            base_predictor: str = 'dot',
-            base_predictor_config: dict = None,
-            **kwargs
+        self,
+        num_layers,
+        base_predictor: str = "dot",
+        base_predictor_config: dict = None,
+        **kwargs,
     ):
         super().__init__(**kwargs)
 
@@ -20,6 +19,7 @@ class PolyPredictorConfig(BasePredictorConfig):
         base_predictor_config = base_predictor_config or {}
 
         from loader.class_hub import ClassHub
+
         predictors = ClassHub.predictors()
         base_predictor_class = predictors(base_predictor)  # type: Type[BasePredictor]
 
@@ -39,9 +39,7 @@ class PolyPredictor(BasePredictor):
         self.base_predictor = self.config.base_predictor
 
         self.linear = torch.nn.Linear(
-            in_features=self.config.num_layers,
-            out_features=1,
-            bias=True
+            in_features=self.config.num_layers, out_features=1, bias=True
         )
 
     def predict(self, user_embeddings, item_embeddings):
@@ -51,7 +49,9 @@ class PolyPredictor(BasePredictor):
         scores = []
 
         for i in range(user_embeddings.shape[0]):
-            scores.append(self.base_predictor(user_embeddings[i], item_embeddings))  # [B]
+            scores.append(
+                self.base_predictor(user_embeddings[i], item_embeddings)
+            )  # [B]
 
         scores = torch.stack(scores, dim=-1)  # [B, S]
         # mean pooling
@@ -59,5 +59,3 @@ class PolyPredictor(BasePredictor):
         return scores
         # scores = self.linear(scores)  # [B, 1]
         # return scores.squeeze(-1)
-
-

@@ -1,13 +1,13 @@
 class DatasetType:
-    news = 'news'
-    book = 'book'
+    news = "news"
+    book = "book"
 
 
 class Phases:
-    train = 'train'
-    dev = 'dev'
-    test = 'test'
-    fast_eval = 'fast_eval'
+    train = "train"
+    dev = "dev"
+    test = "test"
+    fast_eval = "fast_eval"
 
 
 class Meta:

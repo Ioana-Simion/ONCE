@@ -1,8 +1,8 @@
 from collections import OrderedDict
 
 from model.inputer.concat_inputer import ConcatInputer
-from model.operators.base_operator import BaseOperator, BaseOperatorConfig
 from model.inputer.simple_inputer import SimpleInputer
+from model.operators.base_operator import BaseOperator, BaseOperatorConfig
 
 
 class NullOperatorConfig(BaseOperatorConfig):
@@ -15,10 +15,7 @@ class NullSimpleOperator(BaseOperator):
     config: NullOperatorConfig
 
     def forward(self, embeddings: OrderedDict, mask: dict = None, **kwargs):
-        return dict(
-            embedding=embeddings,
-            mask=mask
-        )
+        return dict(embedding=embeddings, mask=mask)
 
 
 class NullConcatOperator(NullSimpleOperator):

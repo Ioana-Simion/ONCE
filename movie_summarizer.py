@@ -9,7 +9,7 @@ MIN_INTERVAL = 0
 
 # concise
 
-movie_list = MovieLensPrompter('data/movielens/movie.csv').stringify()
+movie_list = MovieLensPrompter("data/movielens/movie.csv").stringify()
 
 system = """You are asked to act as a movie description generator. I will provide you the name and released year of a movie, which format is as below:
 
@@ -22,17 +22,17 @@ where {name} will be filled with the movie name. You can only response the detai
 where {description} should be filled with the movie description. Now, your role of movie description generator formally begins. Any other information should not disturb your role."""
 
 
-save_path = 'data/movielens/movie_summarizer.log'
+save_path = "data/movielens/movie_summarizer.log"
 
-with open(save_path, 'a') as f:
+with open(save_path, "a") as f:
     pass
 
 exist_set = set()
-with open(save_path, 'r') as f:
+with open(save_path, "r") as f:
     for line in f:
         if line:
-            if not line.endswith('is a movie.\n'):
-                exist_set.add(line.split('\t')[0])
+            if not line.endswith("is a movie.\n"):
+                exist_set.add(line.split("\t")[0])
 
 print(len(movie_list) - len(exist_set))
 
@@ -45,10 +45,10 @@ for mid, title in tqdm(movie_list):
     try:
         service = ChatService(system)
         enhanced = service.ask(title)  # type: str
-        enhanced = enhanced.rstrip('\n')
+        enhanced = enhanced.rstrip("\n")
 
-        with open(save_path, 'a') as f:
-            f.write(f'{mid}\t{enhanced}\n')
+        with open(save_path, "a") as f:
+            f.write(f"{mid}\t{enhanced}\n")
     except Exception as e:
         print(e)
 

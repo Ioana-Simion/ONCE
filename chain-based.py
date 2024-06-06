@@ -10,8 +10,13 @@ MIN_INTERVAL = 0
 
 # concise
 
-mind_prompter = MindPrompter('data/mind/news.tsv')
-user_list = MindCoT('data/mind/user', 'data/mind/user-plugin', mind_prompter, allowed_user_path='data/mind/cold-V2.json').stringify()
+mind_prompter = MindPrompter("data/mind/news.tsv")
+user_list = MindCoT(
+    "data/mind/user",
+    "data/mind/user-plugin",
+    mind_prompter,
+    allowed_user_path="data/mind/cold-V2.json",
+).stringify()
 
 system = """You are asked to capture user's interest based on his/her browsing history and interests. You should generate a piece of news that he/she may be interested. The format is as below:
 
@@ -52,16 +57,16 @@ where <news category> is limited to the following options:
 
 "title", "abstract", and "category" should be the only keys in the json dict. The news should be diverse, that is not too similar with the original provided news list. You can discover topics that users potentially like, and you don't have to completely fit the interested topics. You are not allowed to response any other words for any explanation or note. JUST GIVE ME JSON-FORMAT NEWS. Now, the task formally begins. Any other information should not disturb you."""
 
-save_path = 'data/mind/chain_v6.log'
+save_path = "data/mind/chain_v6.log"
 # if file not exist, create it
-with open(save_path, 'a') as f:
+with open(save_path, "a") as f:
     pass
 
 exist_set = set()
-with open(save_path, 'r') as f:
+with open(save_path, "r") as f:
     for line in f:
         data = json.loads(line)
-        exist_set.add(data['uid'])
+        exist_set.add(data["uid"])
 
 for uid, content in tqdm(user_list):
     start_time = time.time()
@@ -74,10 +79,10 @@ for uid, content in tqdm(user_list):
     try:
         service = ChatService(system)
         enhanced = service.ask(content)  # type: str
-        enhanced = enhanced.rstrip('\n')
+        enhanced = enhanced.rstrip("\n")
 
-        with open(save_path, 'a') as f:
-            f.write(json.dumps({'uid': uid, 'news': enhanced}) + '\n')
+        with open(save_path, "a") as f:
+            f.write(json.dumps({"uid": uid, "news": enhanced}) + "\n")
     except Exception as e:
         print(e)
 

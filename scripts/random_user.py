@@ -5,18 +5,20 @@ import sys
 import numpy as np
 from UniTok import UniDep
 
-sys.path.append('..')
-from scripts.distillation import DataMeta, MINDDataMeta, GoodreadsDataMeta, MovieLensDataMeta
+sys.path.append("..")
+from scripts.distillation import (
+    DataMeta,
+    GoodreadsDataMeta,
+    MINDDataMeta,
+    MovieLensDataMeta,
+)
 
 
 class RandomUser:
     def __init__(self, meta: DataMeta):
         self.meta = meta
 
-        self.store_dir = os.path.join(
-            self.meta.base_path,
-            'random_user'
-        )
+        self.store_dir = os.path.join(self.meta.base_path, "random_user")
         os.makedirs(self.store_dir, exist_ok=True)
 
         self.user_depot_dir = os.path.join(self.meta.base_path, self.meta.user_depot)
@@ -37,34 +39,31 @@ class RandomUser:
 
         allow_users = []
         for i in range(self.num_users):
-            if self.user_depot[i]['history']:
+            if self.user_depot[i]["history"]:
                 allow_users.append(i)
         selected_users = np.random.choice(allow_users, k, replace=False)
         key = k
 
-        self.train_depot \
-            .filter(bool, col='click') \
-            .filter(lambda x: x in selected_users, col='uid') \
-            .reset_index() \
-            .export(os.path.join(self.store_dir, f'train_{key}'))
+        self.train_depot.filter(bool, col="click").filter(
+            lambda x: x in selected_users, col="uid"
+        ).reset_index().export(os.path.join(self.store_dir, f"train_{key}"))
 
-        self.dev_depot \
-            .filter(lambda x: x in selected_users, col='uid') \
-            .reset_index() \
-            .export(os.path.join(self.store_dir, f'dev_{key}'))
+        self.dev_depot.filter(
+            lambda x: x in selected_users, col="uid"
+        ).reset_index().export(os.path.join(self.store_dir, f"dev_{key}"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', type=str, default='MIND')
-    parser.add_argument('--k', type=int, default=10000)
+    parser.add_argument("--dataset", type=str, default="MIND")
+    parser.add_argument("--k", type=int, default=10000)
     args = parser.parse_args()
 
-    if args.dataset.lower() == 'MIND'.lower():
+    if args.dataset.lower() == "MIND".lower():
         meta = MINDDataMeta()
-    elif args.dataset.lower() == 'Goodreads'.lower():
+    elif args.dataset.lower() == "Goodreads".lower():
         meta = GoodreadsDataMeta()
-    elif args.dataset.lower() == 'MovieLens'.lower():
+    elif args.dataset.lower() == "MovieLens".lower():
         meta = MovieLensDataMeta()
     else:
         raise NotImplementedError

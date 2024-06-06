@@ -10,8 +10,8 @@ MIN_INTERVAL = 0
 
 # concise
 
-mind_prompter = MindPrompter('data/mind/news.tsv')
-user_list = MindColdUser('data/mind/user', mind_prompter).stringify()
+mind_prompter = MindPrompter("data/mind/news.tsv")
+user_list = MindColdUser("data/mind/user", mind_prompter).stringify()
 
 system = """You are asked to capture user's interest based on his/her browsing history, and generate a piece of news that he/she may be interested. The format of history is as below:
 
@@ -46,13 +46,13 @@ where <news category> is limited to the following options:
 
 "title", "abstract", and "category" should be the only keys in the json dict. The news should be diverse, that is not too similar with the original provided news list. You are not allowed to response any other words for any explanation or note. JUST GIVE ME JSON-FORMAT NEWS. Now, the task formally begins. Any other information should not disturb you."""
 
-save_path = 'data/mind/generator_v2.log'
+save_path = "data/mind/generator_v2.log"
 
 exist_set = set()
-with open(save_path, 'r') as f:
+with open(save_path, "r") as f:
     for line in f:
         data = json.loads(line)
-        exist_set.add(data['uid'])
+        exist_set.add(data["uid"])
 
 for uid, content in tqdm(user_list):
     start_time = time.time()
@@ -65,10 +65,10 @@ for uid, content in tqdm(user_list):
     try:
         service = ChatService(system)
         enhanced = service.ask(content)  # type: str
-        enhanced = enhanced.rstrip('\n')
+        enhanced = enhanced.rstrip("\n")
 
-        with open(save_path, 'a') as f:
-            f.write(json.dumps({'uid': uid, 'news': enhanced}) + '\n')
+        with open(save_path, "a") as f:
+            f.write(json.dumps({"uid": uid, "news": enhanced}) + "\n")
     except Exception as e:
         print(e)
 

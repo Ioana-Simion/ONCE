@@ -1,15 +1,9 @@
-from torch import nn
 
 from model.common.base_module import BaseModule
 
 
 class BasePredictorConfig:
-    def __init__(
-            self,
-            hidden_size,
-            embed_hidden_size,
-            **kwargs
-    ):
+    def __init__(self, hidden_size, embed_hidden_size, **kwargs):
         self.hidden_size = hidden_size
         self.embed_hidden_size = embed_hidden_size
 

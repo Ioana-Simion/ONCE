@@ -9,7 +9,7 @@ MIN_INTERVAL = 1.5
 
 # concise
 
-news_list = MindPrompter('data/mind/news.tsv').stringify()
+news_list = MindPrompter("data/mind/news.tsv").stringify()
 system = """You are asked to act as a news title enhancer. I will provide you a piece of news, with its original title, category, subcategory, and abstract (if exists). The news format is as below:
 
 [title] {title}
@@ -24,13 +24,13 @@ where {title}, {abstract}, {category}, and {subcategory} will be filled with con
 where {newtitle} should be filled with the enhanced title. Now, your role of news title enhancer formally begins. Any other information should not disturb your role."""
 
 
-save_path = 'data/mind/news_summarizer.log'
+save_path = "data/mind/news_summarizer.log"
 
 exist_set = set()
-with open(save_path, 'r') as f:
+with open(save_path, "r") as f:
     for line in f:
-        if line and line.startswith('N'):
-            exist_set.add(line.split('\t')[0])
+        if line and line.startswith("N"):
+            exist_set.add(line.split("\t")[0])
 
 
 for nid, content in tqdm(news_list):
@@ -41,10 +41,10 @@ for nid, content in tqdm(news_list):
     try:
         service = ChatService(system)
         enhanced = service.ask(content)  # type: str
-        enhanced = enhanced.rstrip('\n')
+        enhanced = enhanced.rstrip("\n")
 
-        with open(save_path, 'a') as f:
-            f.write(f'{nid}\t{enhanced}\n')
+        with open(save_path, "a") as f:
+            f.write(f"{nid}\t{enhanced}\n")
     except Exception as e:
         print(e)
 

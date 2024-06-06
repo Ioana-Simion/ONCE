@@ -13,7 +13,9 @@ class SingleColumnInputer(BaseInputer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        assert len(self.order) == 1, 'single column inputer only support one column in order'
+        assert (
+            len(self.order) == 1
+        ), "single column inputer only support one column in order"
         self.column = self.order[0]
 
     def sample_rebuilder(self, sample: OrderedDict):
@@ -23,8 +25,8 @@ class SingleColumnInputer(BaseInputer):
         return torch.tensor(value, dtype=torch.long)
 
     def get_embeddings(
-            self,
-            batched_samples: torch.Tensor,
+        self,
+        batched_samples: torch.Tensor,
     ):
         embedding = self.embedding_manager(self.column)(batched_samples.to(Meta.device))
         return embedding

@@ -1,9 +1,13 @@
 import os
-from typing import Optional
 
 import numpy as np
 import torch
-from transformers import AutoModelForMaskedLM, BertForMaskedLM, BertConfig, BertModel, load_tf_weights_in_bert
+from transformers import (
+    AutoModelForMaskedLM,
+    BertConfig,
+    BertModel,
+    load_tf_weights_in_bert,
+)
 
 
 class EmbeddingLoader:
@@ -27,13 +31,15 @@ class EmbeddingLoader:
 
     @staticmethod
     def get_bert_tf_embedding(path):
-        config = BertConfig.from_json_file(os.path.join(path, 'bert_config.json'))
+        config = BertConfig.from_json_file(os.path.join(path, "bert_config.json"))
         bert = BertModel(config)
-        load_tf_weights_in_bert(bert, config, os.path.join(path, 'bert_model.ckpt.index'))
+        load_tf_weights_in_bert(
+            bert, config, os.path.join(path, "bert_model.ckpt.index")
+        )
         return bert.embeddings.word_embeddings.weight
 
     def load(self):
-        if hasattr(self, 'get_{}_embedding'.format(self.type)):
-            getter = getattr(self, 'get_{}_embedding'.format(self.type))
+        if hasattr(self, "get_{}_embedding".format(self.type)):
+            getter = getattr(self, "get_{}_embedding".format(self.type))
             self.embedding = getter(self.path)
         return self

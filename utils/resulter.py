@@ -1,4 +1,3 @@
-import os
 
 
 class Resulter:
@@ -8,8 +7,8 @@ class Resulter:
         self.metrics = metrics
 
         # create result csv
-        self.result_csv = f'resulter_{self.dataset}.csv'
+        self.result_csv = f"resulter_{self.dataset}.csv"
         short_parameters = []
         for parameter in parameters:
-            pos = parameter.rfind('.')
-            short_parameters.append(parameter[pos + 1:])
+            pos = parameter.rfind(".")
+            short_parameters.append(parameter[pos + 1 :])

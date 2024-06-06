@@ -1,6 +1,6 @@
-from datetime import datetime, timezone
 import json
 import os.path
+from datetime import datetime, timezone
 
 from tqdm import tqdm
 
@@ -21,13 +21,18 @@ def convert_to_timestamp(date_string):
     return timestamp
 
 
-with open(interaction_path, 'r') as f_inter:
-    with open(converted_interaction_path, 'w') as f_convert:
+with open(interaction_path, "r") as f_inter:
+    with open(converted_interaction_path, "w") as f_convert:
         for line in tqdm(f_inter):
-            if line.endswith('\n'):
+            if line.endswith("\n"):
                 line = line[:-1]
             data = json.loads(line)
-            user_id, book_id, rating, timestamp = data['user_id'], data['book_id'], data['rating'], data['date_added']
+            user_id, book_id, rating, timestamp = (
+                data["user_id"],
+                data["book_id"],
+                data["rating"],
+                data["date_added"],
+            )
             # a sample of timestamp: Fri Dec 09 15:51:44 -0800 2016
             timestamp = convert_to_timestamp(timestamp)
 

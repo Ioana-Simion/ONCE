@@ -31,7 +31,7 @@ class ConfigInit:
 
         for arg in self.required_args:
             if arg not in kwargs:
-                raise ValueError(f'miss argument {arg}')
+                raise ValueError(f"miss argument {arg}")
 
         for arg in self.default_args:
             if arg not in kwargs:

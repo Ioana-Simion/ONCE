@@ -1,13 +1,13 @@
-from typing import cast, Dict
+from typing import cast
 
 from pigmento import pnt
 
 
 class ModuleType:
-    legommender = 'legommender'
-    user_encoder = 'user_encoder'
-    item_encoder = 'item_encoder'
-    predictor = 'predictor'
+    legommender = "legommender"
+    user_encoder = "user_encoder"
+    item_encoder = "item_encoder"
+    predictor = "predictor"
 
 
 class Mediator:
@@ -35,7 +35,7 @@ class Mediator:
             if not requests:
                 continue
 
-            pnt(f'Requester {request_name} requests {requests}')
+            pnt(f"Requester {request_name} requests {requests}")
 
             for response_name in requests:
                 responser = self._modules[response_name]

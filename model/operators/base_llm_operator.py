@@ -3,10 +3,9 @@ from typing import Optional
 
 import numpy as np
 import torch
-from peft import get_peft_model, LoraConfig
+from peft import LoraConfig, get_peft_model
 from pigmento import pnt
 from torch import nn
-from transformers import PreTrainedModel
 
 from loader.meta import Meta
 from model.common.attention import AdditiveAttention
@@ -17,15 +16,15 @@ from model.operators.base_operator import BaseOperator
 
 class BaseLLMOperatorConfig(AttentionOperatorConfig):
     def __init__(
-            self,
-            llm_dir: str,
-            layer_split: int = 0,  # [0, 24, 28, 30, 31]
-            weights_dir: Optional[str] = None,
-            lora=True,
-            lora_alpha=128,
-            lora_r=32,
-            lora_dropout=0.1,
-            **kwargs,
+        self,
+        llm_dir: str,
+        layer_split: int = 0,  # [0, 24, 28, 30, 31]
+        weights_dir: Optional[str] = None,
+        lora=True,
+        lora_alpha=128,
+        lora_r=32,
+        lora_dropout=0.1,
+        **kwargs,
     ):
         super().__init__(**kwargs)
         self.llm_dir = llm_dir
@@ -69,30 +68,36 @@ class BaseLLMOperator(BaseOperator):
         if self.config.layer_split:
             self._slice_transformer_layers()
             # self.transformer.layers = self.transformer.layers[self.config.layer_split+1:]
-            hidden_weights = np.load(os.path.join(self.config.weights_dir, f'layer_{self.config.layer_split}.npy'))
+            hidden_weights = np.load(
+                os.path.join(
+                    self.config.weights_dir, f"layer_{self.config.layer_split}.npy"
+                )
+            )
             self.hidden_weights = torch.from_numpy(hidden_weights).to(Meta.device)
-            attention_mask = np.load(os.path.join(self.config.weights_dir, 'mask.npy'))
+            attention_mask = np.load(os.path.join(self.config.weights_dir, "mask.npy"))
             self.attention_mask = torch.from_numpy(attention_mask).to(Meta.device)
-            self.hidden_weights = self.hidden_weights.view(*self.attention_mask.shape[:2], self.hidden_weights.shape[-1])
-            pnt(f'hidden_weights.shape: {self.hidden_weights.shape}')
-            pnt(f'attention_mask.shape: {self.attention_mask.shape}')
+            self.hidden_weights = self.hidden_weights.view(
+                *self.attention_mask.shape[:2], self.hidden_weights.shape[-1]
+            )
+            pnt(f"hidden_weights.shape: {self.hidden_weights.shape}")
+            pnt(f"attention_mask.shape: {self.attention_mask.shape}")
 
         if self.config.layer_split < num_hidden_layers - 1 and self.config.lora:
             peft_config = LoraConfig(
                 inference_mode=False,
                 r=self.config.lora_r,
                 lora_alpha=self.config.lora_alpha,
-                lora_dropout=self.config.lora_dropout
+                lora_dropout=self.config.lora_dropout,
             )
             self._lora_encoder(peft_config)
 
     def get_pretrained_parameter_names(self):
-        return ['transformer']
+        return ["transformer"]
 
     def get_all_hidden_states(
-            self,
-            hidden_states: torch.FloatTensor,
-            attention_mask: torch.Tensor,
+        self,
+        hidden_states: torch.FloatTensor,
+        attention_mask: torch.Tensor,
     ):
         raise NotImplementedError
 

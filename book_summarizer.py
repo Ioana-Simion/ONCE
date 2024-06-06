@@ -9,7 +9,7 @@ MIN_INTERVAL = 0
 
 # concise
 
-book_list = GoodreadsPrompter('data/goodreads/book.csv').stringify()
+book_list = GoodreadsPrompter("data/goodreads/book.csv").stringify()
 
 system = """You are asked to act as a book description generator. I will provide you the title of a book, which format is as below:
 
@@ -22,17 +22,17 @@ where {title} will be filled with content. You can only response the description
 where {description} should be filled with the book description. Now, your role of book description generator formally begins. Any other information should not disturb your role."""
 
 
-save_path = 'data/goodreads/book_summarizer.log'
+save_path = "data/goodreads/book_summarizer.log"
 
-with open(save_path, 'a') as f:
+with open(save_path, "a") as f:
     pass
 
 exist_set = set()
-with open(save_path, 'r') as f:
+with open(save_path, "r") as f:
     for line in f:
         if line:
-            if not line.endswith('is a book.\n'):
-                exist_set.add(line.split('\t')[0])
+            if not line.endswith("is a book.\n"):
+                exist_set.add(line.split("\t")[0])
 
 print(len(book_list) - len(exist_set))
 
@@ -45,10 +45,10 @@ for bid, title in tqdm(book_list):
     try:
         service = ChatService(system)
         enhanced = service.ask(title)  # type: str
-        enhanced = enhanced.rstrip('\n')
+        enhanced = enhanced.rstrip("\n")
 
-        with open(save_path, 'a') as f:
-            f.write(f'{bid}\t{enhanced}\n')
+        with open(save_path, "a") as f:
+            f.write(f"{bid}\t{enhanced}\n")
     except Exception as e:
         print(e)
 

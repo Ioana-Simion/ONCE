@@ -3,25 +3,24 @@ import warnings
 import torch
 from oba import Obj
 from pigmento import pnt
-from torch import nn
 
+from loader.class_hub import ClassHub
+from loader.column_map import ColumnMap
+from loader.data_hub import DataHub
 from loader.data_hubs import DataHubs
+from loader.data_loader import DataLoader
 from loader.data_sets import DataSets
 from loader.depot.depot_hub import DepotHub
 from loader.depots import Depots
-from loader.meta import Meta, Phases, DatasetType
+from loader.embedding.embedding_hub import EmbeddingHub
+from loader.meta import DatasetType, Meta, Phases
+from loader.resampler import Resampler
 from loader.status import Status
 from model.common.user_plugin import UserPlugin
 from model.inputer.concat_inputer import ConcatInputer
 from model.inputer.flatten_seq_inputer import FlattenSeqInputer
 from model.inputer.natural_concat_inputer import NaturalConcatInputer
 from model.legommender import Legommender, LegommenderConfig, LegommenderMeta
-from loader.column_map import ColumnMap
-from loader.embedding.embedding_hub import EmbeddingHub
-from loader.resampler import Resampler
-from loader.data_loader import DataLoader
-from loader.data_hub import DataHub
-from loader.class_hub import ClassHub
 
 
 class Controller:
@@ -34,17 +33,19 @@ class Controller:
 
         self.status = Status()
 
-        if 'MIND' in self.data.name.upper():
+        if "MIND" in self.data.name.upper():
             Meta.data_type = DatasetType.news
         else:
             Meta.data_type = DatasetType.book
-        pnt('dataset type: ', Meta.data_type)
+        pnt("dataset type: ", Meta.data_type)
 
-        pnt('build column map ...')
+        pnt("build column map ...")
         self.column_map = ColumnMap(**Obj.raw(self.data.user))
 
         # depots and data hubs initialization
-        self.depots = Depots(user_data=self.data.user, modes=self.modes, column_map=self.column_map)
+        self.depots = Depots(
+            user_data=self.data.user, modes=self.modes, column_map=self.column_map
+        )
         self.hubs = DataHubs(depots=self.depots)
         self.item_hub = DataHub(
             depot=self.data.item.depot,
@@ -70,16 +71,22 @@ class Controller:
             predictor_class=self.predictor_class,
         )
 
-        pnt(f'Selected Item Encoder: {str(self.item_operator_class.__name__) if self.item_operator_class else "null"}')
-        pnt(f'Selected User Encoder: {str(self.user_operator_class.__name__)}')
-        pnt(f'Selected Predictor: {str(self.predictor_class.__name__)}')
-        pnt(f'Use Negative Sampling: {self.model.config.use_neg_sampling}')
-        pnt(f'Use Item Content: {self.model.config.use_item_content}')
+        pnt(
+            f'Selected Item Encoder: {str(self.item_operator_class.__name__) if self.item_operator_class else "null"}'
+        )
+        pnt(f"Selected User Encoder: {str(self.user_operator_class.__name__)}")
+        pnt(f"Selected Predictor: {str(self.predictor_class.__name__)}")
+        pnt(f"Use Negative Sampling: {self.model.config.use_neg_sampling}")
+        pnt(f"Use Item Content: {self.model.config.use_item_content}")
 
         self.legommender_config = LegommenderConfig(**Obj.raw(self.model.config))
 
         # embedding initialization
-        skip_cols = [self.column_map.candidate_col] if self.legommender_config.use_item_content else []
+        skip_cols = (
+            [self.column_map.candidate_col]
+            if self.legommender_config.use_item_content
+            else []
+        )
         self.embedding_hub = EmbeddingHub(
             hidden_size=self.legommender_config.embed_hidden_size,
             same_dim_transform=self.model.config.same_dim_transform,
@@ -91,16 +98,20 @@ class Controller:
         self.embedding_hub.register_vocab(FlattenSeqInputer.vocab)
         if self.model.config.use_item_content:
             self.embedding_hub.register_depot(self.item_hub)
-            lm_col = self.data.item.lm_col or 'title'
+            lm_col = self.data.item.lm_col or "title"
             if self.embedding_hub.has_col(lm_col):
                 self.embedding_hub.clone_vocab(
                     col_name=NaturalConcatInputer.special_col,
-                    clone_col_name=self.data.item.lm_col or 'title'
+                    clone_col_name=self.data.item.lm_col or "title",
                 )
             else:
-                warnings.warn(f'cannot find lm column in item depot, please ensure no natural inputer is used')
+                warnings.warn(
+                    "cannot find lm column in item depot, please ensure no natural inputer is used"
+                )
         cat_embeddings = self.embedding_hub(ConcatInputer.vocab.name)  # type: nn.Embedding
-        cat_embeddings.weight.data[ConcatInputer.PAD] = torch.zeros_like(cat_embeddings.weight.data[ConcatInputer.PAD])
+        cat_embeddings.weight.data[ConcatInputer.PAD] = torch.zeros_like(
+            cat_embeddings.weight.data[ConcatInputer.PAD]
+        )
 
         # user plugin initialization
         user_plugin = None
@@ -140,7 +151,7 @@ class Controller:
         self.sets = DataSets(hubs=self.hubs, resampler=self.resampler)
 
     def parse_mode(self):
-        modes = set(self.exp.mode.lower().split('_'))
+        modes = set(self.exp.mode.lower().split("_"))
         if Phases.train in modes:
             modes.add(Phases.dev)
         return modes

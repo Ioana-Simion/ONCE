@@ -1,13 +1,11 @@
-from collections import OrderedDict
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
-import numpy as np
 import torch
 from UniTok import Vocab
 
 from loader.meta import Meta
 from model.inputer.base_inputer import BaseInputer
-from utils.slice_dict import SliceOrderedDict, SliceDict
+from utils.slice_dict import SliceDict, SliceOrderedDict
 
 
 class SimpleInputer(BaseInputer):
@@ -19,7 +17,9 @@ class SimpleInputer(BaseInputer):
     @classmethod
     def pad(cls, l: list, max_len: int):
         # return padded list and mask
-        return l + [Meta.UNSET] * (max_len - len(l)), [1] * len(l) + [0] * (max_len - len(l))
+        return l + [Meta.UNSET] * (max_len - len(l)), [1] * len(l) + [0] * (
+            max_len - len(l)
+        )
 
     def sample_rebuilder(self, sample: dict):
         input_ids = dict()
@@ -40,16 +40,16 @@ class SimpleInputer(BaseInputer):
         )
 
     def get_mask(self, batched_samples: Dict[str, torch.Tensor]):
-        return SliceDict(batched_samples['attention_mask'])
+        return SliceDict(batched_samples["attention_mask"])
 
     def get_embeddings(
-            self,
-            batched_samples: Dict[str, torch.Tensor],
+        self,
+        batched_samples: Dict[str, torch.Tensor],
     ):
         input_embeddings = SliceOrderedDict()
 
-        input_ids = batched_samples['input_ids']
-        attention_mask = batched_samples['attention_mask']
+        input_ids = batched_samples["input_ids"]
+        attention_mask = batched_samples["attention_mask"]
         for col in input_ids:
             col_input = input_ids[col]  # batch_size, content_len
 
@@ -58,7 +58,9 @@ class SimpleInputer(BaseInputer):
             mask = attention_mask[col].to(Meta.device)
             seq *= mask
 
-            embedding = self.embedding_manager(col)(seq)  # batch_size, content_len, embedding_dim
+            embedding = self.embedding_manager(col)(
+                seq
+            )  # batch_size, content_len, embedding_dim
             mask = mask.unsqueeze(-1)  # batch_size, (content_len,) 1
 
             embedding *= mask  # batch_size, content_len, embedding_dim

@@ -3,21 +3,21 @@ import os
 import pandas as pd
 from tqdm import tqdm
 
-large_data_dir = '/data1/qijiong/Data/MIND-large/'
+large_data_dir = "/data1/qijiong/Data/MIND-large/"
 
 
 def read_user_data(data_dir, mode):
     return pd.read_csv(
-        filepath_or_buffer=os.path.join(data_dir, mode, 'behaviors.tsv'),
-        sep='\t',
-        names=['imp', 'uid', 'time', 'history', 'predict'],
-        usecols=['imp', 'uid', 'history', 'predict'],
+        filepath_or_buffer=os.path.join(data_dir, mode, "behaviors.tsv"),
+        sep="\t",
+        names=["imp", "uid", "time", "history", "predict"],
+        usecols=["imp", "uid", "history", "predict"],
     )
 
 
-train_user_data = read_user_data(large_data_dir, 'train')
-dev_user_data = read_user_data(large_data_dir, 'dev')
-test_user_data = read_user_data(large_data_dir, 'test')
+train_user_data = read_user_data(large_data_dir, "train")
+dev_user_data = read_user_data(large_data_dir, "dev")
+test_user_data = read_user_data(large_data_dir, "test")
 
 user_dict = dict()
 
@@ -35,22 +35,22 @@ def rename_user(user_data, mode):
             user_dict[line.uid].append(line.history)
             index = len(user_dict[line.uid]) - 1
 
-        behaviors['imp'].append(line.imp)
-        behaviors['uid'].append(f'{line.uid}_{index}')
-        behaviors['history'].append(line.history)
-        behaviors['predict'].append(line.predict)
+        behaviors["imp"].append(line.imp)
+        behaviors["uid"].append(f"{line.uid}_{index}")
+        behaviors["history"].append(line.history)
+        behaviors["predict"].append(line.predict)
 
     pd.DataFrame(behaviors).to_csv(
-        path_or_buf=os.path.join(large_data_dir, mode, 'behaviors_v2.tsv'),
-        sep='\t',
+        path_or_buf=os.path.join(large_data_dir, mode, "behaviors_v2.tsv"),
+        sep="\t",
         index=False,
         header=False,
     )
 
 
-rename_user(train_user_data, 'train')
-rename_user(dev_user_data, 'dev')
-rename_user(test_user_data, 'test')
+rename_user(train_user_data, "train")
+rename_user(dev_user_data, "dev")
+rename_user(test_user_data, "test")
 
 
 # analyse user dict

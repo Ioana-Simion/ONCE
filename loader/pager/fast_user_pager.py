@@ -1,16 +1,16 @@
 import torch
 
 from loader.meta import Meta
-from utils.stacker import FastStacker
 from loader.pager.base_pager import BasePager
+from utils.stacker import FastStacker
 
 
 class FastUserPager(BasePager):
     def __init__(
-            self,
-            hidden_size,
-            placeholder,
-            **kwargs,
+        self,
+        hidden_size,
+        placeholder,
+        **kwargs,
     ):
         super().__init__(**kwargs)
 

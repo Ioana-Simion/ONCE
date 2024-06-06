@@ -11,12 +11,16 @@ class SemanticMixInputer(BaseInputer):
     output_single_sequence = True
 
     def __init__(self, item_hub: DataHub, **kwargs):
-        self.order = kwargs['hub'].order
-        self.depot = kwargs['hub'].depot
-        assert len(self.order) == 1, 'semantic inputer only support one column of user semantics'
+        self.order = kwargs["hub"].order
+        self.depot = kwargs["hub"].depot
+        assert (
+            len(self.order) == 1
+        ), "semantic inputer only support one column of user semantics"
         self.user_semantic_col = self.order[0]
         self.item_hub = item_hub
-        assert len(self.item_hub.order) == 1, 'semantic inputer only support one column of item'
+        assert (
+            len(self.item_hub.order) == 1
+        ), "semantic inputer only support one column of item"
         self.semantic_col = self.item_hub.order[0]
 
         super().__init__(**kwargs)
@@ -28,8 +32,8 @@ class SemanticMixInputer(BaseInputer):
         return torch.tensor(user_semantics, dtype=torch.long)
 
     def get_embeddings(
-            self,
-            batched_samples: torch.Tensor,
+        self,
+        batched_samples: torch.Tensor,
     ):
         embedding = self.embedding_manager(self.semantic_col)(batched_samples)
         return embedding

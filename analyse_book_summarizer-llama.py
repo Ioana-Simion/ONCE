@@ -3,7 +3,7 @@ from transformers import LlamaTokenizer
 from UniTok import Column, UniTok, Vocab
 from UniTok.tok import BaseTok, IdTok
 
-save_path = 'data/goodreads/book_summarizer.log'
+save_path = "data/goodreads/book_summarizer.log"
 
 
 class LlamaTok(BaseTok):
@@ -11,8 +11,13 @@ class LlamaTok(BaseTok):
 
     def __init__(self, name, vocab_dir):
         super(LlamaTok, self).__init__(name=name)
-        self.tokenizer = LlamaTokenizer.from_pretrained(pretrained_model_name_or_path=vocab_dir)
-        vocab = [self.tokenizer.convert_ids_to_tokens(i) for i in range(self.tokenizer.vocab_size)]
+        self.tokenizer = LlamaTokenizer.from_pretrained(
+            pretrained_model_name_or_path=vocab_dir
+        )
+        vocab = [
+            self.tokenizer.convert_ids_to_tokens(i)
+            for i in range(self.tokenizer.vocab_size)
+        ]
         self.vocab.extend(vocab)
 
     def t(self, obj) -> [int, list]:
@@ -25,19 +30,23 @@ class LlamaTok(BaseTok):
 
 
 df = pd.read_csv(
-    filepath_or_buffer='data/goodreads/book-desc.csv',
-    sep=',',
+    filepath_or_buffer="data/goodreads/book-desc.csv",
+    sep=",",
     header=0,
 )
 
-vocab = Vocab('bid').load('data/goodreads/user')
-id_tok = IdTok(name='bid')
+vocab = Vocab("bid").load("data/goodreads/user")
+id_tok = IdTok(name="bid")
 id_tok.vocab = vocab
-UniTok().add_col(Column(
-    name='bid',
-    tok=id_tok,
-)).add_col(Column(
-    name='desc',
-    tok=LlamaTok(name='llama', vocab_dir='llama-tokenizer'),
-    max_length=50,
-)).read(df).tokenize().store('goodreads-desc-llama')
+UniTok().add_col(
+    Column(
+        name="bid",
+        tok=id_tok,
+    )
+).add_col(
+    Column(
+        name="desc",
+        tok=LlamaTok(name="llama", vocab_dir="llama-tokenizer"),
+        max_length=50,
+    )
+).read(df).tokenize().store("goodreads-desc-llama")

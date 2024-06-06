@@ -9,9 +9,9 @@ from utils.timer import Timer
 
 class DataSet(BaseDataset):
     def __init__(
-            self,
-            hub: DataHub,
-            resampler=None,
+        self,
+        hub: DataHub,
+        resampler=None,
     ):
         self.hub = hub
         self.depot = hub.depot

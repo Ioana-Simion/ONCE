@@ -10,8 +10,10 @@ MIN_INTERVAL = 0
 
 # concise
 
-goodreads_prompter = GoodreadsPrompter('data/goodreads/book.csv', desc_path='data/goodreads/book-desc.csv')
-user_list = GoodreadsColdUser('data/goodreads/user', goodreads_prompter).stringify()
+goodreads_prompter = GoodreadsPrompter(
+    "data/goodreads/book.csv", desc_path="data/goodreads/book-desc.csv"
+)
+user_list = GoodreadsColdUser("data/goodreads/user", goodreads_prompter).stringify()
 
 system = """You are asked to capture user's interest based on his/her browsing history, and recommend a book that he/she may be interested. The format of history is as below:
 
@@ -28,16 +30,16 @@ You can only recommend one book (only one) in the following json format:
 
 The book should be diverse, that is not too similar with the original provided book list. You are not allowed to response any other words for any explanation or note. JUST GIVE ME JSON-FORMAT NEWS. Now, the task formally begins. Any other information should not disturb you."""
 
-save_path = 'data/goodreads/generator_v1.log'
+save_path = "data/goodreads/generator_v1.log"
 
-with open(save_path, 'a'):
+with open(save_path, "a"):
     pass
 
 exist_set = set()
-with open(save_path, 'r') as f:
+with open(save_path, "r") as f:
     for line in f:
         data = json.loads(line)
-        exist_set.add(data['uid'])
+        exist_set.add(data["uid"])
 
 for uid, content in tqdm(user_list):
     start_time = time.time()
@@ -52,10 +54,10 @@ for uid, content in tqdm(user_list):
     try:
         service = ChatService(system)
         enhanced = service.ask(content)  # type: str
-        enhanced = enhanced.rstrip('\n')
+        enhanced = enhanced.rstrip("\n")
 
-        with open(save_path, 'a') as f:
-            f.write(json.dumps({'uid': uid, 'book': enhanced}) + '\n')
+        with open(save_path, "a") as f:
+            f.write(json.dumps({"uid": uid, "book": enhanced}) + "\n")
     except Exception as e:
         print(e, uid)
 

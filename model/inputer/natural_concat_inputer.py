@@ -10,7 +10,7 @@ from model.inputer.concat_inputer import Pointer
 
 class NaturalConcatInputer(BaseInputer):
     vocab = None
-    special_col = 'natural_cat'
+    special_col = "natural_cat"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -35,9 +35,9 @@ class NaturalConcatInputer(BaseInputer):
             self._map = {k: torch.LongTensor(v) for k, v in prompt_map.items()}
 
         def __getitem__(self, col):
-            brief_col = col.replace('-llama', '')
-            brief_col = brief_col.replace('-token', '')
-            brief_col = brief_col.replace('-bert', '')
+            brief_col = col.replace("-llama", "")
+            brief_col = brief_col.replace("-token", "")
+            brief_col = brief_col.replace("-bert", "")
             return self._map[brief_col]
 
     @classmethod
@@ -76,8 +76,11 @@ class NaturalConcatInputer(BaseInputer):
             pointer.update_input(input_id, value)
 
         input_ids[self.special_col] = input_id
-        attention_mask = torch.tensor([1] * pointer.pos + [0] * (self.max_sequence_len - pointer.pos), dtype=torch.long)
-        input_ids[self.special_col][pointer.pos:] = 0
+        attention_mask = torch.tensor(
+            [1] * pointer.pos + [0] * (self.max_sequence_len - pointer.pos),
+            dtype=torch.long,
+        )
+        input_ids[self.special_col][pointer.pos :] = 0
 
         return dict(
             input_ids=input_ids,
@@ -85,13 +88,13 @@ class NaturalConcatInputer(BaseInputer):
         )
 
     def get_mask(self, batched_samples: Dict[str, torch.Tensor]):
-        return batched_samples['attention_mask']
+        return batched_samples["attention_mask"]
 
     def get_embeddings(
-            self,
-            batched_samples: Dict[str, torch.Tensor],
+        self,
+        batched_samples: Dict[str, torch.Tensor],
     ):
-        input_ids = batched_samples['input_ids']
+        input_ids = batched_samples["input_ids"]
 
         seq = input_ids[self.special_col].to(Meta.device)  # type: torch.Tensor # [B, L]
         mask = (seq > Meta.UNSET).long().to(Meta.device)  # type: torch.Tensor  # [B, L]

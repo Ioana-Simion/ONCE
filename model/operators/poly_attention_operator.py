@@ -7,10 +7,7 @@ from model.operators.base_operator import BaseOperator, BaseOperatorConfig
 
 class PolyAttentionOperatorConfig(BaseOperatorConfig):
     def __init__(
-            self,
-            num_context_codes: int = 32,
-            context_code_dim: int = 200,
-            **kwargs
+        self, num_context_codes: int = 32, context_code_dim: int = 200, **kwargs
     ):
         super().__init__(**kwargs)
         self.num_context_codes = num_context_codes
@@ -29,15 +26,14 @@ class PolyAttentionOperator(BaseOperator):
         self.linear = nn.Linear(
             in_features=self.config.hidden_size,
             out_features=self.config.context_code_dim,
-            bias=False
+            bias=False,
         )
         self.context_codes = nn.Parameter(
             nn.init.xavier_uniform_(
                 torch.empty(
-                    self.config.num_context_codes,
-                    self.config.context_code_dim
+                    self.config.num_context_codes, self.config.context_code_dim
                 ),
-                gain=nn.init.calculate_gain('tanh')
+                gain=nn.init.calculate_gain("tanh"),
             )
         )
         self.softmax = nn.Softmax(dim=2)

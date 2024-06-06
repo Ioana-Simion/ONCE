@@ -1,13 +1,14 @@
 import os
+
 from PIL import Image
 from tqdm import tqdm
 
 from utils.gpu import GPU
 
-os.makedirs('/data3/qijiong/Data/MIND-image-cropped', exist_ok=True)
+os.makedirs("/data3/qijiong/Data/MIND-image-cropped", exist_ok=True)
 
 gpu = GPU.auto_choose(torch_format=True)
-image_path = '/data3/qijiong/Data/MIND-image'
+image_path = "/data3/qijiong/Data/MIND-image"
 
 # 定义矩形区域
 left = 15
@@ -28,4 +29,4 @@ image_list = [os.path.join(image_path, image) for image in image_list]
 for path in tqdm(image_list):
     image = Image.open(path)
     cropped_image = image.crop((left, top, right, bottom))
-    cropped_image.save(path.replace('MIND-image', 'MIND-image-cropped'))
+    cropped_image.save(path.replace("MIND-image", "MIND-image-cropped"))

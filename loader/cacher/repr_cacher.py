@@ -7,10 +7,13 @@ from loader.cacher.user_cacher import UserCacher
 class ReprCacher:
     def __init__(self, legommender):
         from model.legommender import Legommender
+
         legommender = cast(Legommender, legommender)
 
         self.use_item_content = legommender.config.use_item_content
-        self.user_size = legommender.user_hub.depot.vocs[legommender.column_map.user_col].size
+        self.user_size = legommender.user_hub.depot.vocs[
+            legommender.column_map.user_col
+        ].size
         self._activate = True
 
         self.item = ItemCacher(
@@ -18,7 +21,8 @@ class ReprCacher:
             page_size=legommender.config.page_size,
             hidden_size=legommender.config.hidden_size,
             llm_skip=legommender.llm_skip,
-            activate=legommender.item_encoder and legommender.item_encoder.allow_caching,
+            activate=legommender.item_encoder
+            and legommender.item_encoder.allow_caching,
         )
 
         self.user = UserCacher(

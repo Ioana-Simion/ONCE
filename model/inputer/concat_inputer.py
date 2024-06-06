@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Optional, Dict, List
+from typing import Dict, List, Optional
 
 import torch
 from UniTok import Vocab
@@ -13,7 +13,7 @@ class Pointer:
         self.pos = 0
 
     def update_input(self, input_ids, value):
-        input_ids[self.pos: self.pos + len(value)] = value
+        input_ids[self.pos : self.pos + len(value)] = value
         self.pos += len(value)
 
     def update_special_token(self, input_ids, value):
@@ -24,10 +24,10 @@ class Pointer:
 class ConcatInputer(BaseInputer):
     output_single_sequence = True
 
-    vocab = Vocab(name='__cat_inputer_special_ids')
-    PAD = vocab.append('[PAD]')
-    CLS = vocab.append('[CLS]')
-    SEP = vocab.append('[SEP]')
+    vocab = Vocab(name="__cat_inputer_special_ids")
+    PAD = vocab.append("[PAD]")
+    CLS = vocab.append("[CLS]")
+    SEP = vocab.append("[SEP]")
 
     def __init__(self, use_cls_token, use_sep_token, **kwargs):
         super().__init__(**kwargs)
@@ -45,7 +45,11 @@ class ConcatInputer(BaseInputer):
         return length
 
     def get_max_sequence_len(self):
-        return self.max_content_len + int(self.use_cls_token) + int(self.use_sep_token) * len(self.order)
+        return (
+            self.max_content_len
+            + int(self.use_cls_token)
+            + int(self.use_sep_token) * len(self.order)
+        )
 
     def get_vocabs(self) -> Optional[List[Vocab]]:
         return [self.vocab]
@@ -75,8 +79,11 @@ class ConcatInputer(BaseInputer):
                 pointer.update_special_token(special_ids, self.SEP)
 
         input_ids[self.vocab.name] = special_ids
-        attention_mask = torch.tensor([1] * pointer.pos + [0] * (self.max_sequence_len - pointer.pos), dtype=torch.long)
-        input_ids[self.vocab.name][pointer.pos:] = self.PAD
+        attention_mask = torch.tensor(
+            [1] * pointer.pos + [0] * (self.max_sequence_len - pointer.pos),
+            dtype=torch.long,
+        )
+        input_ids[self.vocab.name][pointer.pos :] = self.PAD
 
         return dict(
             input_ids=input_ids,
@@ -84,19 +91,17 @@ class ConcatInputer(BaseInputer):
         )
 
     def get_mask(self, batched_samples: Dict[str, torch.Tensor]):
-        return batched_samples['attention_mask']
+        return batched_samples["attention_mask"]
 
     def get_embeddings(
-            self,
-            batched_samples: Dict[str, torch.Tensor],
+        self,
+        batched_samples: Dict[str, torch.Tensor],
     ):
-        input_ids = batched_samples['input_ids']
+        input_ids = batched_samples["input_ids"]
         shape = list(input_ids.values())[0].shape
 
         input_embeddings = torch.zeros(
-            *shape,
-            self.embedding_manager.hidden_size,
-            dtype=torch.float
+            *shape, self.embedding_manager.hidden_size, dtype=torch.float
         ).to(Meta.device)
 
         for col in input_ids:

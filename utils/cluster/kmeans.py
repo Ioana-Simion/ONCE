@@ -24,16 +24,16 @@ def initialize(X, num_clusters, seed):
 
 
 def kmeans(
-        X,
-        num_clusters,
-        distance='euclidean',
-        cluster_centers=[],
-        tol=1e-4,
-        tqdm_flag=True,
-        iter_limit=0,
-        device=torch.device('cpu'),
-        gamma_for_soft_dtw=0.001,
-        seed=None,
+    X,
+    num_clusters,
+    distance="euclidean",
+    cluster_centers=[],
+    tol=1e-4,
+    tqdm_flag=True,
+    iter_limit=0,
+    device=torch.device("cpu"),
+    gamma_for_soft_dtw=0.001,
+    seed=None,
 ):
     """
     perform kmeans
@@ -49,15 +49,19 @@ def kmeans(
     :return: (torch.tensor, torch.tensor) cluster ids, cluster centers
     """
     if tqdm_flag:
-        print(f'running k-means on {device}..')
+        print(f"running k-means on {device}..")
 
-    if distance == 'euclidean':
-        pairwise_distance_function = partial(pairwise_distance, device=device, tqdm_flag=tqdm_flag)
-    elif distance == 'cosine':
+    if distance == "euclidean":
+        pairwise_distance_function = partial(
+            pairwise_distance, device=device, tqdm_flag=tqdm_flag
+        )
+    elif distance == "cosine":
         pairwise_distance_function = partial(pairwise_cosine, device=device)
-    elif distance == 'soft_dtw':
-        sdtw = SoftDTW(use_cuda=device.type == 'cuda', gamma=gamma_for_soft_dtw)
-        pairwise_distance_function = partial(pairwise_soft_dtw, sdtw=sdtw, device=device)
+    elif distance == "soft_dtw":
+        sdtw = SoftDTW(use_cuda=device.type == "cuda", gamma=gamma_for_soft_dtw)
+        pairwise_distance_function = partial(
+            pairwise_soft_dtw, sdtw=sdtw, device=device
+        )
     else:
         raise NotImplementedError
 
@@ -72,7 +76,7 @@ def kmeans(
         initial_state = initialize(X, num_clusters, seed=seed)
     else:
         if tqdm_flag:
-            print('resuming')
+            print("resuming")
         # find data point closest to the initial cluster center
         initial_state = cluster_centers
         dis = pairwise_distance_function(X, initial_state)
@@ -82,9 +86,8 @@ def kmeans(
 
     iteration = 0
     if tqdm_flag:
-        tqdm_meter = tqdm(desc='[running kmeans]')
+        tqdm_meter = tqdm(desc="[running kmeans]")
     while True:
-
         dis = pairwise_distance_function(X, initial_state)
 
         choice_cluster = torch.argmin(dis, dim=1)
@@ -103,9 +106,8 @@ def kmeans(
             initial_state[index] = selected.mean(dim=0)
 
         center_shift = torch.sum(
-            torch.sqrt(
-                torch.sum((initial_state - initial_state_pre) ** 2, dim=1)
-            ))
+            torch.sqrt(torch.sum((initial_state - initial_state_pre) ** 2, dim=1))
+        )
 
         # increment iteration
         iteration = iteration + 1
@@ -113,12 +115,12 @@ def kmeans(
         # update tqdm meter
         if tqdm_flag:
             tqdm_meter.set_postfix(
-                iteration=f'{iteration}',
-                center_shift=f'{center_shift ** 2:0.6f}',
-                tol=f'{tol:0.6f}'
+                iteration=f"{iteration}",
+                center_shift=f"{center_shift ** 2:0.6f}",
+                tol=f"{tol:0.6f}",
             )
             tqdm_meter.update()
-        if center_shift ** 2 < tol:
+        if center_shift**2 < tol:
             break
         if iter_limit != 0 and iteration >= iter_limit:
             break
@@ -127,12 +129,12 @@ def kmeans(
 
 
 def kmeans_predict(
-        X,
-        cluster_centers,
-        distance='euclidean',
-        device=torch.device('cpu'),
-        gamma_for_soft_dtw=0.001,
-        tqdm_flag=True
+    X,
+    cluster_centers,
+    distance="euclidean",
+    device=torch.device("cpu"),
+    gamma_for_soft_dtw=0.001,
+    tqdm_flag=True,
 ):
     """
     predict using cluster centers
@@ -144,15 +146,19 @@ def kmeans_predict(
     :return: (torch.tensor) cluster ids
     """
     if tqdm_flag:
-        print(f'predicting on {device}..')
+        print(f"predicting on {device}..")
 
-    if distance == 'euclidean':
-        pairwise_distance_function = partial(pairwise_distance, device=device, tqdm_flag=tqdm_flag)
-    elif distance == 'cosine':
+    if distance == "euclidean":
+        pairwise_distance_function = partial(
+            pairwise_distance, device=device, tqdm_flag=tqdm_flag
+        )
+    elif distance == "cosine":
         pairwise_distance_function = partial(pairwise_cosine, device=device)
-    elif distance == 'soft_dtw':
-        sdtw = SoftDTW(use_cuda=device.type == 'cuda', gamma=gamma_for_soft_dtw)
-        pairwise_distance_function = partial(pairwise_soft_dtw, sdtw=sdtw, device=device)
+    elif distance == "soft_dtw":
+        sdtw = SoftDTW(use_cuda=device.type == "cuda", gamma=gamma_for_soft_dtw)
+        pairwise_distance_function = partial(
+            pairwise_soft_dtw, sdtw=sdtw, device=device
+        )
     else:
         raise NotImplementedError
 
@@ -168,9 +174,9 @@ def kmeans_predict(
     return choice_cluster.cpu()
 
 
-def pairwise_distance(data1, data2, device=torch.device('cpu'), tqdm_flag=True):
+def pairwise_distance(data1, data2, device=torch.device("cpu"), tqdm_flag=True):
     if tqdm_flag:
-        print(f'device is :{device}')
+        print(f"device is :{device}")
 
     # transfer to device
     data1, data2 = data1.to(device), data2.to(device)
@@ -187,7 +193,7 @@ def pairwise_distance(data1, data2, device=torch.device('cpu'), tqdm_flag=True):
     return dis
 
 
-def pairwise_cosine(data1, data2, device=torch.device('cpu')):
+def pairwise_cosine(data1, data2, device=torch.device("cpu")):
     # transfer to device
     data1, data2 = data1.to(device), data2.to(device)
 
@@ -208,9 +214,9 @@ def pairwise_cosine(data1, data2, device=torch.device('cpu')):
     return cosine_dis
 
 
-def pairwise_soft_dtw(data1, data2, sdtw=None, device=torch.device('cpu')):
+def pairwise_soft_dtw(data1, data2, sdtw=None, device=torch.device("cpu")):
     if sdtw is None:
-        raise ValueError('sdtw is None - initialize it with SoftDTW')
+        raise ValueError("sdtw is None - initialize it with SoftDTW")
 
     # transfer to device
     data1, data2 = data1.to(device), data2.to(device)

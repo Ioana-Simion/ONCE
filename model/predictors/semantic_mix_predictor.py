@@ -1,7 +1,6 @@
-from typing import Type, Dict, cast, Optional
+from typing import Dict, Optional, cast
 
 import torch
-from pigmento import pnt
 from torch import nn
 
 from loader.meta import Meta
@@ -12,11 +11,11 @@ from utils.function import combine_config
 
 class SemanticMixPredictorConfig(BasePredictorConfig):
     def __init__(
-            self,
-            # num_layers,
-            base_predictor: str = 'DCN',
-            base_predictor_config: dict = None,
-            **kwargs
+        self,
+        # num_layers,
+        base_predictor: str = "DCN",
+        base_predictor_config: dict = None,
+        **kwargs,
     ):
         super().__init__(**kwargs)
 
@@ -24,6 +23,7 @@ class SemanticMixPredictorConfig(BasePredictorConfig):
         base_predictor_config = base_predictor_config or {}
 
         from loader.class_hub import ClassHub
+
         predictors = ClassHub.predictors()
         self.base_predictor_class = predictors(base_predictor)  # type: Type[BasePredictor]
 
@@ -47,23 +47,32 @@ class SemanticMixPredictor(BasePredictor):
 
         # self.base_predictors = nn.ModuleList()
         self.masks = []
-        self.base_predictor = self.config.base_predictor_class(config=self.config.base_predictor_config)
+        self.base_predictor = self.config.base_predictor_class(
+            config=self.config.base_predictor_config
+        )
 
     def build_base_predictor(self):
-        return self.config.base_predictor_class(config=self.config.base_predictor_config)
+        return self.config.base_predictor_class(
+            config=self.config.base_predictor_config
+        )
 
     def request(self) -> Dict[str, list]:
-        return {
-            ModuleType.legommender: ['self']
-        }
+        return {ModuleType.legommender: ["self"]}
 
     def receive(self, responser_name: str, response: dict):
         from model.legommender import Legommender
+
         if responser_name == ModuleType.legommender:
-            legommender = cast(Legommender, response['self'])
-            self.num_item_semantics = legommender.item_hub.depot.cols[legommender.item_hub.order[0]].max_length
-            self.num_user_semantics = legommender.user_hub.depot.cols[legommender.user_hub.order[0]].max_length
-            self.linear = nn.Linear(self.num_item_semantics * self.num_user_semantics, 1)
+            legommender = cast(Legommender, response["self"])
+            self.num_item_semantics = legommender.item_hub.depot.cols[
+                legommender.item_hub.order[0]
+            ].max_length
+            self.num_user_semantics = legommender.user_hub.depot.cols[
+                legommender.user_hub.order[0]
+            ].max_length
+            self.linear = nn.Linear(
+                self.num_item_semantics * self.num_user_semantics, 1
+            )
 
             # for i in range(self.num_item_semantics):
             #     line_predictors = nn.ModuleList()
@@ -118,17 +127,29 @@ class SemanticMixPredictor(BasePredictor):
 
         # print(user_embeddings.shape, item_embeddings.shape)
         for i in range(1, user_embeddings.shape[1]):
-            user_embeddings[:, i, :] = user_embeddings[:, i, :] + user_embeddings[:, i - 1, :]
+            user_embeddings[:, i, :] = (
+                user_embeddings[:, i, :] + user_embeddings[:, i - 1, :]
+            )
         for i in range(1, item_embeddings.shape[1]):
-            item_embeddings[:, i, :] = item_embeddings[:, i, :] + item_embeddings[:, i - 1, :]
+            item_embeddings[:, i, :] = (
+                item_embeddings[:, i, :] + item_embeddings[:, i - 1, :]
+            )
 
         user_embeddings = user_embeddings.unsqueeze(1)  # [B, 1, Su, D]
         item_embeddings = item_embeddings.unsqueeze(2)  # [B, Si, 1, D]
-        user_embeddings = user_embeddings.repeat(1, item_embeddings.size(1), 1, 1)  # [B, Si, Su, D]
-        item_embeddings = item_embeddings.repeat(1, 1, user_embeddings.size(2), 1)  # [B, Si, Su, D]
+        user_embeddings = user_embeddings.repeat(
+            1, item_embeddings.size(1), 1, 1
+        )  # [B, Si, Su, D]
+        item_embeddings = item_embeddings.repeat(
+            1, 1, user_embeddings.size(2), 1
+        )  # [B, Si, Su, D]
 
-        user_embeddings = user_embeddings.view(-1, user_embeddings.size(-1))  # [B*Si*Su, D]
-        item_embeddings = item_embeddings.view(-1, item_embeddings.size(-1))  # [B*Si*Su, D]
+        user_embeddings = user_embeddings.view(
+            -1, user_embeddings.size(-1)
+        )  # [B*Si*Su, D]
+        item_embeddings = item_embeddings.view(
+            -1, item_embeddings.size(-1)
+        )  # [B*Si*Su, D]
 
         scores = self.base_predictor(user_embeddings, item_embeddings)  # [B * Si * Su]
         scores = scores.reshape(batch_size, -1)  # [B, Si * Su]

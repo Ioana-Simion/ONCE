@@ -1,5 +1,4 @@
 import json
-from typing import Union
 
 import torch
 
@@ -12,7 +11,7 @@ class TensorShape:
         self.dtype = dtype
 
     def __str__(self):
-        return f'tensor({self.shape}, dtype={self.dtype})'
+        return f"tensor({self.shape}, dtype={self.dtype})"
 
     def __repr__(self):
         return self.__str__()
@@ -26,7 +25,7 @@ class ListShape:
             data = data[0]
 
     def __str__(self):
-        return f'list({self.shape})'
+        return f"list({self.shape})"
 
     def __repr__(self):
         return self.__str__()
@@ -41,7 +40,7 @@ class Structure(Iterating):
         if isinstance(x, torch.Tensor):
             if self.use_shape:
                 return TensorShape(x.shape, x.dtype)
-            return f'tensor({list(x.shape)}, dtype={x.dtype})'
+            return f"tensor({list(x.shape)}, dtype={x.dtype})"
         elif isinstance(x, list):
             shape = ListShape(x)
             if self.use_shape:
@@ -59,12 +58,12 @@ class Structure(Iterating):
         return self.worker(x)
 
     def analyse_and_stringify(self, x):
-        assert not self.use_shape, 'Cannot stringify shape'
+        assert not self.use_shape, "Cannot stringify shape"
         structure = self.analyse(x)
         return json.dumps(structure, indent=4)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # a = dict(
     #     x=torch.rand(3, 5, 6),
     #     y=dict(
@@ -76,10 +75,7 @@ if __name__ == '__main__':
 
     a = dict(
         x=torch.rand(3, 5, 6).tolist(),
-        y=dict(
-            z=torch.rand(3, 6).tolist(),
-            k=[torch.rand(3, 2, 6).tolist()]
-        )
+        y=dict(z=torch.rand(3, 6).tolist(), k=[torch.rand(3, 2, 6).tolist()]),
     )
 
     print(Structure(use_shape=True).analyse(a))

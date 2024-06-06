@@ -1,17 +1,17 @@
 import torch
 from torch import nn
 
-from model.operators.base_operator import BaseOperator, BaseOperatorConfig
 from model.inputer.concat_inputer import ConcatInputer
+from model.operators.base_operator import BaseOperator, BaseOperatorConfig
 
 
 class GRUOperatorConfig(BaseOperatorConfig):
     def __init__(
-            self,
-            columns: list,
-            num_layers: int = 1,
-            use_news_content: bool = False,
-            **kwargs,
+        self,
+        columns: list,
+        num_layers: int = 1,
+        use_news_content: bool = False,
+        **kwargs,
     ):
         super().__init__(**kwargs)
         self.num_columns = len(columns)
@@ -20,7 +20,6 @@ class GRUOperatorConfig(BaseOperatorConfig):
 
 
 class GRUOperator(BaseOperator):
-
     config_class = GRUOperatorConfig
     inputer_class = ConcatInputer
     config: GRUOperatorConfig
@@ -46,7 +45,6 @@ class GRUOperator(BaseOperator):
         )
 
     def forward(self, embeddings, mask=None, **kwargs):
-
         embeddings = embeddings.to(torch.float32)
         lengths = mask.cpu().numpy().sum(axis=1)
         packed_sequence = nn.utils.rnn.pack_padded_sequence(

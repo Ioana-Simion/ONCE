@@ -1,19 +1,19 @@
 import torch
 
 from loader.meta import Meta
+from loader.pager.base_pager import BasePager
 from model.inputer.base_inputer import BaseInputer
 from utils.stacker import Stacker
-from loader.pager.base_pager import BasePager
 
 
 class FastItemPager(BasePager):
     def __init__(
-            self,
-            inputer: BaseInputer,
-            hidden_size,
-            placeholder,
-            llm_skip,
-            **kwargs,
+        self,
+        inputer: BaseInputer,
+        hidden_size,
+        placeholder,
+        llm_skip,
+        **kwargs,
     ):
         super().__init__(**kwargs)
 
@@ -38,15 +38,17 @@ class FastItemPager(BasePager):
     def stack_features(self):
         features = dict()
         if self.llm_skip:
-            features['mask'] = None
-        feature_cols = ['embeddings'] if self.llm_skip else self.current
+            features["mask"] = None
+        feature_cols = ["embeddings"] if self.llm_skip else self.current
 
         for feature in feature_cols:
             if isinstance(self.current[feature][0], torch.Tensor):
                 features[feature] = torch.stack(self.current[feature]).to(Meta.device)
             else:
                 assert isinstance(self.current[feature][0], dict)
-                features[feature] = self.stacker(self.current[feature], apply=lambda x: x.to(Meta.device))
+                features[feature] = self.stacker(
+                    self.current[feature], apply=lambda x: x.to(Meta.device)
+                )
         return features
 
     def combine(self, slices, features, output):

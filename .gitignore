@@ -162,8 +162,36 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# Data (for now)
-data/eb-nerd
+# From ebnerd-benchmark
+share/python-wheels/
+pip-wheel-metadata/
+.ipynb_checkpoints/
+.installed.cfg
+develop-eggs/
+__pycache__/
+*.egg-info/
+downloads/
+.DS_Store
+.Python
+wheels/
+.vscode
+mlruns
+build/
+.eggs/
+lib64/
+parts/
+sdist/
+dist/
+eggs/
+lib/
+var/
+*.egg
+venv/
+build
+venv
 
-# Legommenders (for now)
+# Temporary
+data/eb-nerd
 legommenders/
+data/mind/MINDsmall_train
+
