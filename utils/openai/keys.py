@@ -3,7 +3,12 @@ class Keys:
         if apikey:
             self.apikeys = [apikey]
         else:
-            self.apikeys = open(".openai").read().split("\n")
+            with open('./utils/openai/apikeys.txt', 'r') as file:
+                lines = file.readlines()
+
+                # Exclude the first line (instruction message)
+                self.apikeys = lines[1:]
+
         self.current_apikey = 0
         print(f"total {len(self.apikeys)} keys")
 

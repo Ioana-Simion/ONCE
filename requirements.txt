@@ -22,3 +22,7 @@ pytest
 tensorflow>=2.12.0, <2.16.0
 polars==0.20.8
 pyyaml==6.0.1
+ipykernel
+timeout_decorator
+pyarrow
+fastparquet
