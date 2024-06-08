@@ -224,8 +224,8 @@ class NAMLDataLoader(NewsrecDataLoader):
         ) = create_lookup_objects(
             self.body_mapping, unknown_representation=self.unknown_representation
         )
-        if self.eval_mode:
-            raise ValueError("'eval_mode = True' is not implemented for NAML")
+        # if self.eval_mode:
+        #     raise ValueError("'eval_mode = True' is not implemented for NAML")
 
         return super().__post_init__()
 
@@ -346,21 +346,30 @@ class NAMLDataLoader(NewsrecDataLoader):
         pred_input_vert = np.array(batch_X[self.category_prefix + self.inview_col].to_list())[:, :, np.newaxis]
         pred_input_subvert = np.array(batch_X[self.subcategory_prefix + self.inview_col].to_list())[:, :, np.newaxis]
 
-        adada
-
-
         his_input_vert = self.pad_sequences(his_input_vert, max_length, dtype='int32', padding='post', truncating='post', value=-1)
         his_input_subvert = self.pad_sequences(his_input_subvert, max_length, dtype='int32', padding='post', truncating='post', value=-1)
         pred_input_vert = self.pad_sequences(pred_input_vert, max_length, dtype='int32', padding='post', truncating='post', value=-1)
         pred_input_subvert = self.pad_sequences(pred_input_subvert, max_length, dtype='int32', padding='post', truncating='post', value=-1)
 
-        return (
-            his_input_title,
-            his_input_body,
-            his_input_vert,
-            his_input_subvert,
-            pred_input_title,
-            pred_input_body,
-            pred_input_vert,
-            pred_input_subvert,
-        ), batch_y
+        if self.eval_mode:
+            return (
+                his_input_title,
+                his_input_body,
+                his_input_vert,
+                his_input_subvert,
+                pred_input_title,
+                pred_input_body,
+                pred_input_vert,
+                pred_input_subvert,
+            )
+        else:
+            return (
+                his_input_title,
+                his_input_body,
+                his_input_vert,
+                his_input_subvert,
+                pred_input_title,
+                pred_input_body,
+                pred_input_vert,
+                pred_input_subvert,
+            ), batch_y

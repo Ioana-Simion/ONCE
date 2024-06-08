@@ -6,7 +6,7 @@ from ebrec.models.newsrec.naml import NAMLModel
 config = hparams_naml
 
 # Define the number of samples in your batch
-BATCH_SIZE = 300
+BATCH_SIZE = 100
 NPRATIO = 4
 HISTORY_SIZE = config.history_size
 TITLE_SIZE = config.title_size
