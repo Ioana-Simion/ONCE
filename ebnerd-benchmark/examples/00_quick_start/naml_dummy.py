@@ -19,6 +19,7 @@ vocab_size = word_embeddings.shape[0]
 n_verts = config.vert_num
 n_subverts = config.subvert_num
 
+
 # Model
 model = NAMLModel(hparams=config, word2vec_embedding=word_embeddings)
 model.model.summary()
