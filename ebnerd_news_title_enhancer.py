@@ -13,7 +13,7 @@ MIN_INTERVAL = 1.5
 
 news_list = EbnerdPrompter("data/eb-nerd/ebnerd_small/articles.parquet").stringify()[:5]
 
-system = """You are asked to act as a news content summarizer. I will provide you a piece of news, with its original title, subtitle, category, topics and body. The news format is as below:
+system = """You are asked to act as a news title enhancer. I will provide you a piece of news, with its original title, subtitle, category, topics and body. The news format is as below:
 
 [title] {title}
 [subtitle] {subtitle}
@@ -21,14 +21,14 @@ system = """You are asked to act as a news content summarizer. I will provide yo
 [topics] {topics}
 [body] {body}
 
-where {title}, {subtitle}, {category}, {topics} and {body} will be filled with content. You can only respond with a summarized body content which shold be clear, complete, objective and neutral. You are not allowed to response any other words for any explanation. Your response format should be:
+where {title}, {subtitle}, {category}, {topics} and {body} will be filled with content. You can only respond with a rephrased news title which should be clear, complete, objective and neutral. You can expand the title according to the above requirements. You are not allowed to respond with any other words or explanations. Your response format should be:
 
-[summarized_body] {summarized_body}
+[newtitle] {newtitle}
 
-where {summarized_body} should be filled with the summarized body. Now, your role of a news content summarizer formally begins. Any other information should not disturb your role."""
+where {newtitle} should be filled with the enhanced title. Now, your role of a news title enhancer formally begins. Any other information should not disturb your role."""
 
 
-save_path = "data/eb-nerd/ebnerd_news_summarizer.log"
+save_path = "data/eb-nerd/ebnerd_news_title_enhancer.log"
 
 # Create the file if it doesn't exist
 if not os.path.exists(save_path):

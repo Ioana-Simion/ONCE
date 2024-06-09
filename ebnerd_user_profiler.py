@@ -16,9 +16,9 @@ articles_path = "data/eb-nerd/ebnerd_small/articles.parquet"
 history_path = "data/eb-nerd/ebnerd_small/train/history.parquet"
 behaviors_path = "data/eb-nerd/ebnerd_small/train/behaviors.parquet"
 
-user_list = EbnerdUser(history_path, behaviors_path, ebnerd_prompter).stringify()
+user_list = EbnerdUser(history_path, behaviors_path, ebnerd_prompter).stringify()[:5]
 
-system = """You are asked to describe user interest based on his/her characteristics (if known) and top 100 browsed news list, the format of which is as below:
+system = """You are asked to describe user interest based on his/her characteristics (if known) and top (maximum 100) browsed news list, the format of which is as below:
 
 [gender] {gender}
 [postcode] {postcode}
@@ -27,14 +27,14 @@ system = """You are asked to describe user interest based on his/her characteris
 ...
 (n) title: {news_title}, read time: {read_time}, scroll percentage: {scroll_percentage}
 
-You can only response the user interests with the following format to describe the [topics] and [regions] of the user's interest
+You can only respond with the user interests in the following format to descripe the [topics] of users' interest:
 
 [topics]
 - topic1
 - topic2
 ...
 
-where topic is limited to the following options: 
+where topics are limited to the following options: 
 
 (1) crime and safety
 (2) entertainment
@@ -55,8 +55,9 @@ where topic is limited to the following options:
 (17) art and culture
 (18) events
 
-When recommending topics, keep in mind that the top 100 articles is ordered based on the user's reading time, so give more importance to the top articles.
-Only [topics] can appear in your response. Your response topic list should be ordered, that the first several options should be most related to the user's interest. You are not allowed to respond with any other words, explanations or notes. Now, the task formally begins. Any other information should not disturb you."""
+When recommending topics, remember that the user's news list is prioritized by reading time, so give more weight to the top articles.
+
+Only [topics] from the provided list can appear in your response. The topics in your response should be ordered with the most relevant to the user's interests appearing first. You are not allowed to respond with any other words, explanations or notes. Now, your role of a user profiler formally begins. Any other information should not disturb your role."""
 
 save_path = "data/eb-nerd/user_profiler.log"
 

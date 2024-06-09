@@ -56,7 +56,7 @@ cover/
 *.pot
 
 # Django stuff:
-*.log
+# *.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -191,7 +191,17 @@ build
 venv
 
 # Temporary
-data/eb-nerd
+data/eb-nerd/articles_large_only
+data/eb-nerd/ebnerd_demo
+data/eb-nerd/ebnerd_large
+data/eb-nerd/ebnerd_small
+data/eb-nerd/ebnerd_testset
+data/eb-nerd/Ekstra_Bladet_contrastive_vector
+data/eb-nerd/Ekstra_Bladet_image_embeddings
+data/eb-nerd/Ekstra_Bladet_word2vec
+data/eb-nerd/FacebookAI_xlm_roberta_base
+data/eb-nerd/google_bert_base_multilingual_cased
+data/eb-nerd/predictions_large_random
 legommenders/
 data/mind/MINDsmall_train
 
