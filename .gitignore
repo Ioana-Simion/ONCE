@@ -52,6 +52,8 @@ coverage.xml
 .pytest_cache/
 cover/
 
+ebnerd-benchmark/data/*
+
 # Translations
 *.mo
 *.pot
