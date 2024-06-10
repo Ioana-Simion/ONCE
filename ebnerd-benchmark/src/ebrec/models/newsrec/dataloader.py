@@ -224,8 +224,8 @@ class NAMLDataLoader(NewsrecDataLoader):
         ) = create_lookup_objects(
             self.body_mapping, unknown_representation=self.unknown_representation
         )
-        if self.eval_mode:
-            raise ValueError("'eval_mode = True' is not implemented for NAML")
+        # if self.eval_mode:
+        #     raise ValueError("'eval_mode = True' is not implemented for NAML")
 
         return super().__post_init__()
 
@@ -298,6 +298,25 @@ class NAMLDataLoader(NewsrecDataLoader):
                 subcategory.select(pl.all().name.prefix(self.subcategory_prefix))
             )
         )
+    
+    def pad_sequences(self, sequences, maxlen, dtype='int32', padding='post', truncating='post', value=-1):
+        # Pads sequences to the same length
+        padded_sequences = np.full((len(sequences), maxlen), value, dtype=dtype)
+        for i, seq in enumerate(sequences):
+            if not len(seq):
+                continue  # Empty sequences directly use the padding value
+            if truncating == 'pre':
+                trunc = seq[-maxlen:]
+            else:
+                trunc = seq[:maxlen]
+            trunc = np.asarray(trunc, dtype=dtype)
+
+            if padding == 'post':
+                padded_sequences[i, :len(trunc)] = trunc
+            else:
+                padded_sequences[i, -len(trunc):] = trunc
+        return padded_sequences
+
 
     def __getitem__(self, idx) -> tuple[tuple[np.ndarray], np.ndarray]:
         batch_X = self.X[idx * self.batch_size : (idx + 1) * self.batch_size].pipe(
@@ -306,52 +325,51 @@ class NAMLDataLoader(NewsrecDataLoader):
         batch_y = self.y[idx * self.batch_size : (idx + 1) * self.batch_size]
         # =>
         batch_y = np.array(batch_y.to_list())
-        his_input_title = np.array(
-            batch_X[self.title_prefix + self.history_column].to_list()
-        )
-        his_input_body = np.array(
-            batch_X[self.body_prefix + self.history_column].to_list()
-        )
-        his_input_vert = np.array(
-            batch_X[self.category_prefix + self.history_column].to_list()
-        )[:, :, np.newaxis]
-        his_input_subvert = np.array(
-            batch_X[self.subcategory_prefix + self.history_column].to_list()
-        )[:, :, np.newaxis]
+        his_input_title = np.array(batch_X[self.title_prefix + self.history_column].to_list())
+        his_input_body = np.array(batch_X[self.body_prefix + self.history_column].to_list())
+
         # =>
-        pred_input_title = np.array(
-            batch_X[self.title_prefix + self.inview_col].to_list()
-        )
-        pred_input_body = np.array(
-            batch_X[self.body_prefix + self.inview_col].to_list()
-        )
-        pred_input_vert = np.array(
-            batch_X[self.category_prefix + self.inview_col].to_list()
-        )[:, :, np.newaxis]
-        pred_input_subvert = np.array(
-            batch_X[self.subcategory_prefix + self.inview_col].to_list()
-        )[:, :, np.newaxis]
+        pred_input_title = np.array(batch_X[self.title_prefix + self.inview_col].to_list())   
+        pred_input_body = np.array(batch_X[self.body_prefix + self.inview_col].to_list())
+
         # =>
-        his_input_title = np.squeeze(
-            self.lookup_article_matrix[his_input_title], axis=2
-        )
-        pred_input_title = np.squeeze(
-            self.lookup_article_matrix[pred_input_title], axis=2
-        )
-        his_input_body = np.squeeze(
-            self.lookup_article_matrix_body[his_input_body], axis=2
-        )
-        pred_input_body = np.squeeze(
-            self.lookup_article_matrix_body[pred_input_body], axis=2
-        )
+        his_input_title = np.squeeze(self.lookup_article_matrix[his_input_title], axis=2)
+        pred_input_title = np.squeeze(self.lookup_article_matrix[pred_input_title], axis=2)
+        his_input_body = np.squeeze(self.lookup_article_matrix_body[his_input_body], axis=2)
+        pred_input_body = np.squeeze(self.lookup_article_matrix_body[pred_input_body], axis=2)
         # =>
-        return (
-            his_input_title,
-            his_input_body,
-            his_input_vert,
-            his_input_subvert,
-            pred_input_title,
-            pred_input_body,
-            pred_input_vert,
-            pred_input_subvert,
-        ), batch_y
+
+        max_length = max(len(item) for item in batch_X[self.category_prefix + self.history_column] if item)
+
+        his_input_vert = np.array(batch_X[self.category_prefix + self.history_column].to_list())[:, :, np.newaxis]
+        his_input_subvert = np.array(batch_X[self.subcategory_prefix + self.history_column].to_list())[:, :, np.newaxis]
+        pred_input_vert = np.array(batch_X[self.category_prefix + self.inview_col].to_list())[:, :, np.newaxis]
+        pred_input_subvert = np.array(batch_X[self.subcategory_prefix + self.inview_col].to_list())[:, :, np.newaxis]
+
+        his_input_vert = self.pad_sequences(his_input_vert, max_length, dtype='int32', padding='post', truncating='post', value=-1)
+        his_input_subvert = self.pad_sequences(his_input_subvert, max_length, dtype='int32', padding='post', truncating='post', value=-1)
+        pred_input_vert = self.pad_sequences(pred_input_vert, max_length, dtype='int32', padding='post', truncating='post', value=-1)
+        pred_input_subvert = self.pad_sequences(pred_input_subvert, max_length, dtype='int32', padding='post', truncating='post', value=-1)
+
+        if self.eval_mode:
+            return (
+                his_input_title,
+                his_input_body,
+                his_input_vert,
+                his_input_subvert,
+                pred_input_title,
+                pred_input_body,
+                pred_input_vert,
+                pred_input_subvert,
+            )
+        else:
+            return (
+                his_input_title,
+                his_input_body,
+                his_input_vert,
+                his_input_subvert,
+                pred_input_title,
+                pred_input_body,
+                pred_input_vert,
+                pred_input_subvert,
+            ), batch_y
