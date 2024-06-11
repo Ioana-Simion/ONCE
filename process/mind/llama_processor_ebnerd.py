@@ -1,9 +1,10 @@
 import os
-
+import numpy as np
 import pandas as pd
 from transformers import LlamaTokenizer
 from UniTok import Column, UniTok, Vocab
 from UniTok.tok import BaseTok, IdTok, SeqTok
+from tok.number_tok import NumberTok
 
 
 class LlamaTok(BaseTok):
@@ -50,10 +51,12 @@ class Processor:
 
         self.nid = Vocab(name="article_id")
         self.topic_voc = Vocab(name="topics")
+        # self.total_inviews_voc = Vocab(name="total_inviews")
+        # self.total_pageviews_voc = Vocab(name="total_pageviews")
 
     def read_news_data(self, mode):
-        columns_to_include = ["article_id", "title", "subtitle", "body", "category_str", "article_type", "topics"]
-        #TODO: "published_time", "last_modified_time", "topics", "total_inviews", "total_pageviews"]
+        columns_to_include = ["article_id", "title", "subtitle", "body", "category_str", "article_type", "topics", "total_inviews", "total_pageviews"]
+        #TODO: "published_time", "last_modified_time"]
                               
         df = pd.read_parquet(
             os.path.join(self.data_dir, mode, "../articles.parquet"),
@@ -73,6 +76,8 @@ class Processor:
             .add_col(Column(name="category_str", tok=txt_tok, max_length=max_category_len))
             .add_col(Column(name="article_type", tok=txt_tok, max_length=max_article_type_len))
             .add_col(Column(name="topics", tok=SeqTok(vocab=self.topic_voc), max_length=max_topics_len))
+            .add_col(Column(name="total_inviews", tok=NumberTok(vocab_size=4138599, name="total_inviews")))
+            .add_col(Column(name="total_pageviews", tok=NumberTok(vocab_size=1637752, name="total_pageviews")))
         )
 
     def combine_news_data(self):

@@ -1,6 +1,7 @@
 from typing import Iterable
 
 from .tok import BaseTok
+import math
 
 
 class NumberTok(BaseTok):
@@ -32,13 +33,19 @@ class NumberTok(BaseTok):
     def t(self, obj):
         # check is iterable
         if isinstance(obj, Iterable) and not isinstance(obj, str):
-            obj = [int(o) for o in obj]
+            obj = [int(o) for o in obj if not self._is_special(o)]
         else:
-            obj = int(obj)
-        objs = [obj] if isinstance(obj, int) else obj
-        for o in objs:
+            obj = int(obj) if not self._is_special(obj) else None
+            obj = [obj] if obj is not None else []
+
+        # objs = [obj] if isinstance(obj, int) else obj
+        for o in obj:
             if o >= len(self.vocab):
                 if self.vocab_size is not None:
                     raise ValueError('vocab_size is {}, but {} is given'.format(self.vocab_size, o))
                 self.vocab.extend([str(i) for i in range(len(self.vocab), o + 1)], count=False)
         return obj
+    
+    def _is_special(self, value):
+        return value is None or (isinstance(value, float) and math.isnan(value))
+
