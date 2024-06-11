@@ -186,7 +186,7 @@ if __name__ == "__main__":
 
     p = Processor(
         data_dir="ebnerd-benchmark/data",
-        store_dir="/ebnerd-benchmark/data",
+        store_dir="ebnerd-benchmark/data/tokenized",
         glove=False
     )
 
