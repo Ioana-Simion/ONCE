@@ -70,6 +70,14 @@ class EbnerdUser:
 
         self._user_list = None
 
+        self.postcode_mapping = {
+            0: "metropolitan",
+            1: "rural district",
+            2: "municipality",
+            3: "provincial",
+            4: "big city"
+        }
+
     def stringify(self):
         if self._user_list is not None:
             return self._user_list
@@ -81,9 +89,20 @@ class EbnerdUser:
             # Add user characteristics (from behavior)
             behavior = self.behaviors_df.loc[self.behaviors_df['user_id'] == history['user_id']].iloc[0]
 
+            if np.isnan(behavior["postcode"]):
+                continue
+
             for key in self.user_keys:
-                if not np.isnan(behavior[self.user_keys[key]]):
-                    string += f"[{key}] {behavior[self.user_keys[key]]}\n"
+               val = behavior[self.user_keys[key]]
+               if not np.isnan(val):
+                    if key == "gender":
+                        key_string = "Male" if val == 0 else "Female"
+                    elif key == "postcode":
+                        key_string = self.postcode_mapping.get(val, "Unknown")
+                    else:
+                        key_string = behavior[self.user_keys[key]]
+
+                    string += f"[{key}] {key_string}\n"
 
             # Add clicked articles by user (from history)
             articles_sorted = sorted(zip(history['article_id_fixed'], history['read_time_fixed'], history['scroll_percentage_fixed']), key=lambda x: x[1])
