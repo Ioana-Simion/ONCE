@@ -83,20 +83,25 @@ class Processor:
         
         return pd.read_parquet(
             os.path.join(self.data_dir, mode, "behaviors.parquet"),
-            columns=["impression_id", "user_id", "article_ids_inview"]
+            columns=["impression_id", "article_id",  "user_id", "article_ids_inview", "article_ids_clicked"]
         )
 
     def read_inter_data(self, mode) -> pd.DataFrame:
         df = self._read_inter_data(mode)
-        data = dict(imp=[], uid=[], nid=[], click=[])
+        data = dict(impression_id=[], user_id=[], article_id=[], article_ids_clicked=[])
         for line in df.itertuples():
-            predicts = line.predict.split(" ")
-            data["imp"].extend([line.imp] * len(predicts))
-            data["uid"].extend([line.uid] * len(predicts))
-            for predict in predicts:
-                nid, click = predict.split("-")
-                data["nid"].append(nid)
-                data["click"].append(int(click))
+            clicked_articles = line.article_ids_clicked
+            full_interaction =line.article_ids_inview 
+
+            data["impression_id"].extend([line.impression_id] * len(full_interaction))
+            data["user_id"].extend([line.user_id] * len(full_interaction))
+            for predict in full_interaction:
+                data["article_id"].append(predict)
+                if predict in clicked_articles:
+                    data["article_ids_clicked"].append(1)
+                else:
+                    data["article_ids_clicked"].append(0)
+
         return pd.DataFrame(data)
 
     def get_news_tok(self, max_title_len=0, max_abs_len=0):
@@ -128,10 +133,10 @@ class Processor:
         return (
             UniTok()
             .add_index_col(name="index")
-            .add_col(Column(name="imp",tok=EntTok))
+            .add_col(Column(name="impression_id",tok=EntTok))
             .add_col(Column(tok=EntTok(vocab=self.uid)))
             .add_col(Column(tok=EntTok(vocab=self.nid)))
-            .add_col(Column(tok=NumberTok(name="click", vocab_size=2)))
+            .add_col(Column(tok=NumberTok(name="article_ids_clicked", vocab_size=2)))
         )
 
 
@@ -141,7 +146,7 @@ class Processor:
 
 
         inter_dev_df = []
-        inter_groups = inter_df.groupby("imp")
+        inter_groups = inter_df.groupby("impression_id")
         for _, imp_df in inter_groups:
             inter_dev_df.append(imp_df)
 
@@ -181,7 +186,7 @@ if __name__ == "__main__":
 
     p = Processor(
         data_dir="ebnerd-benchmark/data",
-        store_dir="/ebnerd-benchmark/data/embed",
+        store_dir="/ebnerd-benchmark/data",
         glove=False
     )
 
