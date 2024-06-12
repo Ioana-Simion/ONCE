@@ -19,7 +19,7 @@ class EmbeddingLoader:
 
     @staticmethod
     def get_numpy_embedding(path):
-        embedding = np.load(path)
+        embedding = np.load(path, allow_pickle=True)
         assert isinstance(embedding, np.ndarray)
         return torch.tensor(embedding, dtype=torch.float32)
 
