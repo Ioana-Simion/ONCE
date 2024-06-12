@@ -1,8 +1,8 @@
 import warnings
 
-from meta import Col, Voc
+from .meta import Col, Voc
 
-from vocab import Vocab
+from .vocab import Vocab
 
 
 class Vocabs(dict):

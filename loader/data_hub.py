@@ -1,7 +1,7 @@
 from typing import Union
 
 from oba import Obj
-from UniTok import UniDep
+from process.mind.unidep import UniDep
 
 from loader.depot.depot_hub import DepotHub
 

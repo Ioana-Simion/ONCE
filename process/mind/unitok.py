@@ -7,11 +7,11 @@ from typing import Optional, Type, Dict, Union
 import numpy as np
 import pandas as pd
 
-from cols import Cols
-from column import Column, IndexColumn
+from .cols import Cols
+from .column import Column, IndexColumn
 from tok import BaseTok, BertTok, EntTok, IdTok
-from vocab import Vocab
-from vocabs import Vocabs
+from .vocab import Vocab
+from .vocabs import Vocabs
 
 
 class UniTok:

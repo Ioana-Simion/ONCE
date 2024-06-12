@@ -1,0 +1,32 @@
+name: ebnerd-${version}-Llama
+base_dir: ebnerd-benchmark\data
+item:
+  filter_cache: true
+  depot: ebnerd-benchmark/data/tokenized_llama #/news-llama
+  order:
+    - title
+    - subtitle
+    - body
+    - category_str
+    - article_type
+    - topics
+    - total_inviews
+    - total_pageviews
+  append:
+    - article_id
+user:
+  filter_cache: true
+  depots:
+    train:
+      path: ebnerd-benchmark/data/tokenized_bert/train
+    test:
+      path: ebnerd-benchmark/data/tokenized_bert/validation
+  # filters:
+  #   history:
+  #     - x
+  candidate_col: article_id
+  clicks_col: article_id
+  label_col: article_ids_clicked
+  group_col: impression_id
+  user_col: user_id
+  index_col: index

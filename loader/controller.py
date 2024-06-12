@@ -152,8 +152,10 @@ class Controller:
 
     def parse_mode(self):
         modes = set(self.exp.mode.lower().split("_"))
-        if Phases.train in modes:
-            modes.add(Phases.dev)
+        # print("Modes", modes) Since we do not have dev.
+        # if Phases.train in modes:
+        #     modes.add(Phases.dev)
+        # print("Modes", modes)
         return modes
 
     def get_loader(self, phase):

@@ -26,15 +26,15 @@ class Depots:
                 user_data.depots.test.path, filter_cache=user_data.filter_cache
             )
 
-        self.fast_eval_depot = self.create_fast_eval_depot(
-            user_data.depots.dev.path, column_map=column_map
-        )
+        # self.fast_eval_depot = self.create_fast_eval_depot(
+        #     user_data.depots.dev.path, column_map=column_map
+        # )
 
         self.depots = {
             Phases.train: self.train_depot,
-            Phases.dev: self.dev_depot,
+            # Phases.dev: self.dev_depot,
             Phases.test: self.test_depot,
-            Phases.fast_eval: self.fast_eval_depot,
+            #Phases.fast_eval: self.fast_eval_depot,
         }  # type: Dict[str, CachingDep]
 
         if user_data.union:
@@ -61,7 +61,7 @@ class Depots:
             for col in user_data.filters:
                 for filter_str in user_data.filters[col]:
                     filter_func_str = f"lambda x: {filter_str}"
-                    for phase in [Phases.train, Phases.dev, Phases.test]:
+                    for phase in [Phases.train, Phases.test]:
                         depot = self.depots[phase]
                         if not depot:
                             continue
@@ -71,7 +71,7 @@ class Depots:
                             f"Filter {col} with {filter_str} in {phase} phase, sample num: {sample_num} -> {len(depot)}"
                         )
 
-        for phase in [Phases.train, Phases.dev, Phases.test]:
+        for phase in [Phases.train, Phases.test]:
             filters = user_data.depots[phase].filters
             depot = self.depots[phase]
             if not depot:

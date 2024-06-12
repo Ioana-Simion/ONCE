@@ -13,11 +13,11 @@ class ClassHub:
 
     @staticmethod
     def operators():
-        return ClassHub(BaseOperator, "model/operators", "Operator")
+        return ClassHub(BaseOperator, "model/operators", "llama_operator")
 
     @staticmethod
     def predictors():
-        return ClassHub(BasePredictor, "model/predictors", "Predictor")
+        return ClassHub(BasePredictor, "model/predictors", "dot_predictor")
 
     def __init__(self, base_class, module_dir: str, module_type: str):
         """
@@ -35,12 +35,13 @@ class ClassHub:
         self.class_dict = dict()
         for class_ in self.class_list:
             name = class_.__name__
-            name = name.replace(self.upper_module_type, "")
+            name = name.replace("Predictor", "")
+            name = name.replace("Operator", "")
             self.class_dict[name] = class_
 
     def get_class_list(self):
         # file_paths = glob.glob('model/recommenders/*_model.py')
-        file_paths = glob.glob(f"{self.module_dir}/*_{self.module_type}.py")
+        file_paths = glob.glob(f"{self.module_dir}/{self.module_type}.py") 
         class_list = []
         for file_path in file_paths:
             file_name = file_path.split("/")[-1].split(".")[0]

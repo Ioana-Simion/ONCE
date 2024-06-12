@@ -8,9 +8,9 @@ from typing import Dict, List, Callable, Union, Optional, cast
 import numpy as np
 import tqdm
 
-from meta import Meta, Col, Voc
-from vocab import Vocab
-from vocabs import Vocabs
+from .meta import Meta, Col, Voc 
+from .vocab import Vocab
+from .vocabs import Vocabs
 
 
 class UniDep:

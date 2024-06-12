@@ -2,8 +2,12 @@ import os
 import numpy as np
 import pandas as pd
 from transformers import LlamaTokenizer
-from UniTok import Column, UniTok, Vocab
-from UniTok.tok import BaseTok, IdTok, SeqTok
+from unitok import UniTok 
+from column import Column
+from vocab import Vocab
+from tok.tok import BaseTok
+from tok.id_tok import IdTok
+from tok.seq_tok import SeqTok
 from tok.number_tok import NumberTok
 
 
@@ -80,13 +84,6 @@ class Processor:
             .add_col(Column(name="total_pageviews", tok=NumberTok(vocab_size=1637752, name="total_pageviews")))
         )
 
-    def combine_news_data(self):
-        news_train_df = self.read_news_data("train")
-        news_dev_df = self.read_news_data("dev")
-        news_df = pd.concat([news_train_df, news_dev_df])
-        news_df = news_df.drop_duplicates(["article_id"])
-        return news_df
-
     def analyse_news(self):
         tok = self.get_news_tok(max_title_len=0, max_subtitle_len=0, max_body_len=0, max_category_len=0, max_article_type_len=0, max_topics_len=0)
         df = self.combine_news_data()
@@ -94,16 +91,16 @@ class Processor:
 
     def tokenize(self):
         news_tok = self.get_news_tok(max_title_len=20, max_subtitle_len=20, max_body_len=400, max_category_len=20, max_article_type_len=20, max_topics_len=100)
-        news_df = self.combine_news_data()
+        news_df =  self.read_news_data("train")
 
         news_tok.read_file(news_df).tokenize().store_data(
-            os.path.join(self.store_dir, "news-llama")
+            os.path.join(self.store_dir)
         )
 
 if __name__ == "__main__":
     p = Processor(
         data_dir="ebnerd-benchmark/data",
-        store_dir="ebnerd-benchmark/data/tokenized",
+        store_dir="ebnerd-benchmark/data/tokenized_llama",
     )
 
     p.tokenize()

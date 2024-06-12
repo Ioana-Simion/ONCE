@@ -174,7 +174,7 @@ class Vocab:
         store_path = store_dir if as_path else self.get_store_path(store_dir)
 
         self.o2i, self.i2o = {}, {}
-        with open(store_path, 'r') as f:
+        with open(store_path, 'r', encoding="utf-8") as f:
             objs = f.read().split('\n')[:-1]
         for index, obj in enumerate(objs):
             self.o2i[obj] = index

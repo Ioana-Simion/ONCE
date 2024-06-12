@@ -1,0 +1,7 @@
+name: llama-full
+embeddings:
+  -
+    vocab_name: article_id
+    vocab_type: numpy
+    path: ebnerd-benchmark\data\tokenized_llama\data.npy
+    frozen: true
