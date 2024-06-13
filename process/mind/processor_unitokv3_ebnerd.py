@@ -6,12 +6,24 @@ import numpy as np
 import pandas as pd
 from nltk import word_tokenize
 
-# New imports
-from column import Column
-from unitok import UniTok
-from vocab import Vocab
-from tok import BaseTok, BertTok, EntTok, IdTok, NumberTok, SplitTok, SeqTok
+import sys
+print(sys.path)  # Print current sys.path
+sys.path.append(os.path.abspath(''))
+print(sys.path)  # Check if the path has been added
+# sys.path.append(os.path.abspath('../../'))
+# print(sys.path)  # Check if the path has been added
 
+# New imports
+from process.mind.column import Column
+from process.mind.unitok import UniTok 
+from process.mind.vocab import Vocab
+
+from process.mind.tok.tok import BaseTok
+from process.mind.tok.bert_tok import BertTok
+from process.mind.tok.ent_tok import EntTok
+from process.mind.tok.id_tok import IdTok
+from process.mind.tok.seq_tok import SeqTok
+from process.mind.tok.number_tok import NumberTok
 
 class GloveTok(BaseTok):
     def __init__(self, name: str, path: str):
@@ -49,7 +61,7 @@ class Processor:
                                    "total_pageviews", "total_read_time", "sentiment_score", "sentiment_label"]
 
         df = pd.read_parquet(
-            os.path.join(self.data_dir, mode, "../articles.parquet"),
+            os.path.join(self.data_dir, mode, "../preprocessed_and_title_enhanced.parquet"),
             columns=["article_id", "title", "subtitle", "body"]
         )
         return df

@@ -1,0 +1,40 @@
+{
+  "version": "UniDep-2.0",
+  "vocs": {
+    "article_id": {
+      "size": 11176,
+      "cols": [
+        "article_id"
+      ]
+    },
+    "english": {
+      "size": 30522,
+      "cols": [
+        "title",
+        "subtitle",
+        "body"
+      ]
+    }
+  },
+  "cols": {
+    "article_id": {
+      "vocab": "article_id"
+    },
+    "title": {
+      "vocab": "english",
+      "max_length": 20,
+      "padding": false
+    },
+    "subtitle": {
+      "vocab": "english",
+      "max_length": 50,
+      "padding": false
+    },
+    "body": {
+      "vocab": "english",
+      "max_length": 50,
+      "padding": false
+    }
+  },
+  "id_col": "article_id"
+}
