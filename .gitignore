@@ -212,3 +212,4 @@ translator/
 summarizer/
 llama/
 llama_new/
+llama_converted_test/*

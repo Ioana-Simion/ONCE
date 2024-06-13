@@ -92,8 +92,8 @@ class Resampler:
                     random.randint(0, self.item_size - 1) for _ in range(rand_count)
                 ]
                 sample[self.candidate_col].extend(neg_samples)
-        if self.neg_col:
-            del sample[self.neg_col]
+        # if self.neg_col: Jort: Hard coded
+            # del sample[self.neg_col]
 
         if not self.use_item_content:
             # if not using item content, we don't need to rebuild candidate contents

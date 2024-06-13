@@ -15,13 +15,13 @@ class DataSets:
             self.dev_set = DataSet(hub=self.hubs.dev_hub, resampler=resampler)
         if hubs.test_hub:
             self.test_set = DataSet(hub=self.hubs.test_hub, resampler=resampler)
-        self.user_set = DataSet(hub=self.hubs.fast_eval_hub, resampler=resampler)
+        #self.user_set = DataSet(hub=self.hubs.fast_eval_hub, resampler=resampler)
 
         self.sets = {
             Phases.train: self.train_set,
-            Phases.dev: self.dev_set,
+            # Phases.dev: self.dev_set,
             Phases.test: self.test_set,
-            Phases.fast_eval: self.user_set,
+            #Phases.fast_eval: self.user_set,
         }
 
     def __getitem__(self, item):

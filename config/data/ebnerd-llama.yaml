@@ -23,7 +23,7 @@ user:
   # filters:
   #   history:
   #     - x
-  candidate_col: article_id
+  candidate_col: article_id # Jort: Problem here
   clicks_col: article_id
   label_col: article_ids_clicked
   group_col: impression_id

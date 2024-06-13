@@ -37,7 +37,10 @@ class DataSet(BaseDataset):
     def pack_sample(self, index):
         _sample = self.depot[index]
         sample = dict()
+
         for col in [*self.order, *self.append]:
+            if col is 'neg': # Jort: Still in columns
+                continue
             value = _sample[col]
             if isinstance(value, np.ndarray):
                 value = value.tolist()

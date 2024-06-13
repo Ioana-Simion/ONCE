@@ -9,7 +9,7 @@ import pandas as pd
 
 from .cols import Cols
 from .column import Column, IndexColumn
-from .tok import BaseTok, BertTok, EntTok, IdTok
+from tok import BaseTok, BertTok, EntTok, IdTok
 from .vocab import Vocab
 from .vocabs import Vocabs
 
