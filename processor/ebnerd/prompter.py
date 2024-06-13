@@ -89,9 +89,6 @@ class EbnerdUser:
             # Add user characteristics (from behavior)
             behavior = self.behaviors_df.loc[self.behaviors_df['user_id'] == history['user_id']].iloc[0]
 
-            if np.isnan(behavior["postcode"]):
-                continue
-
             for key in self.user_keys:
                val = behavior[self.user_keys[key]]
                if not np.isnan(val):
@@ -108,10 +105,12 @@ class EbnerdUser:
             articles_sorted = sorted(zip(history['article_id_fixed'], history['read_time_fixed'], history['scroll_percentage_fixed']), key=lambda x: x[1])
             string += "[articles]"
 
-            for i, (article_id, read_time, scroll_percentage) in enumerate(articles_sorted[:100]):
+            for i, (article_id, read_time, scroll_percentage) in enumerate(articles_sorted[:min(100, len(articles_sorted))]):
                 # Add article title (TODO: enhanced title and/or subtitle/category/topics)
-                article = self.news_df.loc[self.news_df['article_id'] == article_id].iloc[0]
-                string += f"({i + 1})title: {article.title}, read time: {read_time}, scroll percentage: {scroll_percentage}\n"
+                article = self.news_df.loc[self.news_df['article_id'] == article_id]
+                if not article.empty:
+                    article = article.iloc[0]
+                    string += f"({i + 1})title: {article.title}, read time: {read_time}, scroll percentage: {scroll_percentage}\n"
 
             self._user_list.append((history["user_id"], string))
         return self._user_list
