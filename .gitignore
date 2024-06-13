@@ -195,7 +195,6 @@ venv
 
 # Temporary
 data/eb-nerd/articles_large_only
-data/eb-nerd/ebnerd_demo
 data/eb-nerd/ebnerd_large
 data/eb-nerd/ebnerd_small
 data/eb-nerd/ebnerd_testset
@@ -207,4 +206,9 @@ data/eb-nerd/google_bert_base_multilingual_cased
 data/eb-nerd/predictions_large_random
 legommenders/
 data/mind/MINDsmall_train
-
+data/mind/MIND_processed
+data/mind/MINDsmall
+translator/
+summarizer/
+llama/
+llama_new/
