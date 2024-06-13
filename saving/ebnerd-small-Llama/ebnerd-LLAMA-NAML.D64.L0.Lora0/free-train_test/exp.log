@@ -6192,3 +6192,1640 @@
 [00:00:01] |EmbeddingHub| build mapping article_type -> llama
 [00:00:01] |EmbeddingHub| build mapping topics -> topics
 [00:00:01] |EmbeddingHub| create vocab topics (78, 4096)
+[00:00:00] |Worker| START TIME: 2024-06-13 11:50:13.327961
+[00:00:00] |Worker| python  worker.py --embed config/embed/ednerd-llama.yaml --model config/model/llm/ebnerd-llama-naml.yaml --exp config/exp/ebnerd-tt-naml.yaml --data config/data/ebnerd-llama.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096
+[00:00:00] |Worker| {
+    "embed": {
+        "name": "free",
+        "embeddings": []
+    },
+    "model": {
+        "name": "ebnerd-LLAMA-NAML.D64.L0.Lora0",
+        "meta": {
+            "item": "Llama",
+            "user": "Ada",
+            "predictor": "Dot"
+        },
+        "config": {
+            "use_neg_sampling": false,
+            "use_item_content": true,
+            "max_item_content_batch_size": 0,
+            "same_dim_transform": false,
+            "embed_hidden_size": 4096,
+            "hidden_size": 64,
+            "item_config": {
+                "llm_dir": "llama-main\\llama-2-7b",
+                "layer_split": 0,
+                "lora": 0,
+                "weights_dir": "llama-main\\llama-2-7b"
+            },
+            "user_config": {
+                "num_attention_heads": 12,
+                "inputer_config": {
+                    "use_cls_token": false,
+                    "use_sep_token": false
+                }
+            }
+        }
+    },
+    "exp": {
+        "name": "train_test",
+        "dir": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test",
+        "log": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test/exp.log",
+        "mode": "train_test",
+        "load": {
+            "save_dir": null,
+            "epochs": null,
+            "model_only": true,
+            "strict": true,
+            "wait": false
+        },
+        "store": {
+            "metric": "GAUC",
+            "maximize": true,
+            "top": 1,
+            "early_stop": 2
+        },
+        "policy": {
+            "epoch_start": 0,
+            "epoch": 50,
+            "lr": 0.0001,
+            "item_lr": 1e-05,
+            "freeze_emb": false,
+            "pin_memory": false,
+            "epoch_batch": 0,
+            "batch_size": 64,
+            "accumulate_batch": 1,
+            "device": "gpu",
+            "n_warmup": 0,
+            "check_interval": -2,
+            "simple_dev": false
+        },
+        "metrics": [
+            "GAUC",
+            "MRR",
+            "NDCG@1",
+            "NDCG@5",
+            "NDCG@10"
+        ]
+    },
+    "data": {
+        "name": "ebnerd-small-Llama",
+        "base_dir": "ebnerd-benchmark\\data",
+        "item": {
+            "filter_cache": true,
+            "depot": "ebnerd-benchmark/data/tokenized_llama",
+            "order": [
+                "title",
+                "subtitle",
+                "body",
+                "category_str",
+                "article_type",
+                "topics"
+            ],
+            "append": [
+                "article_id"
+            ]
+        },
+        "user": {
+            "filter_cache": true,
+            "depots": {
+                "train": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/train"
+                },
+                "test": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/validation"
+                }
+            },
+            "candidate_col": "article_id",
+            "clicks_col": "article_id",
+            "label_col": "article_ids_clicked",
+            "group_col": "impression_id",
+            "user_col": "user_id",
+            "index_col": "index"
+        }
+    },
+    "version": "small",
+    "llm_ver": "7b",
+    "hidden_size": 64,
+    "layer": 0,
+    "lora": 0,
+    "fast_eval": 0,
+    "embed_hidden_size": 4096,
+    "warmup": 0,
+    "simple_dev": false,
+    "batch_size": 64,
+    "acc_batch": 1,
+    "lora_r": 32,
+    "lr": 0.0001,
+    "item_lr": 1e-05,
+    "mind_large_submission": false,
+    "epoch_batch": 0,
+    "max_item_batch_size": 0,
+    "page_size": 512,
+    "patience": 2,
+    "epoch_start": 0,
+    "frozen": true,
+    "load_path": null,
+    "rand": {},
+    "time": {},
+    "seed": 2023
+}
+[00:00:00] |GPU| not support cuda
+[00:00:00] |GPU| switch to CPU
+[00:00:00] |Controller| dataset type:  book
+[00:00:00] |Controller| build column map ...
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/train
+
+        Sample Size: 278139
+        Id Column: index
+        Columns:
+        	index, vocab index (size 278139)
+        	impression_id, vocab impression_id (size 24724)
+        	user_id, vocab user_id (size 1590)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/validation
+
+        Sample Size: 304915
+        Id Column: index
+        Columns:
+        	index, vocab index (size 304915)
+        	impression_id, vocab impression_id (size 25356)
+        	user_id, vocab user_id (size 1935)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |Controller| Selected Item Encoder: LlamaOperator
+[00:00:00] |Controller| Selected User Encoder: AdaOperator
+[00:00:00] |Controller| Selected Predictor: DotPredictor
+[00:00:00] |Controller| Use Negative Sampling: False
+[00:00:00] |Controller| Use Item Content: True
+[00:00:00] |EmbeddingHub| skip col article_id
+[00:00:00] |EmbeddingHub| create vocab __cat_inputer_special_ids (3, 4096)
+[00:00:00] |EmbeddingHub| create vocab __flatten_seq_special_ids (4, 4096)
+[00:00:00] |EmbeddingHub| build mapping title -> llama
+[00:00:00] |EmbeddingHub| create vocab llama (32000, 4096)
+[00:00:01] |EmbeddingHub| build mapping subtitle -> llama
+[00:00:01] |EmbeddingHub| build mapping body -> llama
+[00:00:01] |EmbeddingHub| build mapping category_str -> llama
+[00:00:01] |EmbeddingHub| build mapping article_type -> llama
+[00:00:01] |EmbeddingHub| build mapping topics -> topics
+[00:00:01] |EmbeddingHub| create vocab topics (78, 4096)
+[00:00:00] |Worker| START TIME: 2024-06-13 11:52:29.816376
+[00:00:00] |Worker| python  worker.py --embed config/embed/ednerd-llama.yaml --model config/model/llm/ebnerd-llama-naml.yaml --exp config/exp/ebnerd-tt-naml.yaml --data config/data/ebnerd-llama.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096
+[00:00:00] |Worker| {
+    "embed": {
+        "name": "free",
+        "embeddings": []
+    },
+    "model": {
+        "name": "ebnerd-LLAMA-NAML.D64.L0.Lora0",
+        "meta": {
+            "item": "Llama",
+            "user": "Ada",
+            "predictor": "Dot"
+        },
+        "config": {
+            "use_neg_sampling": false,
+            "use_item_content": true,
+            "max_item_content_batch_size": 0,
+            "same_dim_transform": false,
+            "embed_hidden_size": 4096,
+            "hidden_size": 64,
+            "item_config": {
+                "llm_dir": "llama-main\\llama-2-7b",
+                "layer_split": 0,
+                "lora": 0,
+                "weights_dir": "llama-main\\llama-2-7b"
+            },
+            "user_config": {
+                "num_attention_heads": 12,
+                "inputer_config": {
+                    "use_cls_token": false,
+                    "use_sep_token": false
+                }
+            }
+        }
+    },
+    "exp": {
+        "name": "train_test",
+        "dir": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test",
+        "log": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test/exp.log",
+        "mode": "train_test",
+        "load": {
+            "save_dir": null,
+            "epochs": null,
+            "model_only": true,
+            "strict": true,
+            "wait": false
+        },
+        "store": {
+            "metric": "GAUC",
+            "maximize": true,
+            "top": 1,
+            "early_stop": 2
+        },
+        "policy": {
+            "epoch_start": 0,
+            "epoch": 50,
+            "lr": 0.0001,
+            "item_lr": 1e-05,
+            "freeze_emb": false,
+            "pin_memory": false,
+            "epoch_batch": 0,
+            "batch_size": 64,
+            "accumulate_batch": 1,
+            "device": "gpu",
+            "n_warmup": 0,
+            "check_interval": -2,
+            "simple_dev": false
+        },
+        "metrics": [
+            "GAUC",
+            "MRR",
+            "NDCG@1",
+            "NDCG@5",
+            "NDCG@10"
+        ]
+    },
+    "data": {
+        "name": "ebnerd-small-Llama",
+        "base_dir": "ebnerd-benchmark\\data",
+        "item": {
+            "filter_cache": true,
+            "depot": "ebnerd-benchmark/data/tokenized_llama",
+            "order": [
+                "title",
+                "subtitle",
+                "body",
+                "category_str",
+                "article_type",
+                "topics"
+            ],
+            "append": [
+                "article_id"
+            ]
+        },
+        "user": {
+            "filter_cache": true,
+            "depots": {
+                "train": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/train"
+                },
+                "test": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/validation"
+                }
+            },
+            "candidate_col": "article_id",
+            "clicks_col": "article_id",
+            "label_col": "article_ids_clicked",
+            "group_col": "impression_id",
+            "user_col": "user_id",
+            "index_col": "index"
+        }
+    },
+    "version": "small",
+    "llm_ver": "7b",
+    "hidden_size": 64,
+    "layer": 0,
+    "lora": 0,
+    "fast_eval": 0,
+    "embed_hidden_size": 4096,
+    "warmup": 0,
+    "simple_dev": false,
+    "batch_size": 64,
+    "acc_batch": 1,
+    "lora_r": 32,
+    "lr": 0.0001,
+    "item_lr": 1e-05,
+    "mind_large_submission": false,
+    "epoch_batch": 0,
+    "max_item_batch_size": 0,
+    "page_size": 512,
+    "patience": 2,
+    "epoch_start": 0,
+    "frozen": true,
+    "load_path": null,
+    "rand": {},
+    "time": {},
+    "seed": 2023
+}
+[00:00:00] |GPU| not support cuda
+[00:00:00] |GPU| switch to CPU
+[00:00:00] |Controller| dataset type:  book
+[00:00:00] |Controller| build column map ...
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/train
+
+        Sample Size: 278139
+        Id Column: index
+        Columns:
+        	index, vocab index (size 278139)
+        	impression_id, vocab impression_id (size 24724)
+        	user_id, vocab user_id (size 1590)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/validation
+
+        Sample Size: 304915
+        Id Column: index
+        Columns:
+        	index, vocab index (size 304915)
+        	impression_id, vocab impression_id (size 25356)
+        	user_id, vocab user_id (size 1935)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |Controller| Selected Item Encoder: LlamaOperator
+[00:00:00] |Controller| Selected User Encoder: AdaOperator
+[00:00:00] |Controller| Selected Predictor: DotPredictor
+[00:00:00] |Controller| Use Negative Sampling: False
+[00:00:00] |Controller| Use Item Content: True
+[00:00:00] |EmbeddingHub| skip col article_id
+[00:00:00] |EmbeddingHub| create vocab __cat_inputer_special_ids (3, 4096)
+[00:00:00] |EmbeddingHub| create vocab __flatten_seq_special_ids (4, 4096)
+[00:00:00] |EmbeddingHub| build mapping title -> llama
+[00:00:00] |EmbeddingHub| create vocab llama (32000, 4096)
+[00:00:01] |EmbeddingHub| build mapping subtitle -> llama
+[00:00:01] |EmbeddingHub| build mapping body -> llama
+[00:00:01] |EmbeddingHub| build mapping category_str -> llama
+[00:00:01] |EmbeddingHub| build mapping article_type -> llama
+[00:00:01] |EmbeddingHub| build mapping topics -> topics
+[00:00:01] |EmbeddingHub| create vocab topics (78, 4096)
+[00:00:00] |Worker| START TIME: 2024-06-13 12:06:23.852210
+[00:00:00] |Worker| python  worker.py --embed config/embed/ednerd-llama.yaml --model config/model/llm/ebnerd-llama-naml.yaml --exp config/exp/ebnerd-tt-naml.yaml --data config/data/ebnerd-llama.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096
+[00:00:00] |Worker| {
+    "embed": {
+        "name": "free",
+        "embeddings": []
+    },
+    "model": {
+        "name": "ebnerd-LLAMA-NAML.D64.L0.Lora0",
+        "meta": {
+            "item": "Llama",
+            "user": "Ada",
+            "predictor": "Dot"
+        },
+        "config": {
+            "use_neg_sampling": false,
+            "use_item_content": true,
+            "max_item_content_batch_size": 0,
+            "same_dim_transform": false,
+            "embed_hidden_size": 4096,
+            "hidden_size": 64,
+            "item_config": {
+                "llm_dir": "llama-main\\llama-2-7b",
+                "layer_split": 0,
+                "lora": 0,
+                "weights_dir": "llama-main\\llama-2-7b"
+            },
+            "user_config": {
+                "num_attention_heads": 12,
+                "inputer_config": {
+                    "use_cls_token": false,
+                    "use_sep_token": false
+                }
+            }
+        }
+    },
+    "exp": {
+        "name": "train_test",
+        "dir": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test",
+        "log": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test/exp.log",
+        "mode": "train_test",
+        "load": {
+            "save_dir": null,
+            "epochs": null,
+            "model_only": true,
+            "strict": true,
+            "wait": false
+        },
+        "store": {
+            "metric": "GAUC",
+            "maximize": true,
+            "top": 1,
+            "early_stop": 2
+        },
+        "policy": {
+            "epoch_start": 0,
+            "epoch": 50,
+            "lr": 0.0001,
+            "item_lr": 1e-05,
+            "freeze_emb": false,
+            "pin_memory": false,
+            "epoch_batch": 0,
+            "batch_size": 64,
+            "accumulate_batch": 1,
+            "device": "gpu",
+            "n_warmup": 0,
+            "check_interval": -2,
+            "simple_dev": false
+        },
+        "metrics": [
+            "GAUC",
+            "MRR",
+            "NDCG@1",
+            "NDCG@5",
+            "NDCG@10"
+        ]
+    },
+    "data": {
+        "name": "ebnerd-small-Llama",
+        "base_dir": "ebnerd-benchmark\\data",
+        "item": {
+            "filter_cache": true,
+            "depot": "ebnerd-benchmark/data/tokenized_llama",
+            "order": [
+                "title",
+                "subtitle",
+                "body",
+                "category_str",
+                "article_type",
+                "topics"
+            ],
+            "append": [
+                "article_id"
+            ]
+        },
+        "user": {
+            "filter_cache": true,
+            "depots": {
+                "train": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/train"
+                },
+                "test": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/validation"
+                }
+            },
+            "candidate_col": "article_id",
+            "clicks_col": "article_id",
+            "label_col": "article_ids_clicked",
+            "group_col": "impression_id",
+            "user_col": "user_id",
+            "index_col": "index"
+        }
+    },
+    "version": "small",
+    "llm_ver": "7b",
+    "hidden_size": 64,
+    "layer": 0,
+    "lora": 0,
+    "fast_eval": 0,
+    "embed_hidden_size": 4096,
+    "warmup": 0,
+    "simple_dev": false,
+    "batch_size": 64,
+    "acc_batch": 1,
+    "lora_r": 32,
+    "lr": 0.0001,
+    "item_lr": 1e-05,
+    "mind_large_submission": false,
+    "epoch_batch": 0,
+    "max_item_batch_size": 0,
+    "page_size": 512,
+    "patience": 2,
+    "epoch_start": 0,
+    "frozen": true,
+    "load_path": null,
+    "rand": {},
+    "time": {},
+    "seed": 2023
+}
+[00:00:00] |GPU| not support cuda
+[00:00:00] |GPU| switch to CPU
+[00:00:00] |Controller| dataset type:  book
+[00:00:00] |Controller| build column map ...
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/train
+
+        Sample Size: 278139
+        Id Column: index
+        Columns:
+        	index, vocab index (size 278139)
+        	impression_id, vocab impression_id (size 24724)
+        	user_id, vocab user_id (size 1590)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/validation
+
+        Sample Size: 304915
+        Id Column: index
+        Columns:
+        	index, vocab index (size 304915)
+        	impression_id, vocab impression_id (size 25356)
+        	user_id, vocab user_id (size 1935)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |Controller| Selected Item Encoder: LlamaOperator
+[00:00:00] |Controller| Selected User Encoder: AdaOperator
+[00:00:00] |Controller| Selected Predictor: DotPredictor
+[00:00:00] |Controller| Use Negative Sampling: False
+[00:00:00] |Controller| Use Item Content: True
+[00:00:00] |EmbeddingHub| skip col article_id
+[00:00:00] |EmbeddingHub| create vocab __cat_inputer_special_ids (3, 4096)
+[00:00:00] |EmbeddingHub| create vocab __flatten_seq_special_ids (4, 4096)
+[00:00:00] |EmbeddingHub| build mapping title -> llama
+[00:00:00] |EmbeddingHub| create vocab llama (32000, 4096)
+[00:00:01] |EmbeddingHub| build mapping subtitle -> llama
+[00:00:01] |EmbeddingHub| build mapping body -> llama
+[00:00:01] |EmbeddingHub| build mapping category_str -> llama
+[00:00:01] |EmbeddingHub| build mapping article_type -> llama
+[00:00:01] |EmbeddingHub| build mapping topics -> topics
+[00:00:01] |EmbeddingHub| create vocab topics (78, 4096)
+[00:00:00] |Worker| START TIME: 2024-06-13 12:10:54.477799
+[00:00:00] |Worker| python  worker.py --embed config/embed/ednerd-llama.yaml --model config/model/llm/ebnerd-llama-naml.yaml --exp config/exp/ebnerd-tt-naml.yaml --data config/data/ebnerd-llama.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096
+[00:00:00] |Worker| {
+    "embed": {
+        "name": "free",
+        "embeddings": []
+    },
+    "model": {
+        "name": "ebnerd-LLAMA-NAML.D64.L0.Lora0",
+        "meta": {
+            "item": "Llama",
+            "user": "Ada",
+            "predictor": "Dot"
+        },
+        "config": {
+            "use_neg_sampling": false,
+            "use_item_content": true,
+            "max_item_content_batch_size": 0,
+            "same_dim_transform": false,
+            "embed_hidden_size": 4096,
+            "hidden_size": 64,
+            "item_config": {
+                "llm_dir": "llama-main\\llama-2-7b",
+                "layer_split": 0,
+                "lora": 0,
+                "weights_dir": "llama-main\\llama-2-7b"
+            },
+            "user_config": {
+                "num_attention_heads": 12,
+                "inputer_config": {
+                    "use_cls_token": false,
+                    "use_sep_token": false
+                }
+            }
+        }
+    },
+    "exp": {
+        "name": "train_test",
+        "dir": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test",
+        "log": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test/exp.log",
+        "mode": "train_test",
+        "load": {
+            "save_dir": null,
+            "epochs": null,
+            "model_only": true,
+            "strict": true,
+            "wait": false
+        },
+        "store": {
+            "metric": "GAUC",
+            "maximize": true,
+            "top": 1,
+            "early_stop": 2
+        },
+        "policy": {
+            "epoch_start": 0,
+            "epoch": 50,
+            "lr": 0.0001,
+            "item_lr": 1e-05,
+            "freeze_emb": false,
+            "pin_memory": false,
+            "epoch_batch": 0,
+            "batch_size": 64,
+            "accumulate_batch": 1,
+            "device": "gpu",
+            "n_warmup": 0,
+            "check_interval": -2,
+            "simple_dev": false
+        },
+        "metrics": [
+            "GAUC",
+            "MRR",
+            "NDCG@1",
+            "NDCG@5",
+            "NDCG@10"
+        ]
+    },
+    "data": {
+        "name": "ebnerd-small-Llama",
+        "base_dir": "ebnerd-benchmark\\data",
+        "item": {
+            "filter_cache": true,
+            "depot": "ebnerd-benchmark/data/tokenized_llama",
+            "order": [
+                "title",
+                "subtitle",
+                "body",
+                "category_str",
+                "article_type",
+                "topics"
+            ],
+            "append": [
+                "article_id"
+            ]
+        },
+        "user": {
+            "filter_cache": true,
+            "depots": {
+                "train": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/train"
+                },
+                "test": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/validation"
+                }
+            },
+            "candidate_col": "article_id",
+            "clicks_col": "article_id",
+            "label_col": "article_ids_clicked",
+            "group_col": "impression_id",
+            "user_col": "user_id",
+            "index_col": "index"
+        }
+    },
+    "version": "small",
+    "llm_ver": "7b",
+    "hidden_size": 64,
+    "layer": 0,
+    "lora": 0,
+    "fast_eval": 0,
+    "embed_hidden_size": 4096,
+    "warmup": 0,
+    "simple_dev": false,
+    "batch_size": 64,
+    "acc_batch": 1,
+    "lora_r": 32,
+    "lr": 0.0001,
+    "item_lr": 1e-05,
+    "mind_large_submission": false,
+    "epoch_batch": 0,
+    "max_item_batch_size": 0,
+    "page_size": 512,
+    "patience": 2,
+    "epoch_start": 0,
+    "frozen": true,
+    "load_path": null,
+    "rand": {},
+    "time": {},
+    "seed": 2023
+}
+[00:00:00] |GPU| not support cuda
+[00:00:00] |GPU| switch to CPU
+[00:00:00] |Controller| dataset type:  book
+[00:00:00] |Controller| build column map ...
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/train
+
+        Sample Size: 278139
+        Id Column: index
+        Columns:
+        	index, vocab index (size 278139)
+        	impression_id, vocab impression_id (size 24724)
+        	user_id, vocab user_id (size 1590)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/validation
+
+        Sample Size: 304915
+        Id Column: index
+        Columns:
+        	index, vocab index (size 304915)
+        	impression_id, vocab impression_id (size 25356)
+        	user_id, vocab user_id (size 1935)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |Worker| START TIME: 2024-06-13 12:12:39.549255
+[00:00:00] |Worker| python  worker.py --embed config/embed/ednerd-llama.yaml --model config/model/llm/ebnerd-llama-naml.yaml --exp config/exp/ebnerd-tt-naml.yaml --data config/data/ebnerd-llama.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096
+[00:00:00] |Worker| {
+    "embed": {
+        "name": "free",
+        "embeddings": []
+    },
+    "model": {
+        "name": "ebnerd-LLAMA-NAML.D64.L0.Lora0",
+        "meta": {
+            "item": "Llama",
+            "user": "Ada",
+            "predictor": "Dot"
+        },
+        "config": {
+            "use_neg_sampling": false,
+            "use_item_content": true,
+            "max_item_content_batch_size": 0,
+            "same_dim_transform": false,
+            "embed_hidden_size": 4096,
+            "hidden_size": 64,
+            "item_config": {
+                "llm_dir": "llama-main\\llama-2-7b",
+                "layer_split": 0,
+                "lora": 0,
+                "weights_dir": "llama-main\\llama-2-7b"
+            },
+            "user_config": {
+                "num_attention_heads": 12,
+                "inputer_config": {
+                    "use_cls_token": false,
+                    "use_sep_token": false
+                }
+            }
+        }
+    },
+    "exp": {
+        "name": "train_test",
+        "dir": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test",
+        "log": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test/exp.log",
+        "mode": "train_test",
+        "load": {
+            "save_dir": null,
+            "epochs": null,
+            "model_only": true,
+            "strict": true,
+            "wait": false
+        },
+        "store": {
+            "metric": "GAUC",
+            "maximize": true,
+            "top": 1,
+            "early_stop": 2
+        },
+        "policy": {
+            "epoch_start": 0,
+            "epoch": 50,
+            "lr": 0.0001,
+            "item_lr": 1e-05,
+            "freeze_emb": false,
+            "pin_memory": false,
+            "epoch_batch": 0,
+            "batch_size": 64,
+            "accumulate_batch": 1,
+            "device": "gpu",
+            "n_warmup": 0,
+            "check_interval": -2,
+            "simple_dev": false
+        },
+        "metrics": [
+            "GAUC",
+            "MRR",
+            "NDCG@1",
+            "NDCG@5",
+            "NDCG@10"
+        ]
+    },
+    "data": {
+        "name": "ebnerd-small-Llama",
+        "base_dir": "ebnerd-benchmark\\data",
+        "item": {
+            "filter_cache": true,
+            "depot": "ebnerd-benchmark/data/tokenized_llama",
+            "order": [
+                "title",
+                "subtitle",
+                "body",
+                "category_str",
+                "article_type",
+                "topics"
+            ],
+            "append": [
+                "article_id"
+            ]
+        },
+        "user": {
+            "filter_cache": true,
+            "depots": {
+                "train": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/train"
+                },
+                "test": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/validation"
+                }
+            },
+            "candidate_col": "article_id",
+            "clicks_col": "article_id",
+            "label_col": "article_ids_clicked",
+            "group_col": "impression_id",
+            "user_col": "user_id",
+            "index_col": "index"
+        }
+    },
+    "version": "small",
+    "llm_ver": "7b",
+    "hidden_size": 64,
+    "layer": 0,
+    "lora": 0,
+    "fast_eval": 0,
+    "embed_hidden_size": 4096,
+    "warmup": 0,
+    "simple_dev": false,
+    "batch_size": 64,
+    "acc_batch": 1,
+    "lora_r": 32,
+    "lr": 0.0001,
+    "item_lr": 1e-05,
+    "mind_large_submission": false,
+    "epoch_batch": 0,
+    "max_item_batch_size": 0,
+    "page_size": 512,
+    "patience": 2,
+    "epoch_start": 0,
+    "frozen": true,
+    "load_path": null,
+    "rand": {},
+    "time": {},
+    "seed": 2023
+}
+[00:00:00] |GPU| not support cuda
+[00:00:00] |GPU| switch to CPU
+[00:00:00] |Controller| dataset type:  book
+[00:00:00] |Controller| build column map ...
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/train
+
+        Sample Size: 278139
+        Id Column: index
+        Columns:
+        	index, vocab index (size 278139)
+        	impression_id, vocab impression_id (size 24724)
+        	user_id, vocab user_id (size 1590)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/validation
+
+        Sample Size: 304915
+        Id Column: index
+        Columns:
+        	index, vocab index (size 304915)
+        	impression_id, vocab impression_id (size 25356)
+        	user_id, vocab user_id (size 1935)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |Controller| Selected Item Encoder: LlamaOperator
+[00:00:00] |Controller| Selected User Encoder: AdaOperator
+[00:00:00] |Controller| Selected Predictor: DotPredictor
+[00:00:00] |Controller| Use Negative Sampling: False
+[00:00:00] |Controller| Use Item Content: True
+[00:00:00] |EmbeddingHub| skip col article_id
+[00:00:00] |EmbeddingHub| create vocab __cat_inputer_special_ids (3, 4096)
+[00:00:00] |EmbeddingHub| create vocab __flatten_seq_special_ids (4, 4096)
+[00:00:00] |EmbeddingHub| build mapping title -> llama
+[00:00:00] |EmbeddingHub| create vocab llama (32000, 4096)
+[00:00:01] |EmbeddingHub| build mapping subtitle -> llama
+[00:00:01] |EmbeddingHub| build mapping body -> llama
+[00:00:01] |EmbeddingHub| build mapping category_str -> llama
+[00:00:01] |EmbeddingHub| build mapping article_type -> llama
+[00:00:01] |EmbeddingHub| build mapping topics -> topics
+[00:00:01] |EmbeddingHub| create vocab topics (78, 4096)
+[00:01:59] |Worker| {'index': 0, 'impression_id': 0, 'user_id': 0, 'article_id': 9657, 'article_ids_clicked': array([0], dtype=object)}
+[00:00:00] |Worker| START TIME: 2024-06-13 12:27:20.075599
+[00:00:00] |Worker| python  worker.py --embed config/embed/ednerd-llama.yaml --model config/model/llm/ebnerd-llama-naml.yaml --exp config/exp/ebnerd-tt-naml.yaml --data config/data/ebnerd-llama.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096
+[00:00:00] |Worker| {
+    "embed": {
+        "name": "free",
+        "embeddings": []
+    },
+    "model": {
+        "name": "ebnerd-LLAMA-NAML.D64.L0.Lora0",
+        "meta": {
+            "item": "Llama",
+            "user": "Ada",
+            "predictor": "Dot"
+        },
+        "config": {
+            "use_neg_sampling": false,
+            "use_item_content": true,
+            "max_item_content_batch_size": 0,
+            "same_dim_transform": false,
+            "embed_hidden_size": 4096,
+            "hidden_size": 64,
+            "item_config": {
+                "llm_dir": "llama-main\\llama-2-7b",
+                "layer_split": 0,
+                "lora": 0,
+                "weights_dir": "llama-main\\llama-2-7b"
+            },
+            "user_config": {
+                "num_attention_heads": 12,
+                "inputer_config": {
+                    "use_cls_token": false,
+                    "use_sep_token": false
+                }
+            }
+        }
+    },
+    "exp": {
+        "name": "train_test",
+        "dir": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test",
+        "log": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test/exp.log",
+        "mode": "train_test",
+        "load": {
+            "save_dir": null,
+            "epochs": null,
+            "model_only": true,
+            "strict": true,
+            "wait": false
+        },
+        "store": {
+            "metric": "GAUC",
+            "maximize": true,
+            "top": 1,
+            "early_stop": 2
+        },
+        "policy": {
+            "epoch_start": 0,
+            "epoch": 50,
+            "lr": 0.0001,
+            "item_lr": 1e-05,
+            "freeze_emb": false,
+            "pin_memory": false,
+            "epoch_batch": 0,
+            "batch_size": 64,
+            "accumulate_batch": 1,
+            "device": "gpu",
+            "n_warmup": 0,
+            "check_interval": -2,
+            "simple_dev": false
+        },
+        "metrics": [
+            "GAUC",
+            "MRR",
+            "NDCG@1",
+            "NDCG@5",
+            "NDCG@10"
+        ]
+    },
+    "data": {
+        "name": "ebnerd-small-Llama",
+        "base_dir": "ebnerd-benchmark\\data",
+        "item": {
+            "filter_cache": true,
+            "depot": "ebnerd-benchmark/data/tokenized_llama",
+            "order": [
+                "title",
+                "subtitle",
+                "body",
+                "category_str",
+                "article_type",
+                "topics"
+            ],
+            "append": [
+                "article_id"
+            ]
+        },
+        "user": {
+            "filter_cache": true,
+            "depots": {
+                "train": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/train"
+                },
+                "test": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/validation"
+                }
+            },
+            "candidate_col": "article_id",
+            "clicks_col": "article_id",
+            "label_col": "article_ids_clicked",
+            "group_col": "impression_id",
+            "user_col": "user_id",
+            "index_col": "index"
+        }
+    },
+    "version": "small",
+    "llm_ver": "7b",
+    "hidden_size": 64,
+    "layer": 0,
+    "lora": 0,
+    "fast_eval": 0,
+    "embed_hidden_size": 4096,
+    "warmup": 0,
+    "simple_dev": false,
+    "batch_size": 64,
+    "acc_batch": 1,
+    "lora_r": 32,
+    "lr": 0.0001,
+    "item_lr": 1e-05,
+    "mind_large_submission": false,
+    "epoch_batch": 0,
+    "max_item_batch_size": 0,
+    "page_size": 512,
+    "patience": 2,
+    "epoch_start": 0,
+    "frozen": true,
+    "load_path": null,
+    "rand": {},
+    "time": {},
+    "seed": 2023
+}
+[00:00:00] |GPU| not support cuda
+[00:00:00] |GPU| switch to CPU
+[00:00:00] |Controller| dataset type:  book
+[00:00:00] |Controller| build column map ...
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/train
+
+        Sample Size: 278139
+        Id Column: index
+        Columns:
+        	index, vocab index (size 278139)
+        	impression_id, vocab impression_id (size 24724)
+        	user_id, vocab user_id (size 1590)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/validation
+
+        Sample Size: 304915
+        Id Column: index
+        Columns:
+        	index, vocab index (size 304915)
+        	impression_id, vocab impression_id (size 25356)
+        	user_id, vocab user_id (size 1935)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |Controller| Selected Item Encoder: LlamaOperator
+[00:00:00] |Controller| Selected User Encoder: AdaOperator
+[00:00:00] |Controller| Selected Predictor: DotPredictor
+[00:00:00] |Controller| Use Negative Sampling: False
+[00:00:00] |Controller| Use Item Content: True
+[00:00:00] |EmbeddingHub| skip col article_id
+[00:00:00] |EmbeddingHub| create vocab __cat_inputer_special_ids (3, 4096)
+[00:00:00] |EmbeddingHub| create vocab __flatten_seq_special_ids (4, 4096)
+[00:00:00] |EmbeddingHub| build mapping title -> llama
+[00:00:00] |EmbeddingHub| create vocab llama (32000, 4096)
+[00:00:01] |EmbeddingHub| build mapping subtitle -> llama
+[00:00:01] |EmbeddingHub| build mapping body -> llama
+[00:00:01] |EmbeddingHub| build mapping category_str -> llama
+[00:00:01] |EmbeddingHub| build mapping article_type -> llama
+[00:00:01] |EmbeddingHub| build mapping topics -> topics
+[00:00:01] |EmbeddingHub| create vocab topics (78, 4096)
+[00:02:03] |Worker| {'index': 0, 'impression_id': 0, 'user_id': 0, 'article_id': 9657, 'article_ids_clicked': array([0], dtype=object)}
+[00:00:00] |Worker| START TIME: 2024-06-13 12:57:02.552331
+[00:00:00] |Worker| python  worker.py --embed config/embed/ednerd-llama.yaml --model config/model/llm/ebnerd-llama-naml.yaml --exp config/exp/ebnerd-tt-naml.yaml --data config/data/ebnerd-llama.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096
+[00:00:00] |Worker| {
+    "embed": {
+        "name": "free",
+        "embeddings": []
+    },
+    "model": {
+        "name": "ebnerd-LLAMA-NAML.D64.L0.Lora0",
+        "meta": {
+            "item": "Llama",
+            "user": "Ada",
+            "predictor": "Dot"
+        },
+        "config": {
+            "use_neg_sampling": false,
+            "use_item_content": true,
+            "max_item_content_batch_size": 0,
+            "same_dim_transform": false,
+            "embed_hidden_size": 4096,
+            "hidden_size": 64,
+            "item_config": {
+                "llm_dir": "llama-main\\llama-2-7b",
+                "layer_split": 0,
+                "lora": 0,
+                "weights_dir": "llama-main\\llama-2-7b"
+            },
+            "user_config": {
+                "num_attention_heads": 12,
+                "inputer_config": {
+                    "use_cls_token": false,
+                    "use_sep_token": false
+                }
+            }
+        }
+    },
+    "exp": {
+        "name": "train_test",
+        "dir": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test",
+        "log": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test/exp.log",
+        "mode": "train_test",
+        "load": {
+            "save_dir": null,
+            "epochs": null,
+            "model_only": true,
+            "strict": true,
+            "wait": false
+        },
+        "store": {
+            "metric": "GAUC",
+            "maximize": true,
+            "top": 1,
+            "early_stop": 2
+        },
+        "policy": {
+            "epoch_start": 0,
+            "epoch": 50,
+            "lr": 0.0001,
+            "item_lr": 1e-05,
+            "freeze_emb": false,
+            "pin_memory": false,
+            "epoch_batch": 0,
+            "batch_size": 64,
+            "accumulate_batch": 1,
+            "device": "gpu",
+            "n_warmup": 0,
+            "check_interval": -2,
+            "simple_dev": false
+        },
+        "metrics": [
+            "GAUC",
+            "MRR",
+            "NDCG@1",
+            "NDCG@5",
+            "NDCG@10"
+        ]
+    },
+    "data": {
+        "name": "ebnerd-small-Llama",
+        "base_dir": "ebnerd-benchmark\\data",
+        "item": {
+            "filter_cache": true,
+            "depot": "ebnerd-benchmark/data/tokenized_llama",
+            "order": [
+                "title",
+                "subtitle",
+                "body",
+                "category_str",
+                "article_type",
+                "topics"
+            ],
+            "append": [
+                "article_id"
+            ]
+        },
+        "user": {
+            "filter_cache": true,
+            "use_neg_sampling": false,
+            "depots": {
+                "train": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/train"
+                },
+                "test": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/validation"
+                }
+            },
+            "candidate_col": "article_id",
+            "clicks_col": "article_id",
+            "label_col": "article_ids_clicked",
+            "group_col": "impression_id",
+            "user_col": "user_id",
+            "index_col": "index"
+        }
+    },
+    "version": "small",
+    "llm_ver": "7b",
+    "hidden_size": 64,
+    "layer": 0,
+    "lora": 0,
+    "fast_eval": 0,
+    "embed_hidden_size": 4096,
+    "warmup": 0,
+    "simple_dev": false,
+    "batch_size": 64,
+    "acc_batch": 1,
+    "lora_r": 32,
+    "lr": 0.0001,
+    "item_lr": 1e-05,
+    "mind_large_submission": false,
+    "epoch_batch": 0,
+    "max_item_batch_size": 0,
+    "page_size": 512,
+    "patience": 2,
+    "epoch_start": 0,
+    "frozen": true,
+    "load_path": null,
+    "rand": {},
+    "time": {},
+    "seed": 2023
+}
+[00:00:00] |GPU| not support cuda
+[00:00:00] |GPU| switch to CPU
+[00:00:00] |Controller| dataset type:  book
+[00:00:00] |Controller| build column map ...
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/train
+
+        Sample Size: 278139
+        Id Column: index
+        Columns:
+        	index, vocab index (size 278139)
+        	impression_id, vocab impression_id (size 24724)
+        	user_id, vocab user_id (size 1590)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/validation
+
+        Sample Size: 304915
+        Id Column: index
+        Columns:
+        	index, vocab index (size 304915)
+        	impression_id, vocab impression_id (size 25356)
+        	user_id, vocab user_id (size 1935)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |Controller| Selected Item Encoder: LlamaOperator
+[00:00:00] |Controller| Selected User Encoder: AdaOperator
+[00:00:00] |Controller| Selected Predictor: DotPredictor
+[00:00:00] |Controller| Use Negative Sampling: False
+[00:00:00] |Controller| Use Item Content: True
+[00:00:00] |EmbeddingHub| skip col article_id
+[00:00:00] |EmbeddingHub| create vocab __cat_inputer_special_ids (3, 4096)
+[00:00:00] |EmbeddingHub| create vocab __flatten_seq_special_ids (4, 4096)
+[00:00:00] |EmbeddingHub| build mapping title -> llama
+[00:00:00] |EmbeddingHub| create vocab llama (32000, 4096)
+[00:00:01] |EmbeddingHub| build mapping subtitle -> llama
+[00:00:01] |EmbeddingHub| build mapping body -> llama
+[00:00:01] |EmbeddingHub| build mapping category_str -> llama
+[00:00:01] |EmbeddingHub| build mapping article_type -> llama
+[00:00:01] |EmbeddingHub| build mapping topics -> topics
+[00:00:01] |EmbeddingHub| create vocab topics (78, 4096)
+[00:02:05] |Worker| {'index': 0, 'impression_id': 0, 'user_id': 0, 'article_id': 9657, 'article_ids_clicked': array([0], dtype=object)}
+[00:00:00] |Worker| START TIME: 2024-06-13 13:01:01.098807
+[00:00:00] |Worker| python  worker.py --embed config/embed/ednerd-llama.yaml --model config/model/llm/ebnerd-llama-naml.yaml --exp config/exp/ebnerd-tt-naml.yaml --data config/data/ebnerd-llama.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096
+[00:00:00] |Worker| {
+    "embed": {
+        "name": "free",
+        "embeddings": []
+    },
+    "model": {
+        "name": "ebnerd-LLAMA-NAML.D64.L0.Lora0",
+        "meta": {
+            "item": "Llama",
+            "user": "Ada",
+            "predictor": "Dot"
+        },
+        "config": {
+            "use_neg_sampling": false,
+            "use_item_content": true,
+            "max_item_content_batch_size": 0,
+            "same_dim_transform": false,
+            "embed_hidden_size": 4096,
+            "hidden_size": 64,
+            "item_config": {
+                "llm_dir": "llama-main\\llama-2-7b",
+                "layer_split": 0,
+                "lora": 0,
+                "weights_dir": "llama-main\\llama-2-7b"
+            },
+            "user_config": {
+                "num_attention_heads": 12,
+                "inputer_config": {
+                    "use_cls_token": false,
+                    "use_sep_token": false
+                }
+            }
+        }
+    },
+    "exp": {
+        "name": "train_test",
+        "dir": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test",
+        "log": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test/exp.log",
+        "mode": "train_test",
+        "load": {
+            "save_dir": null,
+            "epochs": null,
+            "model_only": true,
+            "strict": true,
+            "wait": false
+        },
+        "store": {
+            "metric": "GAUC",
+            "maximize": true,
+            "top": 1,
+            "early_stop": 2
+        },
+        "policy": {
+            "epoch_start": 0,
+            "epoch": 50,
+            "lr": 0.0001,
+            "item_lr": 1e-05,
+            "freeze_emb": false,
+            "pin_memory": false,
+            "epoch_batch": 0,
+            "batch_size": 64,
+            "accumulate_batch": 1,
+            "device": "gpu",
+            "n_warmup": 0,
+            "check_interval": -2,
+            "simple_dev": false
+        },
+        "metrics": [
+            "GAUC",
+            "MRR",
+            "NDCG@1",
+            "NDCG@5",
+            "NDCG@10"
+        ]
+    },
+    "data": {
+        "name": "ebnerd-small-Llama",
+        "base_dir": "ebnerd-benchmark\\data",
+        "item": {
+            "filter_cache": true,
+            "depot": "ebnerd-benchmark/data/tokenized_llama",
+            "order": [
+                "title",
+                "subtitle",
+                "body",
+                "category_str",
+                "article_type",
+                "topics"
+            ],
+            "append": [
+                "article_id"
+            ]
+        },
+        "user": {
+            "filter_cache": true,
+            "depots": {
+                "train": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/train"
+                },
+                "test": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/validation"
+                }
+            },
+            "candidate_col": "article_id",
+            "clicks_col": "article_id",
+            "label_col": "article_ids_clicked",
+            "group_col": "impression_id",
+            "user_col": "user_id",
+            "index_col": "index"
+        }
+    },
+    "version": "small",
+    "llm_ver": "7b",
+    "hidden_size": 64,
+    "layer": 0,
+    "lora": 0,
+    "fast_eval": 0,
+    "embed_hidden_size": 4096,
+    "warmup": 0,
+    "simple_dev": false,
+    "batch_size": 64,
+    "acc_batch": 1,
+    "lora_r": 32,
+    "lr": 0.0001,
+    "item_lr": 1e-05,
+    "mind_large_submission": false,
+    "epoch_batch": 0,
+    "max_item_batch_size": 0,
+    "page_size": 512,
+    "patience": 2,
+    "epoch_start": 0,
+    "frozen": true,
+    "load_path": null,
+    "rand": {},
+    "time": {},
+    "seed": 2023
+}
+[00:00:00] |GPU| not support cuda
+[00:00:00] |GPU| switch to CPU
+[00:00:00] |Controller| dataset type:  book
+[00:00:00] |Controller| build column map ...
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/train
+
+        Sample Size: 278139
+        Id Column: index
+        Columns:
+        	index, vocab index (size 278139)
+        	impression_id, vocab impression_id (size 24724)
+        	user_id, vocab user_id (size 1590)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/validation
+
+        Sample Size: 304915
+        Id Column: index
+        Columns:
+        	index, vocab index (size 304915)
+        	impression_id, vocab impression_id (size 25356)
+        	user_id, vocab user_id (size 1935)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |Controller| Selected Item Encoder: LlamaOperator
+[00:00:00] |Controller| Selected User Encoder: AdaOperator
+[00:00:00] |Controller| Selected Predictor: DotPredictor
+[00:00:00] |Controller| Use Negative Sampling: False
+[00:00:00] |Controller| Use Item Content: True
+[00:00:00] |EmbeddingHub| skip col article_id
+[00:00:00] |EmbeddingHub| create vocab __cat_inputer_special_ids (3, 4096)
+[00:00:00] |EmbeddingHub| create vocab __flatten_seq_special_ids (4, 4096)
+[00:00:00] |EmbeddingHub| build mapping title -> llama
+[00:00:00] |EmbeddingHub| create vocab llama (32000, 4096)
+[00:00:01] |EmbeddingHub| build mapping subtitle -> llama
+[00:00:01] |EmbeddingHub| build mapping body -> llama
+[00:00:01] |EmbeddingHub| build mapping category_str -> llama
+[00:00:01] |EmbeddingHub| build mapping article_type -> llama
+[00:00:01] |EmbeddingHub| build mapping topics -> topics
+[00:00:01] |EmbeddingHub| create vocab topics (78, 4096)
+[00:01:57] |Worker| {'index': 0, 'impression_id': 0, 'user_id': 0, 'article_id': 9657, 'article_ids_clicked': array([0], dtype=object)}
+[00:00:00] |Worker| START TIME: 2024-06-13 13:04:14.592882
+[00:00:00] |Worker| python  worker.py --embed config/embed/ednerd-llama.yaml --model config/model/llm/ebnerd-llama-naml.yaml --exp config/exp/ebnerd-tt-naml.yaml --data config/data/ebnerd-llama.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096
+[00:00:00] |Worker| {
+    "embed": {
+        "name": "free",
+        "embeddings": []
+    },
+    "model": {
+        "name": "ebnerd-LLAMA-NAML.D64.L0.Lora0",
+        "meta": {
+            "item": "Llama",
+            "user": "Ada",
+            "predictor": "Dot"
+        },
+        "config": {
+            "use_neg_sampling": false,
+            "use_item_content": true,
+            "max_item_content_batch_size": 0,
+            "same_dim_transform": false,
+            "embed_hidden_size": 4096,
+            "hidden_size": 64,
+            "item_config": {
+                "llm_dir": "llama-main\\llama-2-7b",
+                "layer_split": 0,
+                "lora": 0,
+                "weights_dir": "llama-main\\llama-2-7b"
+            },
+            "user_config": {
+                "num_attention_heads": 12,
+                "inputer_config": {
+                    "use_cls_token": false,
+                    "use_sep_token": false
+                }
+            }
+        }
+    },
+    "exp": {
+        "name": "train_test",
+        "dir": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test",
+        "log": "saving/ebnerd-small-Llama/ebnerd-LLAMA-NAML.D64.L0.Lora0/free-train_test/exp.log",
+        "mode": "train_test",
+        "load": {
+            "save_dir": null,
+            "epochs": null,
+            "model_only": true,
+            "strict": true,
+            "wait": false
+        },
+        "store": {
+            "metric": "GAUC",
+            "maximize": true,
+            "top": 1,
+            "early_stop": 2
+        },
+        "policy": {
+            "epoch_start": 0,
+            "epoch": 50,
+            "lr": 0.0001,
+            "item_lr": 1e-05,
+            "freeze_emb": false,
+            "pin_memory": false,
+            "epoch_batch": 0,
+            "batch_size": 64,
+            "accumulate_batch": 1,
+            "device": "gpu",
+            "n_warmup": 0,
+            "check_interval": -2,
+            "simple_dev": false
+        },
+        "metrics": [
+            "GAUC",
+            "MRR",
+            "NDCG@1",
+            "NDCG@5",
+            "NDCG@10"
+        ]
+    },
+    "data": {
+        "name": "ebnerd-small-Llama",
+        "base_dir": "ebnerd-benchmark\\data",
+        "item": {
+            "filter_cache": true,
+            "depot": "ebnerd-benchmark/data/tokenized_llama",
+            "order": [
+                "title",
+                "subtitle",
+                "body",
+                "category_str",
+                "article_type",
+                "topics"
+            ],
+            "append": [
+                "article_id"
+            ]
+        },
+        "user": {
+            "filter_cache": true,
+            "depots": {
+                "train": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/train"
+                },
+                "test": {
+                    "path": "ebnerd-benchmark/data/tokenized_bert/validation"
+                }
+            },
+            "candidate_col": "article_id",
+            "clicks_col": "article_id",
+            "label_col": "article_ids_clicked",
+            "group_col": "impression_id",
+            "user_col": "user_id",
+            "index_col": "index"
+        }
+    },
+    "version": "small",
+    "llm_ver": "7b",
+    "hidden_size": 64,
+    "layer": 0,
+    "lora": 0,
+    "fast_eval": 0,
+    "embed_hidden_size": 4096,
+    "warmup": 0,
+    "simple_dev": false,
+    "batch_size": 64,
+    "acc_batch": 1,
+    "lora_r": 32,
+    "lr": 0.0001,
+    "item_lr": 1e-05,
+    "mind_large_submission": false,
+    "epoch_batch": 0,
+    "max_item_batch_size": 0,
+    "page_size": 512,
+    "patience": 2,
+    "epoch_start": 0,
+    "frozen": true,
+    "load_path": null,
+    "rand": {},
+    "time": {},
+    "seed": 2023
+}
+[00:00:00] |GPU| not support cuda
+[00:00:00] |GPU| switch to CPU
+[00:00:00] |Controller| dataset type:  book
+[00:00:00] |Controller| build column map ...
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/train
+
+        Sample Size: 278139
+        Id Column: index
+        Columns:
+        	index, vocab index (size 278139)
+        	impression_id, vocab impression_id (size 24724)
+        	user_id, vocab user_id (size 1590)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |CachingDep| load 0 filter caches on 
+        UniDep (2.0): ebnerd-benchmark/data/tokenized_bert/validation
+
+        Sample Size: 304915
+        Id Column: index
+        Columns:
+        	index, vocab index (size 304915)
+        	impression_id, vocab impression_id (size 25356)
+        	user_id, vocab user_id (size 1935)
+        	article_id, vocab article_id (size 11777)
+        	article_ids_clicked, vocab article_ids_clicked (size 2)
+
+[00:00:00] |Controller| Selected Item Encoder: LlamaOperator
+[00:00:00] |Controller| Selected User Encoder: AdaOperator
+[00:00:00] |Controller| Selected Predictor: DotPredictor
+[00:00:00] |Controller| Use Negative Sampling: False
+[00:00:00] |Controller| Use Item Content: True
+[00:00:00] |EmbeddingHub| skip col article_id
+[00:00:00] |EmbeddingHub| create vocab __cat_inputer_special_ids (3, 4096)
+[00:00:00] |EmbeddingHub| create vocab __flatten_seq_special_ids (4, 4096)
+[00:00:00] |EmbeddingHub| build mapping title -> llama
+[00:00:00] |EmbeddingHub| create vocab llama (32000, 4096)
+[00:00:01] |EmbeddingHub| build mapping subtitle -> llama
+[00:00:01] |EmbeddingHub| build mapping body -> llama
+[00:00:01] |EmbeddingHub| build mapping category_str -> llama
+[00:00:01] |EmbeddingHub| build mapping article_type -> llama
+[00:00:01] |EmbeddingHub| build mapping topics -> topics
+[00:00:01] |EmbeddingHub| create vocab topics (78, 4096)
+[00:01:53] |Worker| {'index': 0, 'impression_id': 0, 'user_id': 0, 'article_id': 9657, 'article_ids_clicked': array([0], dtype=object)}

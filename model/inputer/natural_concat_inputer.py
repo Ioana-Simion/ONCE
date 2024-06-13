@@ -39,7 +39,7 @@ class NaturalConcatInputer(BaseInputer):
             brief_col = col.replace("-llama", "")
             brief_col = brief_col.replace("-token", "")
             brief_col = brief_col.replace("-bert", "")
-            print("Brief col", self._map)
+            #print("Brief col", self._map)
             return self._map[brief_col]
 
     @classmethod

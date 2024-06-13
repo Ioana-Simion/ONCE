@@ -11,10 +11,10 @@ config:
   embed_hidden_size: ${embed_hidden_size}$
   hidden_size: ${hidden_size}$
   item_config:
-    llm_dir: llama_converted #llama-main
+    llm_dir: llama-main\llama-2-7b #llama-main
     layer_split: ${layer}$
     lora: ${lora}$
-    weights_dir: llama_converted #llama-main\llama-2-7b
+    weights_dir: llama-main\llama-2-7b #llama-main\llama-2-7b
   user_config:
     #llm_dir: llama-main
     num_attention_heads: 12
