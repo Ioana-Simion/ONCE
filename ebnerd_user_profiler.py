@@ -10,7 +10,7 @@ from utils.openai.chat_service import ChatService
 
 MIN_INTERVAL = 0
 
-articles_path = "ebnerd-benchmark/data/preprocessed_and_title_enhanced.parquet"
+articles_path = "data/eb-nerd/ebnerd_demo/preprocessed_and_title_enhanced.parquet"
 ebnerd_prompter = EbnerdPrompter(articles_path)
 
 history_path = "ebnerd-benchmark/data/train/history.parquet"

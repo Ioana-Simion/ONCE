@@ -11,7 +11,7 @@ MIN_INTERVAL = 1.5
 
 # concise
 
-news_list = EbnerdPrompter("data/eb-nerd/ebnerd_small/articles.parquet").stringify()[:5]
+news_list = EbnerdPrompter("data/eb-nerd/ebnerd_demo/preprocessed_and_title_enhanced.parquet").stringify()
 
 system = """You are asked to act as a news title enhancer. I will provide you a piece of news, with its original title, subtitle, category, topics and body. The news format is as below:
 
