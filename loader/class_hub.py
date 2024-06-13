@@ -59,4 +59,8 @@ class ClassHub:
         return class_list
 
     def __call__(self, name):
+        if name == "Ada":
+            class_hub = ClassHub(BaseOperator, "model/operators", "ada_operator")
+            return class_hub.class_dict["Ada"]
+
         return self.class_dict[name]

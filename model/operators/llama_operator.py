@@ -1,5 +1,8 @@
 import torch
 from transformers import LlamaModel
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+from transformers import LlamaForCausalLM
 
 from model.inputer.llm_concat_inputer import LlamaConcatInputer
 from model.operators.base_llm_operator import BaseLLMOperator
@@ -11,7 +14,13 @@ class LlamaOperator(BaseLLMOperator):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.transformer = LlamaModel.from_pretrained(self.config.llm_dir)  # type: LlamaModel
+
+        # Load model directly
+
+
+        self.transformer = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf", use_auth_token="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")
+        #self.transformer = LlamaModel.from_pretrained(self.config.llm_dir)  # type: LlamaModel
+
         self.transformer.embed_tokens = None
 
         self.layer_split(self.transformer.config.num_hidden_layers)

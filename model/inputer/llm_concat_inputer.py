@@ -14,12 +14,13 @@ class LlamaConcatInputer(NaturalConcatInputer):
     @staticmethod
     def get_col_prompts():
         return dict(
-            newtitle=[529, 3257, 29958],
             title=[529, 3257, 29958],
-            abs=[529, 16595, 29958],
-            cat=[529, 7320, 29958],
-            subCat=[529, 1491, 7320, 29958],
-            desc=[529, 16595, 29958],
+            subtitle=[529, 16595, 29958],
+            body=[529, 7320, 29958],
+            category_str=[529, 1491, 7320, 29958],
+            article_type=[529, 16595, 29958],
+            topics=[529, 16595, 29958],
+            article_id=[529, 16595, 29958],
         )
 
 

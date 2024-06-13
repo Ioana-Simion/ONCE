@@ -10,10 +10,9 @@ item:
     - category_str
     - article_type
     - topics
-    - total_inviews
-    - total_pageviews
   append:
     - article_id
+    #- index
 user:
   filter_cache: true
   depots:

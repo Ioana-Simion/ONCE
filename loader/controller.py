@@ -92,6 +92,7 @@ class Controller:
             same_dim_transform=self.model.config.same_dim_transform,
         )
         for embedding_info in self.embed.embeddings:
+            print("Embedding Info", embedding_info)
             self.embedding_hub.load_pretrained_embedding(**Obj.raw(embedding_info))
         self.embedding_hub.register_depot(self.hubs.a_hub(), skip_cols=skip_cols)
         self.embedding_hub.register_vocab(ConcatInputer.vocab)

@@ -19,6 +19,7 @@ class NaturalConcatInputer(BaseInputer):
 
         self.max_content_len = self.get_max_content_len()
         self.max_sequence_len = self.max_content_len + len(self.start_prompt)
+        print("self.col_prompt_map", self.col_prompt_map)
         for col in self.order:
             self.max_sequence_len += len(self.col_prompt_map[col])
 
@@ -38,6 +39,7 @@ class NaturalConcatInputer(BaseInputer):
             brief_col = col.replace("-llama", "")
             brief_col = brief_col.replace("-token", "")
             brief_col = brief_col.replace("-bert", "")
+            print("Brief col", self._map)
             return self._map[brief_col]
 
     @classmethod

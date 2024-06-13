@@ -270,6 +270,7 @@ class Legommender(BaseModule):
         return self.__str__()
 
     def prepare_user_module(self):
+
         user_config = self.user_encoder_class.config_class(
             **combine_config(
                 config=self.config.user_config,

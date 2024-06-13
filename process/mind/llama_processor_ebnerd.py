@@ -2,13 +2,21 @@ import os
 import numpy as np
 import pandas as pd
 from transformers import LlamaTokenizer
-from unitok import UniTok 
-from column import Column
-from vocab import Vocab
-from tok.tok import BaseTok
-from tok.id_tok import IdTok
-from tok.seq_tok import SeqTok
-from tok.number_tok import NumberTok
+
+import sys
+print(sys.path)  # Print current sys.path
+sys.path.append(os.path.abspath(''))
+print(sys.path)  # Check if the path has been added
+# sys.path.append(os.path.abspath('../../'))
+# print(sys.path)  # Check if the path has been added
+
+from process.mind.unitok import UniTok 
+from process.mind.column import Column
+from process.mind.vocab import Vocab
+from process.mind.tok.tok import BaseTok
+from process.mind.tok.id_tok import IdTok
+from process.mind.tok.seq_tok import SeqTok
+from process.mind.tok.number_tok import NumberTok
 
 
 class LlamaTok(BaseTok):
@@ -59,7 +67,7 @@ class Processor:
         # self.total_pageviews_voc = Vocab(name="total_pageviews")
 
     def read_news_data(self, mode):
-        columns_to_include = ["article_id", "title", "subtitle", "body", "category_str", "article_type", "topics", "total_inviews", "total_pageviews"]
+        columns_to_include = ["article_id", "title", "subtitle", "body", "category_str", "article_type", "topics"] #, "total_inviews", "total_pageviews"]
         #TODO: "published_time", "last_modified_time"]
                               
         df = pd.read_parquet(
@@ -70,18 +78,19 @@ class Processor:
 
     def get_news_tok(self, max_title_len=0, max_subtitle_len=0, max_body_len=0, max_category_len=0, max_article_type_len=0, max_topics_len=0):
         txt_tok = LlamaTok(name="llama", vocab_dir="llama_converted")
-
+        # add_col(Column(name="nid", tok=IdTok(name="nid", vocab=self.nid)))
         return (
             UniTok()
-            .add_col(Column(tok=IdTok(vocab=self.nid)))
+            .add_index_col(name="index")            
+            .add_col(Column(name="article_id", tok=IdTok(name="article_id", vocab=self.nid)))
             .add_col(Column(name="title", tok=txt_tok, max_length=max_title_len))
             .add_col(Column(name="subtitle", tok=txt_tok, max_length=max_subtitle_len))
             .add_col(Column(name="body", tok=txt_tok, max_length=max_body_len))
             .add_col(Column(name="category_str", tok=txt_tok, max_length=max_category_len))
             .add_col(Column(name="article_type", tok=txt_tok, max_length=max_article_type_len))
             .add_col(Column(name="topics", tok=SeqTok(vocab=self.topic_voc), max_length=max_topics_len))
-            .add_col(Column(name="total_inviews", tok=NumberTok(vocab_size=4138599, name="total_inviews")))
-            .add_col(Column(name="total_pageviews", tok=NumberTok(vocab_size=1637752, name="total_pageviews")))
+            # .add_col(Column(name="total_inviews", tok=NumberTok(vocab_size=4138599, name="total_inviews")))
+            # .add_col(Column(name="total_pageviews", tok=NumberTok(vocab_size=1637752, name="total_pageviews")))
         )
 
     def analyse_news(self):
