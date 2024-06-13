@@ -151,7 +151,7 @@ def write_model(
 
     # permute for sliced rotary
     def permute(w, n_heads, dim1=dim, dim2=dim):
-        return w.view(n_heads, dim1 // n_heads // 2, 2, dim2).transpose(1, 2).reshape(dim1, dim2)
+        return w.view(n_heads, dim2 // n_heads // 2, 2, dim2).transpose(1, 2).reshape(dim2, dim2)
 
     print(f"Fetching all parameters from the checkpoint at {input_base_path}.")
     # Load weights
