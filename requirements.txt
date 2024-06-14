@@ -26,3 +26,5 @@ ipykernel
 timeout_decorator
 pyarrow
 fastparquet
+bitsandbytes
+sentencepiece
