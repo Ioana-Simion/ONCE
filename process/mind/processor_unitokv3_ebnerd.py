@@ -6,11 +6,24 @@ import numpy as np
 import pandas as pd
 from nltk import word_tokenize
 
+import sys
+print(sys.path)  # Print current sys.path
+sys.path.append(os.path.abspath(''))
+print(sys.path)  # Check if the path has been added
+# sys.path.append(os.path.abspath('../../'))
+# print(sys.path)  # Check if the path has been added
+
 # New imports
-from column import Column
-from unitok import UniTok
-from vocab import Vocab
-from tok import BaseTok, BertTok, EntTok, IdTok, NumberTok, SplitTok, SeqTok
+from process.mind.column import Column
+from process.mind.unitok import UniTok 
+from process.mind.vocab import Vocab
+
+from process.mind.tok.tok import BaseTok
+from process.mind.tok.bert_tok import BertTok
+from process.mind.tok.ent_tok import EntTok
+from process.mind.tok.id_tok import IdTok
+from process.mind.tok.seq_tok import SeqTok
+from process.mind.tok.number_tok import NumberTok
 
 
 class GloveTok(BaseTok):
@@ -49,7 +62,7 @@ class Processor:
                                    "total_pageviews", "total_read_time", "sentiment_score", "sentiment_label"]
 
         df = pd.read_parquet(
-            os.path.join(self.data_dir, mode, "../articles.parquet"),
+            os.path.join(self.data_dir, mode, "../preprocessed_and_title_enhanced.parquet"),
             columns=["article_id", "title", "subtitle", "body"]
         )
         return df
@@ -64,7 +77,7 @@ class Processor:
 
 
         df = pd.read_parquet(
-            os.path.join(self.data_dir, mode, "behaviors.parquet"),
+            os.path.join(self.data_dir, mode, "behaviours_with_user_interests.parquet"),
             columns=["user_id", "article_ids_clicked"]
         )
         # Previously: columns=["uid", "history"]. History is defined as: The news click history (ID list of clicked news) 
@@ -82,7 +95,7 @@ class Processor:
                                "__last_in_fragment", "__filename"]
         
         return pd.read_parquet(
-            os.path.join(self.data_dir, mode, "behaviors.parquet"),
+            os.path.join(self.data_dir, mode, "behaviours_with_user_interests.parquet"),
             columns=["impression_id", "article_id",  "user_id", "article_ids_inview", "article_ids_clicked"]
         )
 
@@ -91,7 +104,7 @@ class Processor:
         data = dict(impression_id=[], user_id=[], article_id=[], article_ids_clicked=[])
         for line in df.itertuples():
             clicked_articles = line.article_ids_clicked
-            full_interaction =line.article_ids_inview 
+            full_interaction = line.article_ids_inview 
 
             data["impression_id"].extend([line.impression_id] * len(full_interaction))
             data["user_id"].extend([line.user_id] * len(full_interaction))

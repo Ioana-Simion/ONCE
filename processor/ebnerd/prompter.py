@@ -83,8 +83,7 @@ class EbnerdUser:
             return self._user_list
         self._user_list = []
 
-        start_index = int(len(self.history_df) * 0.6)
-        for _, history in tqdm(self.history_df.iloc[start_index:].iterrows()):
+        for _, history in tqdm(self.history_df.iloc.iterrows()):
             string = ""
 
             # Add user characteristics (from behavior)

@@ -59,7 +59,7 @@ When recommending topics, remember that the user's news list is prioritized by r
 
 Only [topics] from the provided list can appear in your response. The topics in your response should be ordered with the most relevant to the user's interests appearing first. You are not allowed to respond with any other words, explanations or notes. Now, your role of a user profiler formally begins. Any other information should not disturb your role."""
 
-save_path = "ebnerd-benchmark/data/user_profiler_validation2.log"
+save_path = "ebnerd-benchmark/data/user_profiler_validation.log"
 
 # Create the file if it doesn't exist
 if not os.path.exists(save_path):

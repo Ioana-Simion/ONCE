@@ -36,7 +36,6 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-ebnerd-benchmark/data/*
 # Unit test / coverage reports
 htmlcov/
 .tox/
@@ -52,7 +51,7 @@ coverage.xml
 .pytest_cache/
 cover/
 
-ebnerd-benchmark/data/*
+# ebnerd-benchmark/data/*
 
 # Translations
 *.mo
@@ -192,6 +191,14 @@ var/
 venv/
 build
 venv
+
+ebnerd-benchmark/data/ebnerd_demo
+ebnerd-benchmark/data/ebnerd_large
+ebnerd-benchmark/data/ebnerd_small
+ebnerd-benchmark/data/train
+ebnerd-benchmark/data/validation
+ebnerd-benchmark/data/tokenized_bert/
+ebnerd-benchmark/data/tokenized_llama/
 
 # Temporary
 data/eb-nerd/articles_large_only

@@ -71,7 +71,7 @@ class Processor:
         #TODO: "published_time", "last_modified_time"]
                               
         df = pd.read_parquet(
-            os.path.join(self.data_dir, mode, "../articles.parquet"),
+            os.path.join(self.data_dir, mode, "../preprocessed_and_title_enhanced.parquet"),
             columns=columns_to_include
         )
         return df
@@ -81,7 +81,6 @@ class Processor:
         # add_col(Column(name="nid", tok=IdTok(name="nid", vocab=self.nid)))
         return (
             UniTok()
-            .add_index_col(name="index")            
             .add_col(Column(name="article_id", tok=IdTok(name="article_id", vocab=self.nid)))
             .add_col(Column(name="title", tok=txt_tok, max_length=max_title_len))
             .add_col(Column(name="subtitle", tok=txt_tok, max_length=max_subtitle_len))
@@ -93,10 +92,10 @@ class Processor:
             # .add_col(Column(name="total_pageviews", tok=NumberTok(vocab_size=1637752, name="total_pageviews")))
         )
 
-    def analyse_news(self):
-        tok = self.get_news_tok(max_title_len=0, max_subtitle_len=0, max_body_len=0, max_category_len=0, max_article_type_len=0, max_topics_len=0)
-        df = self.combine_news_data()
-        tok.read_file(df).analyse()
+    # def analyse_news(self):
+    #     tok = self.get_news_tok(max_title_len=0, max_subtitle_len=0, max_body_len=0, max_category_len=0, max_article_type_len=0, max_topics_len=0)
+    #     df = self.combine_news_data()
+    #     tok.read_file(df).analyse()
 
     def tokenize(self):
         news_tok = self.get_news_tok(max_title_len=20, max_subtitle_len=20, max_body_len=400, max_category_len=20, max_article_type_len=20, max_topics_len=100)

@@ -4,8 +4,18 @@ from tqdm import tqdm
 
 from global_setting import Global
 from analysis.lengths import Lengths
-from tok import IdTok, BaseTok
-from vocab import Vocab
+
+import sys
+import os
+print(sys.path)  # Print current sys.path
+sys.path.append(os.path.abspath(''))
+print(sys.path)  # Check if the path has been added
+# sys.path.append(os.path.abspath('../../'))
+# print(sys.path)  # Check if the path has been added
+
+from process.mind.tok.id_tok import IdTok
+from process.mind.tok.tok import BaseTok
+from process.mind.vocab import Vocab
 
 
 class SeqOperator:
