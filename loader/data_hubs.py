@@ -28,15 +28,13 @@ class DataHubs:
             self.dev_hub = DataHub(depot=depots.dev_depot, order=order, append=append)
         if depots.test_depot:
             self.test_hub = DataHub(depot=depots.test_depot, order=order, append=append)
-        # self.fast_eval_hub = DataHub(
-        #     depot=depots.fast_eval_depot, order=order, append=append
-        # )
+        self.fast_eval_hub = DataHub(depot=depots.fast_eval_depot, order=order, append=append)
 
         self.hubs = {
             Phases.train: self.train_hub,
             # Phases.dev: self.dev_hub,
             Phases.test: self.test_hub,
-            #Phases.fast_eval: self.fast_eval_hub,
+            Phases.fast_eval: self.fast_eval_hub,
         }
 
     def __getitem__(self, item):

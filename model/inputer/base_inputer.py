@@ -1,10 +1,15 @@
 from typing import Dict, List, Optional
-
 import torch
-from UniTok import Vocab
 
 from loader.data_hub import DataHub
 from loader.embedding.embedding_hub import EmbeddingHub
+
+
+import sys
+sys.path.append("../..")
+
+# from UniTok import Vocab
+from process.mind.vocab import Vocab
 
 
 class BaseInputer:

@@ -29,3 +29,4 @@ user:
   group_col: impression_id
   user_col: user_id
   index_col: index
+  max_clicks: max_length_article_ids_clicked

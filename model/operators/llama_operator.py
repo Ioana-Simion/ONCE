@@ -16,13 +16,13 @@ class LlamaOperator(BaseLLMOperator):
 
 
         # Load model directly
-        configuration = LlamaConfig()
+        #configuration = LlamaConfig()
 
         # Initializing a model from the llama-7b style configuration
-        self.transformer = LlamaModel(configuration)
+        #self.transformer = LlamaModel(configuration)
 
 
-        #self.transformer = LlamaModel.from_pretrained(self.config.llm_dir)  # type: LlamaModel
+        self.transformer = LlamaModel.from_pretrained(self.config.llm_dir)  # type: LlamaModel
 
         self.transformer.embed_tokens = None
 

@@ -7,9 +7,9 @@ import pandas as pd
 from nltk import word_tokenize
 
 import sys
-print(sys.path)  # Print current sys.path
+#print(sys.path)  # Print current sys.path
 sys.path.append(os.path.abspath(''))
-print(sys.path)  # Check if the path has been added
+#print(sys.path)  # Check if the path has been added
 # sys.path.append(os.path.abspath('../../'))
 # print(sys.path)  # Check if the path has been added
 
@@ -101,11 +101,15 @@ class Processor:
 
     def read_inter_data(self, mode) -> pd.DataFrame:
         df = self._read_inter_data(mode)
-        data = dict(impression_id=[], user_id=[], article_id=[], article_ids_clicked=[])
+
+        data = dict(impression_id=[], user_id=[], article_id=[], article_ids_clicked=[], max_length_article_ids_clicked=0)
+        max_length_of_article_ids_clicked= max(len(x) for x in df["article_ids_inview"])
+        data["max_length_article_ids_clicked"] = max_length_of_article_ids_clicked
+
         for line in df.itertuples():
             clicked_articles = line.article_ids_clicked
             full_interaction = line.article_ids_inview 
-
+            # data["max_length_article_ids_clicked"].extend([max_length_of_article_ids_clicked]* len(full_interaction))
             data["impression_id"].extend([line.impression_id] * len(full_interaction))
             data["user_id"].extend([line.user_id] * len(full_interaction))
             for predict in full_interaction:
@@ -150,12 +154,13 @@ class Processor:
             .add_col(Column(tok=EntTok(vocab=self.uid)))
             .add_col(Column(tok=EntTok(vocab=self.nid)))
             .add_col(Column(tok=NumberTok(name="article_ids_clicked", vocab_size=2)))
+            .add_col(Column(tok=NumberTok(name="max_length_article_ids_clicked", vocab_size=101))) # Jort: The vocab size is based on the max length of the article ids clicked
         )
 
 
     def reassign_inter_df_v2(self):
         inter_train_df = self.read_inter_data("train")
-        inter_df = self.read_inter_data("validation")
+        inter_df = self.read_inter_data("validation") # Jort: Problem here, maybe val shouldnt be used here
 
 
         inter_dev_df = []

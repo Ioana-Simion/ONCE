@@ -7,9 +7,9 @@ from analysis.lengths import Lengths
 
 import sys
 import os
-print(sys.path)  # Print current sys.path
+#print(sys.path)  # Print current sys.path
 sys.path.append(os.path.abspath(''))
-print(sys.path)  # Check if the path has been added
+#print(sys.path)  # Check if the path has been added
 # sys.path.append(os.path.abspath('../../'))
 # print(sys.path)  # Check if the path has been added
 

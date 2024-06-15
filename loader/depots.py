@@ -26,15 +26,15 @@ class Depots:
                 user_data.depots.test.path, filter_cache=user_data.filter_cache
             )
 
-        # self.fast_eval_depot = self.create_fast_eval_depot(
-        #     user_data.depots.dev.path, column_map=column_map
-        # )
+        self.fast_eval_depot = self.create_fast_eval_depot(
+            user_data.depots.dev.path, column_map=column_map
+        )
 
         self.depots = {
             Phases.train: self.train_depot,
             # Phases.dev: self.dev_depot,
             Phases.test: self.test_depot,
-            #Phases.fast_eval: self.fast_eval_depot,
+            Phases.fast_eval: self.fast_eval_depot,
         }  # type: Dict[str, CachingDep]
 
         if user_data.union:
@@ -86,6 +86,7 @@ class Depots:
 
     @staticmethod
     def create_fast_eval_depot(path, column_map: ColumnMap):
+        #print("Path to depot: ", path)
         user_depot = CachingDep(path)
         user_num = user_depot.cols[column_map.user_col].voc.size
         user_depot.reset(

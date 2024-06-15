@@ -29,7 +29,8 @@ class Resampler:
         self.use_item_content = self.config.use_item_content
 
         self.column_map = legommender.column_map
-        self.clicks_col = self.column_map.clicks_col
+        #self.clicks_col = self.column_map.clicks_col
+        self.clicks_col = "article_ids_clicked" # Jort: Hard coded
         self.candidate_col = self.column_map.candidate_col
         self.label_col = self.column_map.label_col
         self.neg_col = self.column_map.neg_col
@@ -63,6 +64,7 @@ class Resampler:
         item_cache = []
         for sample in tqdm(self.item_dataset):
             item_cache.append(self.item_inputer.sample_rebuilder(sample))
+        #print("item cache built", item_cache)
         return item_cache
 
     @staticmethod
@@ -111,25 +113,35 @@ class Resampler:
             sample[self.candidate_col] = self.pack_tensor(sample[self.candidate_col])
             return
 
+        # Jort: Removed this since we do not have neg_sampling.
         # start to inject content knowledge
         # if self.use_neg_sampling:
         # when using negative sampling, we need to rebuild candidate contents
-        sample[self.candidate_col] = self.stacker(
-            [self.item_cache[nid] for nid in sample[self.candidate_col]]
-        )
-        return
+        # print(sample[self.candidate_col])
+        # sample[self.candidate_col] = self.stacker(
+        #     [self.item_cache[nid] for nid in sample[self.candidate_col]]
+        # )
+        # return
 
         # when not using negative sampling, we can use cache to speed up
-        if sample[self.candidate_col][0] not in self.candidate_cache:
-            item_id = sample[self.candidate_col][0]
-            sample[self.candidate_col] = self.stacker(
-                [self.item_cache[nid] for nid in sample[self.candidate_col]]
-            )
-            self.candidate_cache[item_id] = sample[self.candidate_col]
-        else:
-            sample[self.candidate_col] = self.candidate_cache[
-                sample[self.candidate_col][0]
-            ]
+        try:
+            if sample[self.candidate_col][0] not in self.candidate_cache:
+                item_id = sample[self.candidate_col][0]
+                sample[self.candidate_col] = self.stacker(
+                    [self.item_cache[nid-1] for nid in sample[self.candidate_col]]
+                )
+                self.candidate_cache[item_id] = sample[self.candidate_col]
+            else:
+                sample[self.candidate_col] = self.candidate_cache[
+                    sample[self.candidate_col][0]
+                ]
+        except:
+            print("sample[self.candidate_col]", sample[self.candidate_col])
+            print("sample", sample)
+            print("self.item_cache", len(self.item_cache))
+            print("item_id", item_id)
+            print("self.candidate_cache", len(self.candidate_cache))
+            raise ValueError("Error in resampler.py")
 
     def rebuild_clicks(self, sample):
         if self.legommender.cacher.user.cached:
@@ -141,17 +153,34 @@ class Resampler:
         # convert clicks to list
         if isinstance(sample[self.clicks_col], np.ndarray):
             sample[self.clicks_col] = sample[self.clicks_col].tolist()
-        len_clicks = len(sample[self.clicks_col])
+
+        len_clicks = len(sample["article_ids_clicked"]) # Jort: Hard coded
+        
+        max_click_num = sample["max_length_article_ids_clicked"]
+        
         # padding clicks
-        sample[self.clicks_mask_col] = [1] * len_clicks + [0] * (
-            self.max_click_num - len_clicks
-        )
+        try:
+            sample[self.clicks_mask_col] = [1] * len_clicks + [0] * (
+                max_click_num - len_clicks
+            )
+        except:
+            print("sample", sample)
+            print("max_click_num", max_click_num)
+            print("self.clicks_col", self.clicks_col)
+            print("sample[self.clicks_col]", sample[self.clicks_col])
+            print("len_clicks", len_clicks)
+            print("sample", sample)
+            print("self.max_click_num", self.max_click_num)
+            print("sample[self.clicks_col]", self.clicks_mask_col)
+            raise ValueError("Error in resampler.py")  
         sample[self.clicks_mask_col] = torch.tensor(
             sample[self.clicks_mask_col], dtype=torch.long
         )
         if self.use_item_content:
-            sample[self.clicks_col].extend([0] * (self.max_click_num - len_clicks))
+            # Init sample[self.clicks_col])
+            sample["article_ids_clicked"].extend([0] * (max_click_num - len_clicks)) # JOrt: Hard coded
 
+        
         if not self.use_item_content:
             # if not using item content, we use vanilla inputer provided by user operator to rebuild clicks
             sample[self.clicks_col] = self.user_inputer.sample_rebuilder(sample)
@@ -179,9 +208,7 @@ class Resampler:
         if sample[self.user_col] in self.user_cache:
             sample[self.clicks_col] = self.user_cache[sample[self.user_col]]
         else:
-            sample[self.clicks_col] = self.stacker(
-                [self.item_cache[nid] for nid in sample[self.clicks_col]]
-            )
+            sample[self.clicks_col] = self.stacker([self.item_cache[nid] for nid in sample[self.clicks_col]])
             self.user_cache[sample[self.user_col]] = sample[self.clicks_col]
 
     def rebuild(self, sample):
