@@ -20,6 +20,8 @@ user:
       path: ebnerd-benchmark/data/tokenized_bert/train
     test:
       path: ebnerd-benchmark/data/tokenized_bert/validation
+    dev: # Jort: Idk how to fix fast_eval without doing this
+      path: ebnerd-benchmark/data/tokenized_bert/validation
   # filters:
   #   history:
   #     - x
