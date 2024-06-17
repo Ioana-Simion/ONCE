@@ -1,4 +1,4 @@
-from process.mind.unidep import UniDep
+from UniTok import UniDep
 
 from loader.depot.caching_depot import CachingDep
 

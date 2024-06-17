@@ -198,7 +198,10 @@ ebnerd-benchmark/data/ebnerd_small
 ebnerd-benchmark/data/train
 ebnerd-benchmark/data/validation
 ebnerd-benchmark/data/tokenized_bert/
+ebnerd-benchmark/data/tokenized_bert_test/
 ebnerd-benchmark/data/tokenized_llama/
+ebnerd-benchmark/data/tokenized_llama_test/
+ebnerd-benchmark/data/news-fusion/
 
 # Temporary
 data/eb-nerd/articles_large_only

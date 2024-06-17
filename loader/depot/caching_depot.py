@@ -3,7 +3,7 @@ import os.path
 
 import numpy as np
 from pigmento import pnt
-from process.mind.unidep import UniDep
+from UniTok import UniDep
 
 from utils.rand import Rand
 

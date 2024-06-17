@@ -21,17 +21,40 @@ from ebrec.utils._behaviors import (
     truncate_history,
     create_user_id_to_int_mapping
 )
+
 from ebrec.utils._constants import (
-    DEFAULT_ARTICLE_ID_COL,
-    DEFAULT_CATEGORY_COL,
+    DEFAULT_IMPRESSION_TIMESTAMP_COL,
+    DEFAULT_SCROLL_PERCENTAGE_COL,
     DEFAULT_CLICKED_ARTICLES_COL,
-    DEFAULT_HISTORY_ARTICLE_ID_COL,
     DEFAULT_INVIEW_ARTICLES_COL,
     DEFAULT_IMPRESSION_ID_COL,
-    DEFAULT_SUBTITLE_COL,
-    DEFAULT_LABELS_COL,
-    DEFAULT_TITLE_COL,
+    DEFAULT_ARTICLE_ID_COL,
+    DEFAULT_SESSION_ID_COL,
+    DEFAULT_READ_TIME_COL,
     DEFAULT_USER_COL,
+    DEFAULT_GENDER_COL,
+    DEFAULT_ARTICLE_MODIFIED_TIMESTAMP_COL,
+    DEFAULT_ARTICLE_PUBLISHED_TIMESTAMP_COL,
+    DEFAULT_SENTIMENT_LABEL_COL,
+    DEFAULT_SENTIMENT_SCORE_COL,
+    DEFAULT_TOTAL_READ_TIME_COL,
+    DEFAULT_TOTAL_PAGEVIEWS_COL,
+    DEFAULT_TOTAL_INVIEWS_COL,
+    DEFAULT_ARTICLE_TYPE_COL,
+    DEFAULT_CATEGORY_STR_COL,
+    DEFAULT_SUBCATEGORY_COL,
+    DEFAULT_ENTITIES_COL,
+    DEFAULT_IMAGE_IDS_COL,
+    DEFAULT_SUBTITLE_COL,
+    DEFAULT_CATEGORY_COL,
+    DEFAULT_TOPICS_COL,
+    DEFAULT_TITLE_COL,
+    DEFAULT_BODY_COL,
+    DEFAULT_HISTORY_IMPRESSION_TIMESTAMP_COL,
+    DEFAULT_HISTORY_SCROLL_PERCENTAGE_COL,
+    DEFAULT_HISTORY_ARTICLE_ID_COL,
+    DEFAULT_HISTORY_READ_TIME_COL,
+    DEFAULT_LABELS_COL
 )
 from ebrec.utils._nlp import get_transformers_word_embeddings
 from ebrec.utils._polars import concat_str_columns, slice_join_dataframes
@@ -241,7 +264,7 @@ def make_data_loader(PATH_DATA, do_eval):
     BATCH_SIZE = 100
     df_articles = (
         pl.scan_parquet(PATH_DATA.joinpath("../articles.parquet"))
-        .select(pl.col(DEFAULT_ARTICLE_ID_COL, DEFAULT_CATEGORY_COL))
+        .select(pl.col(DEFAULT_ARTICLE_ID_COL, DEFAULT_CATEGORY_COL, DEFAULT_BODY_COL, DEFAULT_TITLE_COL, DEFAULT_TOPICS_COL, DEFAULT_SUBTITLE_COL, DEFAULT_ARTICLE_TYPE_COL))
         .with_columns(pl.Series(TOKEN_COL, np.random.randint(0, 20, (1, 10))))
         .collect()
     )
@@ -294,13 +317,13 @@ def make_data_loader(PATH_DATA, do_eval):
 
 
 # LOAD DATA:
-PATH_DATA = Path("ebnerd-benchmark/data/ebnerd_large/train")
+PATH_DATA = Path("ebnerd-benchmark/data/train")
 do_eval = False
 train_dataloader, df_behaviors_train = make_data_loader(PATH_DATA, do_eval)
 
 
 # LOAD DATA:
-PATH_DATA = Path("ebnerd-benchmark/data/ebnerd_large/validation")
+PATH_DATA = Path("ebnerd-benchmark/data/validation")
 do_eval = True
 val_dataloader, df_behaviors_val = make_data_loader(PATH_DATA, do_eval)
 

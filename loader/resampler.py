@@ -4,21 +4,21 @@ import numpy as np
 import torch
 from tqdm import tqdm
 
-from loader.data_hub import DataHub
-from loader.data_set import DataSet
 from loader.meta import Meta
 from loader.status import Status
-from model.legommender import Legommender
-from utils.stacker import FastStacker
+from model.legommender import Legommender, LegommenderConfig
+from loader.data_hub import DataHub
+from loader.data_set import DataSet
+from utils.stacker import Stacker, FastStacker
 from utils.timer import Timer
 
 
 class Resampler:
     def __init__(
-        self,
-        legommender: Legommender,
-        item_hub: DataHub,
-        status: Status,
+            self,
+            legommender: Legommender,
+            item_hub: DataHub,
+            status: Status,
     ):
         self.status = status
         self.timer = Timer(activate=True)
@@ -29,8 +29,7 @@ class Resampler:
         self.use_item_content = self.config.use_item_content
 
         self.column_map = legommender.column_map
-        #self.clicks_col = self.column_map.clicks_col
-        self.clicks_col = "article_ids_clicked" # Jort: Hard coded
+        self.clicks_col = self.column_map.clicks_col
         self.candidate_col = self.column_map.candidate_col
         self.label_col = self.column_map.label_col
         self.neg_col = self.column_map.neg_col
@@ -64,7 +63,6 @@ class Resampler:
         item_cache = []
         for sample in tqdm(self.item_dataset):
             item_cache.append(self.item_inputer.sample_rebuilder(sample))
-        #print("item cache built", item_cache)
         return item_cache
 
     @staticmethod
@@ -78,24 +76,18 @@ class Resampler:
 
         # negative sampling
         if self.use_neg_sampling:
-            if self.status.is_training or (
-                self.status.is_evaluating and Meta.simple_dev
-            ):
+            if self.status.is_training or (self.status.is_evaluating and Meta.simple_dev):
                 # During testing or non-simple-dev evaluation,
                 # the legommender will directly calculate the scores.
                 # Therefore, we don't need to do negative sampling for cross-entropy loss.
                 true_negs = sample[self.neg_col] if self.neg_col else []
                 rand_count = max(self.legommender.neg_count - len(true_negs), 0)
 
-                neg_samples = random.sample(
-                    true_negs, k=min(self.legommender.neg_count, len(true_negs))
-                )
-                neg_samples += [
-                    random.randint(0, self.item_size - 1) for _ in range(rand_count)
-                ]
+                neg_samples = random.sample(true_negs, k=min(self.legommender.neg_count, len(true_negs)))
+                neg_samples += [random.randint(0, self.item_size - 1) for _ in range(rand_count)]
                 sample[self.candidate_col].extend(neg_samples)
-        # if self.neg_col: Jort: Hard coded
-            # del sample[self.neg_col]
+        if self.neg_col:
+            del sample[self.neg_col]
 
         if not self.use_item_content:
             # if not using item content, we don't need to rebuild candidate contents
@@ -113,35 +105,19 @@ class Resampler:
             sample[self.candidate_col] = self.pack_tensor(sample[self.candidate_col])
             return
 
-        # Jort: Removed this since we do not have neg_sampling.
         # start to inject content knowledge
         # if self.use_neg_sampling:
-        # when using negative sampling, we need to rebuild candidate contents
-        # print(sample[self.candidate_col])
-        # sample[self.candidate_col] = self.stacker(
-        #     [self.item_cache[nid] for nid in sample[self.candidate_col]]
-        # )
-        # return
+            # when using negative sampling, we need to rebuild candidate contents
+        sample[self.candidate_col] = self.stacker([self.item_cache[nid] for nid in sample[self.candidate_col]])
+        return
 
         # when not using negative sampling, we can use cache to speed up
-        try:
-            if sample[self.candidate_col][0] not in self.candidate_cache:
-                item_id = sample[self.candidate_col][0]
-                sample[self.candidate_col] = self.stacker(
-                    [self.item_cache[nid-1] for nid in sample[self.candidate_col]]
-                )
-                self.candidate_cache[item_id] = sample[self.candidate_col]
-            else:
-                sample[self.candidate_col] = self.candidate_cache[
-                    sample[self.candidate_col][0]
-                ]
-        except:
-            print("sample[self.candidate_col]", sample[self.candidate_col])
-            print("sample", sample)
-            print("self.item_cache", len(self.item_cache))
-            print("item_id", item_id)
-            print("self.candidate_cache", len(self.candidate_cache))
-            raise ValueError("Error in resampler.py")
+        if sample[self.candidate_col][0] not in self.candidate_cache:
+            item_id = sample[self.candidate_col][0]
+            sample[self.candidate_col] = self.stacker([self.item_cache[nid] for nid in sample[self.candidate_col]])
+            self.candidate_cache[item_id] = sample[self.candidate_col]
+        else:
+            sample[self.candidate_col] = self.candidate_cache[sample[self.candidate_col][0]]
 
     def rebuild_clicks(self, sample):
         if self.legommender.cacher.user.cached:
@@ -153,34 +129,13 @@ class Resampler:
         # convert clicks to list
         if isinstance(sample[self.clicks_col], np.ndarray):
             sample[self.clicks_col] = sample[self.clicks_col].tolist()
-
-        len_clicks = len(sample["article_ids_clicked"]) # Jort: Hard coded
-        
-        max_click_num = sample["max_length_article_ids_clicked"]
-        
+        len_clicks = len(sample[self.clicks_col])
         # padding clicks
-        try:
-            sample[self.clicks_mask_col] = [1] * len_clicks + [0] * (
-                max_click_num - len_clicks
-            )
-        except:
-            print("sample", sample)
-            print("max_click_num", max_click_num)
-            print("self.clicks_col", self.clicks_col)
-            print("sample[self.clicks_col]", sample[self.clicks_col])
-            print("len_clicks", len_clicks)
-            print("sample", sample)
-            print("self.max_click_num", self.max_click_num)
-            print("sample[self.clicks_col]", self.clicks_mask_col)
-            raise ValueError("Error in resampler.py")  
-        sample[self.clicks_mask_col] = torch.tensor(
-            sample[self.clicks_mask_col], dtype=torch.long
-        )
+        sample[self.clicks_mask_col] = [1] * len_clicks + [0] * (self.max_click_num - len_clicks)
+        sample[self.clicks_mask_col] = torch.tensor(sample[self.clicks_mask_col], dtype=torch.long)
         if self.use_item_content:
-            # Init sample[self.clicks_col])
-            sample["article_ids_clicked"].extend([0] * (max_click_num - len_clicks)) # JOrt: Hard coded
+            sample[self.clicks_col].extend([0] * (self.max_click_num - len_clicks))
 
-        
         if not self.use_item_content:
             # if not using item content, we use vanilla inputer provided by user operator to rebuild clicks
             sample[self.clicks_col] = self.user_inputer.sample_rebuilder(sample)
@@ -188,9 +143,7 @@ class Resampler:
         if self.legommender.flatten_mode:
             # in flatten mode, click contents will be rebuilt by user inputer
             sample[self.clicks_col] = self.user_inputer.sample_rebuilder(sample)
-            sample[self.clicks_mask_col] = self.user_inputer.get_mask(
-                sample[self.clicks_col]
-            )
+            sample[self.clicks_mask_col] = self.user_inputer.get_mask(sample[self.clicks_col])
             return
 
         if self.legommender.llm_skip:
