@@ -32,7 +32,7 @@ class DataHubs:
 
         self.hubs = {
             Phases.train: self.train_hub,
-            # Phases.dev: self.dev_hub,
+            Phases.dev: self.dev_hub,
             Phases.test: self.test_hub,
             Phases.fast_eval: self.fast_eval_hub,
         }

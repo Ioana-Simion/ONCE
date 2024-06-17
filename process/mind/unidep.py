@@ -232,7 +232,7 @@ class UniDep:
                     columns[col_name].append(depot.data[col_name][index])
 
             for col_name in columns:
-                values = np.array(columns[col_name], dtype=object)
+                values = np.array(columns[col_name])
                 self.data[col_name] = values
         return self
 

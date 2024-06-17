@@ -32,7 +32,7 @@ class Depots:
 
         self.depots = {
             Phases.train: self.train_depot,
-            # Phases.dev: self.dev_depot,
+            Phases.dev: self.dev_depot,
             Phases.test: self.test_depot,
             Phases.fast_eval: self.fast_eval_depot,
         }  # type: Dict[str, CachingDep]

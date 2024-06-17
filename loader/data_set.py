@@ -9,9 +9,9 @@ from utils.timer import Timer
 
 class DataSet(BaseDataset):
     def __init__(
-        self,
-        hub: DataHub,
-        resampler=None,
+            self,
+            hub: DataHub,
+            resampler=None,
     ):
         self.hub = hub
         self.depot = hub.depot
@@ -37,17 +37,12 @@ class DataSet(BaseDataset):
     def pack_sample(self, index):
         _sample = self.depot[index]
         sample = dict()
-        #print("columns", [*self.order, *self.append], _sample.keys())
         for col in [*self.order, *self.append]:
-            if col is 'neg': # Jort: Still in columns
-                continue
             value = _sample[col]
             if isinstance(value, np.ndarray):
                 value = value.tolist()
             sample[col] = copy.copy(value)
-        if "max_length_article_ids_clicked" in _sample.keys():
-            sample["max_length_article_ids_clicked"] = _sample["max_length_article_ids_clicked"][0]
-        
+
         if self.resampler:
             sample = self.resampler(sample)
         return sample

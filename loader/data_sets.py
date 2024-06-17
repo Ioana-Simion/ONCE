@@ -19,7 +19,7 @@ class DataSets:
 
         self.sets = {
             Phases.train: self.train_set,
-            # Phases.dev: self.dev_set,
+            Phases.dev: self.dev_set,
             Phases.test: self.test_set,
             Phases.fast_eval: self.user_set,
         }
