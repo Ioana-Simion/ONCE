@@ -2,18 +2,18 @@ import torch
 from torch import nn
 
 from model.common.mlp_layer import MLPLayer
-from model.predictors.base_predictor import BasePredictor, BasePredictorConfig
+from model.predictors.base_predictor import BasePredictorConfig, BasePredictor
 
 
 class DCNPredictorConfig(BasePredictorConfig):
     def __init__(
-        self,
-        dnn_hidden_units,
-        dnn_activations,
-        dnn_dropout,
-        dnn_batch_norm,
-        cross_num,
-        **kwargs,
+            self,
+            dnn_hidden_units,
+            dnn_activations,
+            dnn_dropout,
+            dnn_batch_norm,
+            cross_num,
+            **kwargs
     ):
         super().__init__(**kwargs)
 
@@ -45,9 +45,7 @@ class CrossNet(nn.Module):
     def forward(self, input_embeddings):
         output_embeddings = input_embeddings
         for cross_net in self.cross_net:
-            output_embeddings = output_embeddings + cross_net(
-                input_embeddings, output_embeddings
-            )
+            output_embeddings = output_embeddings + cross_net(input_embeddings, output_embeddings)
         return output_embeddings
 
 
@@ -66,7 +64,7 @@ class DCNPredictor(BasePredictor):
             output_activation=None,
             dropout_rates=self.config.dnn_dropout,
             batch_norm=self.config.dnn_batch_norm,
-            use_bias=True,
+            use_bias=True
         )
 
         self.cross_net = CrossNet(self.config.hidden_size * 2, self.config.cross_num)
@@ -80,9 +78,7 @@ class DCNPredictor(BasePredictor):
         @param item_embeddings: [B, D]  batch size, embedding size
         @return: [B]  batch size
         """
-        input_embeddings = torch.cat(
-            [user_embeddings, item_embeddings], dim=1
-        )  # [batch_size, 2 * hidden_size]
+        input_embeddings = torch.cat([user_embeddings, item_embeddings], dim=1)  # [batch_size, 2 * hidden_size]
         cross_output = self.cross_net(input_embeddings)
         dnn_output = self.dnn(input_embeddings)
         final_out = torch.cat([cross_output, dnn_output], dim=-1)

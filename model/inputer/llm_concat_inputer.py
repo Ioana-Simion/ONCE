@@ -39,7 +39,7 @@ class BertConcatInputer(NaturalConcatInputer):
             newtitle=[1026, 2516, 1028],
             title=[1026, 2516, 1028],
             abs=[1026, 10061, 1028],
-            cat=[1026, 4696, 1028],
+            category=[1026, 4696, 1028],
             subCat=[1026, 4942, 16280, 20255, 2100, 1028],
             desc=[1026, 10061, 1028],
         )

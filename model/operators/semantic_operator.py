@@ -1,3 +1,4 @@
+from typing import Type
 
 import torch
 from torch import nn
@@ -10,16 +11,15 @@ from utils.function import combine_config
 
 class SemanticOperatorConfig(BaseOperatorConfig):
     def __init__(
-        self,
-        user_operator: str,
-        user_operator_config: dict,
-        additive_hidden_size: int = 256,
-        **kwargs,
+            self,
+            user_operator: str,
+            user_operator_config: dict,
+            additive_hidden_size: int = 256,
+            **kwargs
     ):
         super().__init__(**kwargs)
 
         from loader.class_hub import ClassHub
-
         operators = ClassHub.operators()
         self.user_operator_class = operators(user_operator)  # type: Type[BaseOperator]
         self.user_operator_config = self.user_operator_class.config_class(
@@ -39,15 +39,13 @@ class SemanticOperator(BaseOperator):
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
 
-        assert self.target_user, "semantic operator is only designed as user encoder"
+        assert self.target_user, 'semantic operator is only designed as user encoder'
 
         self.num_semantic_layers = self.inputer.get_max_content_len()
 
         user_operators = []
         for i in range(self.num_semantic_layers):
-            base_operator = self.config.user_operator_class(
-                config=self.config.user_operator_config, **kwargs
-            )
+            base_operator = self.config.user_operator_class(config=self.config.user_operator_config, **kwargs)
             user_operators.append(base_operator)
         self.user_operators = nn.ModuleList(user_operators)
 

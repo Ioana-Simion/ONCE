@@ -4,16 +4,16 @@ from torch import nn
 from loader.meta import Meta
 from model.common.attention import AdditiveAttention
 from model.inputer.simple_inputer import SimpleInputer
-from model.operators.base_operator import BaseOperator, BaseOperatorConfig
+from model.operators.base_operator import BaseOperatorConfig, BaseOperator
 
 
 class CNNOperatorConfig(BaseOperatorConfig):
     def __init__(
-        self,
-        kernel_size: int = 3,
-        dropout: float = 0.1,
-        additive_hidden_size: int = 256,
-        **kwargs,
+            self,
+            kernel_size: int = 3,
+            dropout: float = 0.1,
+            additive_hidden_size: int = 256,
+            **kwargs,
     ):
         super().__init__(**kwargs)
 
@@ -34,7 +34,7 @@ class CNNOperator(BaseOperator):
             in_channels=self.config.input_dim,
             out_channels=self.config.hidden_size,
             kernel_size=self.config.kernel_size,
-            padding="same",
+            padding='same',
         )
         self.linear = nn.Linear(self.config.input_dim, self.config.hidden_size)
         self.activation = nn.ReLU()

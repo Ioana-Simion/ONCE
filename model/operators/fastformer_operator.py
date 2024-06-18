@@ -1,19 +1,19 @@
 from torch import nn
 
 from loader.meta import Meta
-from model.common.fastformer import FastformerConfig, FastformerModel
-from model.inputer.concat_inputer import ConcatInputer
+from model.common.fastformer import FastformerModel, FastformerConfig
 from model.operators.attention_operator import AttentionOperatorConfig
 from model.operators.base_operator import BaseOperator
+from model.inputer.concat_inputer import ConcatInputer
 
 
 class FastformerOperatorConfig(AttentionOperatorConfig):
     def __init__(
-        self,
-        num_hidden_layers: int = 3,
-        num_attention_heads: int = 8,
-        hidden_dropout_prob: float = 0.1,
-        **kwargs,
+            self,
+            num_hidden_layers: int = 3,
+            num_attention_heads: int = 8,
+            hidden_dropout_prob: float = 0.1,
+            **kwargs,
     ):
         super().__init__(**kwargs)
         self.num_hidden_layers = num_hidden_layers
@@ -31,16 +31,14 @@ class FastformerOperator(BaseOperator):
         # use multi-head attention to capture sequence-level information and
         # use additive attention to fuse the information
 
-        self.fastformer = FastformerModel(
-            FastformerConfig(
-                hidden_size=self.config.input_dim,
-                num_attention_heads=self.config.num_attention_heads,
-                hidden_dropout_prob=self.config.hidden_dropout_prob,
-                num_hidden_layers=self.config.num_hidden_layers,
-                intermediate_size=self.config.input_dim * 4,
-                max_position_embeddings=1024,
-            )
-        )
+        self.fastformer = FastformerModel(FastformerConfig(
+            hidden_size=self.config.input_dim,
+            num_attention_heads=self.config.num_attention_heads,
+            hidden_dropout_prob=self.config.hidden_dropout_prob,
+            num_hidden_layers=self.config.num_hidden_layers,
+            intermediate_size=self.config.input_dim * 4,
+            max_position_embeddings=1024,
+        ))
 
         self.linear = nn.Linear(self.config.input_dim, self.config.hidden_size)
         #

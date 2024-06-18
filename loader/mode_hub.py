@@ -1,6 +1,8 @@
+from typing import Dict, Type, Union
 
 from loader.class_hub import ClassHub
 from loader.controller import Controller
+from loader.mode.base_mode import BaseMode
 
 
 class ModeHub:

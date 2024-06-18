@@ -24,7 +24,7 @@ class SliceOrderedDict(OrderedDict):
         return slice_dict
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     d = SliceDict(
         a=[1, 2, 3],
         b=[4, 5, 6],
@@ -35,3 +35,4 @@ if __name__ == "__main__":
     d = dict(a=1, b=2)
     e = dict(d)
     print(e)
+

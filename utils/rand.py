@@ -15,25 +15,28 @@ class Rand(dict):
 
     def __getitem__(self, item):
         crt_time = str(time.time())
-        crt_time = md5(crt_time.encode("utf-8")).hexdigest()
-        return "".join([random.choice(crt_time) for _ in range(int(item))])
+        crt_time = md5(crt_time.encode('utf-8')).hexdigest()
+        return ''.join([random.choice(crt_time) for _ in range(int(item))])
 
     def __str__(self):
-        return "<Random class>"
+        return '<Random class>'
 
     def __repr__(self):
         return self.__str__()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+
     d = dict(
-        utils=dict(rand=Rand()),
-        store=dict(
-            path="${utils.rand.4}",
-            filename="${store.path}/exp.log",
+        utils=dict(
+            rand=Rand()
         ),
+        store=dict(
+            path='${utils.rand.4}',
+            filename='${store.path}/exp.log',
+        )
     )
 
     import smartdict
-
     print(smartdict.parse(d))
+

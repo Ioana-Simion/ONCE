@@ -1,7 +1,7 @@
 from oba import Obj
 
-from loader.mode.base_mode import BaseMode
 from loader.pager.llm_split_pager import LLMSplitPager
+from loader.mode.base_mode import BaseMode
 from model.operators.base_llm_operator import BaseLLMOperator
 
 
@@ -18,9 +18,7 @@ class LayerSplitMode(BaseMode):
 
     def work(self, *args, **kwargs):
         item_encoder = self.legommender.item_encoder  # type: BaseLLMOperator
-        assert isinstance(item_encoder, BaseLLMOperator), ValueError(
-            "item_encoder is not a LLMOperator"
-        )
+        assert isinstance(item_encoder, BaseLLMOperator), ValueError(f'item_encoder is not a LLMOperator')
 
         pager = LLMSplitPager(
             inputer=item_encoder.inputer,

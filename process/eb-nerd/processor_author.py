@@ -1,22 +1,9 @@
 import os.path
 
 import pandas as pd
-import sys
+from UniTok import UniTok, Column, Vocab, UniDep
+from UniTok.tok import BertTok, IdTok, EntTok, SeqTok, NumberTok
 from tqdm import tqdm
-from UniTok import UniDep
-
-sys.path.append(os.path.abspath(''))
-
-from process.mind.column import Column
-from process.mind.unitok import UniTok 
-from process.mind.vocab import Vocab
-
-from process.mind.tok.tok import BaseTok
-from process.mind.tok.bert_tok import BertTok
-from process.mind.tok.ent_tok import EntTok
-from process.mind.tok.id_tok import IdTok
-from process.mind.tok.seq_tok import SeqTok
-from process.mind.tok.number_tok import NumberTok
 
 
 class Processor:
@@ -39,7 +26,7 @@ class Processor:
         tilavis
         eblive
         horoskoper
-        webmaster-validation-sektion
+        webmaster-test-sektion
         migration_catalog
         podcast
         rssfeed
@@ -51,8 +38,8 @@ class Processor:
 
     def read_news(self):
         df = pd.read_parquet(self.news_path)
-        df = df[['article_id', 'title', 'subtitle', 'body', 'category_str']]
-        df.columns = ['nid', 'title', 'subtitle', 'body', 'category']
+        df = df[['article_id', 'title', 'subtitle', "body", 'category_str']]
+        df.columns = ['nid', 'title', 'subtitle', "body", 'category']
         return df
 
     def read_user(self, mode='train'):
@@ -67,13 +54,13 @@ class Processor:
 
     def read_inters(self, mode='train'):
         columns = ['impression_id', 'user_id', 'article_ids_inview']
-        if mode != 'validation':
+        if mode != 'test':
             columns.append('article_ids_clicked')
         df = pd.read_parquet(
             path=os.path.join(self.data_dir, mode, 'behaviors.parquet'),
             columns=columns
         )
-        if mode == 'validation':
+        if mode == 'test':
             df.columns = ['imp', 'uid', 'interactions']
             df['click'] = 0
             df['click'] = df['click'].apply(lambda x: [])
@@ -92,7 +79,7 @@ class Processor:
                 data['nid'].append(interaction)
                 data['click'].append(int(interaction in clicks))
 
-            if mode == 'validation':
+            if mode == 'test':
                 neg_dict[line.uid] = {self.nid.i2o[0]}
                 continue
 
@@ -202,24 +189,24 @@ class Processor:
 
         valid_inter_df, valid_neg_df = self.read_inters(mode='validation')
         inter_tok = self.get_inter_tok()
-        inter_tok.read(valid_inter_df).tokenize().store(os.path.join(self.store_dir, 'validation'))
+        inter_tok.read(valid_inter_df).tokenize().store(os.path.join(self.store_dir, 'valid'))
 
-        test_inter_df, test_neg_df = self.read_inters(mode='validation')
-        inter_tok = self.get_inter_tok()
-        inter_tok.read(test_inter_df).tokenize().store(os.path.join(self.store_dir, 'validation'))
+        # test_inter_df, test_neg_df = self.read_inters(mode='test')
+        # inter_tok = self.get_inter_tok()
+        # inter_tok.read(test_inter_df).tokenize().store(os.path.join(self.store_dir, 'test'))
 
-        neg_df = pd.concat([train_neg_df, valid_neg_df, test_neg_df])
+        neg_df = pd.concat([train_neg_df, valid_neg_df])
         neg_tok = self.get_neg_tok(max_neg=250)
         neg_tok.read(neg_df).tokenize().store(os.path.join(self.store_dir, 'neg'))
 
-        # for mode, inter in zip(['train', 'validation', 'validation'], [train_inter_df, valid_inter_df, test_inter_df]):
+        # for mode, inter in zip(['train', 'validation', 'test'], [train_inter_df, valid_inter_df, test_inter_df]):
         #     inter_tok = self.get_inter_tok()
         #     inter_tok.read(inter).tokenize().store(os.path.join(self.store_dir, mode))
 
 
 if __name__ == '__main__':
     processor = Processor(
-        data_dir="ebnerd-benchmark/data",
-        store_dir="ebnerd-benchmark/data/tokenized_bert_test2"
+        data_dir="ebnerd-benchmark/data/ebnerd_large",
+        store_dir="ebnerd-benchmark/data/tokenized_bert_large_original"
     )
     processor.tokenize(load_news=False, load_user=False)

@@ -9,13 +9,13 @@ load:
   strict: true
   wait: false
 store:
-  metric: GAUC
+  metric: AUC
   maximize: true
   top: 1
   early_stop: ${patience}$
 policy:
   epoch_start: ${epoch_start}$
-  epoch: 50
+  epoch: 1
   lr: ${lr}$
   item_lr: ${item_lr}$
   freeze_emb: false
@@ -26,10 +26,10 @@ policy:
   device: gpu
   n_warmup: ${warmup}$
   check_interval: -2
-  simple_dev: ${simple_dev}$
+  # ANA: should we use simple_dev or not?
+  simple_dev: false
 metrics:
-  - GAUC
+  - AUC
   - MRR
-  - NDCG@1
   - NDCG@5
   - NDCG@10

@@ -1,18 +1,19 @@
 from torch import nn
-from transformers.models.bert.modeling_bert import BertConfig, BertModel
 
 from loader.meta import Meta
 from model.common.attention import AdditiveAttention
-from model.inputer.concat_inputer import ConcatInputer
 from model.operators.attention_operator import AttentionOperatorConfig
 from model.operators.base_operator import BaseOperator
+from model.inputer.concat_inputer import ConcatInputer
+
+from transformers.models.bert.modeling_bert import BertModel, BertConfig
 
 
 class TransformerOperatorConfig(AttentionOperatorConfig):
     def __init__(
-        self,
-        num_hidden_layers: int = 3,
-        **kwargs,
+            self,
+            num_hidden_layers: int = 3,
+            **kwargs,
     ):
         super().__init__(**kwargs)
         self.num_hidden_layers = num_hidden_layers
@@ -25,18 +26,16 @@ class TransformerOperator(BaseOperator):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.transformer = BertModel(
-            BertConfig(
-                hidden_size=self.config.input_dim,
-                num_attention_heads=self.config.num_attention_heads,
-                attention_probs_dropout_prob=self.config.attention_dropout,
-                num_hidden_layers=self.config.num_hidden_layers,
-                intermediate_size=self.config.hidden_size * 4,
-                vocab_size=1,
-                type_vocab_size=1,
-                max_position_embeddings=1024,
-            )
-        )
+        self.transformer = BertModel(BertConfig(
+            hidden_size=self.config.input_dim,
+            num_attention_heads=self.config.num_attention_heads,
+            attention_probs_dropout_prob=self.config.attention_dropout,
+            num_hidden_layers=self.config.num_hidden_layers,
+            intermediate_size=self.config.hidden_size * 4,
+            vocab_size=1,
+            type_vocab_size=1,
+            max_position_embeddings=1024,
+        ))
 
         self.linear = nn.Linear(self.config.input_dim, self.config.hidden_size)
 
@@ -52,6 +51,7 @@ class TransformerOperator(BaseOperator):
             inputs_embeds=embeddings,
             attention_mask=mask,
             return_dict=True,
+
         )
         outputs = transformer_output.last_hidden_state  # [B, L, D]
 

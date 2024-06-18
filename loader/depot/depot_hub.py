@@ -10,6 +10,7 @@ class DepotHub:
     def get(cls, path, filter_cache=False) -> UniDep:
         if path in cls.depots:
             return cls.depots[path]
+
         depot = CachingDep(path, filter_cache=filter_cache)
         # depot.deep_union(True)
         cls.depots[path] = depot

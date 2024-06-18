@@ -7,7 +7,11 @@ from model.predictors.dcn_predictor import DCNPredictorConfig
 
 
 class GDCNPredictorConfig(DCNPredictorConfig):
-    def __init__(self, sequential_mode: bool = False, **kwargs):
+    def __init__(
+            self,
+            sequential_mode: bool = False,
+            **kwargs
+    ):
         super().__init__(**kwargs)
 
         self.sequential_mode = sequential_mode
@@ -20,16 +24,15 @@ class GateCrossLayer(nn.Module):
 
         self.cross_layers = cross_layers
 
-        self.w = nn.ModuleList(
-            [nn.Linear(input_dim, input_dim, bias=False) for _ in range(cross_layers)]
-        )
-        self.wg = nn.ModuleList(
-            [nn.Linear(input_dim, input_dim, bias=False) for _ in range(cross_layers)]
-        )
+        self.w = nn.ModuleList([
+            nn.Linear(input_dim, input_dim, bias=False) for _ in range(cross_layers)
+        ])
+        self.wg = nn.ModuleList([
+            nn.Linear(input_dim, input_dim, bias=False) for _ in range(cross_layers)
+        ])
 
-        self.b = nn.ParameterList(
-            [nn.Parameter(torch.zeros((input_dim,))) for _ in range(cross_layers)]
-        )
+        self.b = nn.ParameterList([nn.Parameter(
+            torch.zeros((input_dim,))) for _ in range(cross_layers)])
 
         for i in range(cross_layers):
             nn.init.uniform_(self.b[i].data)
@@ -39,8 +42,8 @@ class GateCrossLayer(nn.Module):
     def forward(self, x):
         x0 = x
         for i in range(self.cross_layers):
-            xw = self.w[i](x)  # Feature Crossing
-            xg = self.activation(self.wg[i](x))  # Information Gate
+            xw = self.w[i](x) # Feature Crossing
+            xg = self.activation(self.wg[i](x)) # Information Gate
             x = x0 * (xw + self.b[i]) * xg + x
         return x
 
@@ -64,18 +67,14 @@ class GDCNPredictor(BasePredictor):
             use_bias=True,
         )
 
-        self.cross_net = GateCrossLayer(
-            self.config.hidden_size * 2, self.config.cross_num
-        )
+        self.cross_net = GateCrossLayer(self.config.hidden_size * 2, self.config.cross_num)
 
         if not self.config.sequential_mode:
             output_dim = self.config.hidden_size * 2 + self.config.dnn_hidden_units[-1]
             self.prediction = nn.Linear(output_dim, 1)
 
     def predict(self, user_embeddings, item_embeddings):
-        input_embeddings = torch.cat(
-            [user_embeddings, item_embeddings], dim=1
-        )  # [batch_size, 2 * hidden_size]
+        input_embeddings = torch.cat([user_embeddings, item_embeddings], dim=1)  # [batch_size, 2 * hidden_size]
         cross_output = self.cross_net(input_embeddings)
 
         if self.config.sequential_mode:

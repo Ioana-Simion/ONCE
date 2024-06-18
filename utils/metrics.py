@@ -1,16 +1,10 @@
 from collections import OrderedDict
 from multiprocessing import Pool
-from typing import Union
+from typing import Dict, Union, List
 
 import pandas as pd
 import torch
-from sklearn.metrics import (
-    f1_score,
-    label_ranking_average_precision_score,
-    log_loss,
-    ndcg_score,
-    roc_auc_score,
-)
+from sklearn.metrics import log_loss, roc_auc_score, ndcg_score, label_ranking_average_precision_score, f1_score
 
 
 class Metric:
@@ -28,7 +22,7 @@ class Metric:
 
 
 class LogLoss(Metric):
-    name = "LogLoss"
+    name = 'LogLoss'
     group = False
 
     def calculate(self, scores: list, labels: list):
@@ -36,7 +30,7 @@ class LogLoss(Metric):
 
 
 class AUC(Metric):
-    name = "AUC"
+    name = 'AUC'
     group = False
 
     def calculate(self, scores: list, labels: list):
@@ -44,12 +38,12 @@ class AUC(Metric):
 
 
 class GAUC(AUC):
-    name = "GAUC"
+    name = 'GAUC'
     group = True
 
 
 class MRR(Metric):
-    name = "MRR"
+    name = 'MRR'
     group = True
 
     def calculate(self, scores: list, labels: list):
@@ -57,7 +51,7 @@ class MRR(Metric):
 
 
 class F1(Metric):
-    name = "F1"
+    name = 'F1'
     group = False
 
     def __init__(self, threshold=0.5):
@@ -68,51 +62,47 @@ class F1(Metric):
         return f1_score(labels, scores)
 
     def __str__(self):
-        return f"{self.name}@{self.threshold}"
+        return f'{self.name}@{self.threshold}'
 
 
 class HitRatio(Metric):
-    name = "HitRatio"
+    name = 'HitRatio'
     group = True
 
     def __init__(self, n):
         self.n = n
 
     def calculate(self, scores: list, labels: list):
-        scores, labels = zip(
-            *sorted(zip(scores, labels), key=lambda x: x[0], reverse=True)
-        )
-        return int(1 in labels[: self.n])
+        scores, labels = zip(*sorted(zip(scores, labels), key=lambda x: x[0], reverse=True))
+        return int(1 in labels[:self.n])
         # candidates_set = set(scores[:self.n])
         # interaction = candidates_set.intersection(set(labels))
         # return int(bool(interaction))
 
     def __str__(self):
-        return f"{self.name}@{self.n}"
+        return f'{self.name}@{self.n}'
 
 
 class Recall(Metric):
-    name = "Recall"
+    name = 'Recall'
     group = True
 
     def __init__(self, n):
         self.n = n
 
     def calculate(self, scores: list, labels: list):
-        scores, labels = zip(
-            *sorted(zip(scores, labels), key=lambda x: x[0], reverse=True)
-        )
-        return sum(labels[: self.n]) * 1.0 / sum(labels)
+        scores, labels = zip(*sorted(zip(scores, labels), key=lambda x: x[0], reverse=True))
+        return sum(labels[:self.n]) * 1.0 / sum(labels)
         # candidates_set = set(scores[:self.n])
         # interaction = candidates_set.intersection(set(labels))
         # return len(interaction) * 1.0 / self.n
 
     def __str__(self):
-        return f"{self.name}@{self.n}"
+        return f'{self.name}@{self.n}'
 
 
 class NDCG(Metric):
-    name = "NDCG"
+    name = 'NDCG'
     group = True
 
     def __init__(self, n):
@@ -122,7 +112,7 @@ class NDCG(Metric):
         return ndcg_score([labels], [scores], k=self.n)
 
     def __str__(self):
-        return f"{self.name}@{self.n}"
+        return f'{self.name}@{self.n}'
 
 
 class MetricPool:
@@ -142,12 +132,12 @@ class MetricPool:
     def parse(cls, metrics_config):
         metrics = []
         for m in metrics_config:
-            at = m.find("@")
+            at = m.find('@')
             argument = []
             if at > -1:
-                m, argument = m[:at], [int(m[at + 1 :])]
+                m, argument = m[:at], [int(m[at+1:])]
             if m.upper() not in MetricPool.metric_dict:
-                raise ValueError(f"Metric {m} not found")
+                raise ValueError(f'Metric {m} not found')
             metrics.append(MetricPool.metric_dict[m.upper()](*argument))
         return cls(metrics)
 
@@ -159,7 +149,7 @@ class MetricPool:
 
         groups = None
         if self.group:
-            groups = df.groupby("groups")
+            groups = df.groupby('groups')
 
         for metric in self.metrics:
             if not metric.group:
@@ -179,9 +169,7 @@ class MetricPool:
             pool.close()
             pool.join()
             values = [t.get() for t in tasks]
-            self.values[str(metric)] = (
-                torch.tensor(values, dtype=torch.float).mean().item()
-            )
+            self.values[str(metric)] = torch.tensor(values, dtype=torch.float).mean().item()
         return self.values
 
     def __call__(self, *args, **kwargs):

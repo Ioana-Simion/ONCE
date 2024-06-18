@@ -1,0 +1,30 @@
+name: EB-NeRD-${version}-Llama
+base_dir: ebnerd-benchmark/data
+item:
+  filter_cache: true
+  depot: ${data.base_dir}/news-fusion2
+  order:
+    - title-llama
+    - category-llama
+  append:
+    - nid
+  lm_col: title-llama
+user:
+  filter_cache: true
+  depots:
+    train:
+      path: ebnerd-benchmark/data/tokenized_bert_test2/train
+    test:
+      path: ebnerd-benchmark/data/tokenized_bert_test2/valid
+    dev: 
+      path: ebnerd-benchmark/data/tokenized_bert_test2/valid
+  union:
+    - ebnerd-benchmark/data/tokenized_bert_test2/user
+    - ebnerd-benchmark/data/tokenized_bert_test2/neg
+  candidate_col: nid
+  clicks_col: history
+  label_col: click
+  neg_col: neg
+  group_col: imp
+  user_col: uid
+  index_col: index

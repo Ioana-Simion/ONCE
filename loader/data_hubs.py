@@ -21,9 +21,7 @@ class DataHubs:
 
         self.train_hub = self.dev_hub = self.test_hub = None
         if depots.train_depot:
-            self.train_hub = DataHub(
-                depot=depots.train_depot, order=order, append=append
-            )
+            self.train_hub = DataHub(depot=depots.train_depot, order=order, append=append)
         if depots.dev_depot:
             self.dev_hub = DataHub(depot=depots.dev_depot, order=order, append=append)
         if depots.test_depot:
@@ -32,7 +30,7 @@ class DataHubs:
 
         self.hubs = {
             Phases.train: self.train_hub,
-            # Phases.dev: self.dev_hub,
+            Phases.dev: self.dev_hub,
             Phases.test: self.test_hub,
             Phases.fast_eval: self.fast_eval_hub,
         }

@@ -33,17 +33,17 @@ def argparse():
             kwargs[key] = arg
             key = None
         else:
-            assert arg.startswith("--")
+            assert arg.startswith('--')
             key = arg[2:]
 
     for key, value in kwargs.items():
-        if value == "null":
+        if value == 'null':
             kwargs[key] = None
         elif value.isdigit():
             kwargs[key] = int(value)
-        elif value.lower() == "true":
+        elif value.lower() == 'true':
             kwargs[key] = True
-        elif value.lower() == "false":
+        elif value.lower() == 'false':
             kwargs[key] = False
         else:
             try:

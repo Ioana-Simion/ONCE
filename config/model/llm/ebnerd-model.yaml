@@ -4,7 +4,7 @@ meta:
   user: Ada
   predictor: Dot
 config:
-  use_neg_sampling: false
+  use_neg_sampling: true
   use_item_content: true
   max_item_content_batch_size: ${max_item_batch_size}$
   same_dim_transform: false
@@ -14,7 +14,7 @@ config:
     llm_dir: llama_converted_test #llama-main
     layer_split: ${layer}$
     lora: ${lora}$
-    weights_dir: llama_converted_test #llama-main\llama-2-7b
+    weights_dir: data/EB-NeRD/llama-7b-split
   user_config:
     #llm_dir: llama-main
     num_attention_heads: 12

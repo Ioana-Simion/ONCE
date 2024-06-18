@@ -2,9 +2,11 @@
 https://github.com/aqweteddy/NRMS-Pytorch/
 """
 
-
 import torch
 from torch import nn
+from torch.nn import functional as F
+
+from typing import Tuple, Optional
 
 
 class AdditiveAttention(nn.Module):
@@ -20,9 +22,7 @@ class AdditiveAttention(nn.Module):
             nn.Linear(self.hidden_size, 1, bias=False),
         )
 
-    def forward(
-        self, inputs: torch.Tensor, attention_mask: torch.Tensor = None
-    ) -> [torch.Tensor, torch.Tensor]:
+    def forward(self, inputs: torch.Tensor, attention_mask: torch.Tensor = None) -> [torch.Tensor, torch.Tensor]:
         """
 
         @param inputs: [B, L, D]
@@ -35,8 +35,6 @@ class AdditiveAttention(nn.Module):
             attention = torch.exp(attention)  # [B, L]
         else:
             attention = torch.exp(attention) * attention_mask  # [B, L]
-        attention_weight = attention / (
-            torch.sum(attention, dim=-1, keepdim=True) + torch.finfo(torch.float32).eps
-        )  # [B, L]
+        attention_weight = attention / (torch.sum(attention, dim=-1, keepdim=True) + torch.finfo(torch.float32).eps)  # [B, L]
 
         return torch.sum(inputs * attention_weight.unsqueeze(-1), dim=1)  # [B, D]
