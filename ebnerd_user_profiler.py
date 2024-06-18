@@ -16,7 +16,7 @@ ebnerd_prompter = EbnerdPrompter(articles_path)
 history_path = "ebnerd-benchmark/data/ebnerd_large/train/history.parquet"
 behaviors_path = "ebnerd-benchmark/data/ebnerd_large/train/behaviors.parquet"
 
-user_list = EbnerdUser(history_path, behaviors_path, ebnerd_prompter).stringify()[:2]
+user_list = EbnerdUser(history_path, behaviors_path, ebnerd_prompter).stringify()
 
 system = """You are asked to describe user interest based on his/her characteristics (if known) and top (maximum 100) browsed news list, the format of which is as below:
 

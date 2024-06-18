@@ -5,7 +5,7 @@
 #SBATCH --job-name=WorkerTrain
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --time=00:30:00
+#SBATCH --time=00:10:00
 #SBATCH --output=worker_train_%A.out
 
 cd $HOME/ONCE
@@ -22,10 +22,8 @@ python worker.py \
     --version small \
     --llm_ver 7b \
     --hidden_size 64 \
-    --layer 29 \
+    --layer 30 \
     --lora 1 \
     --fast_eval 0 \
     --embed_hidden_size 4096 \
     --page_size 16 \
-    --batch_size 16 \
-    --acc_batch 2 \
