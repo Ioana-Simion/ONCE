@@ -5,7 +5,7 @@
 #SBATCH --job-name=Processor
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --time=00:50:00
+#SBATCH --time=02:00:00
 #SBATCH --output=processor_%A.out
 
 cd $HOME/ONCE
