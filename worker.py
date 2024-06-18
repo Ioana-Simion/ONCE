@@ -194,6 +194,7 @@ class Worker:
                         if step > self.exp.policy.epoch_batch:
                             break
 
+            self.test_runner()
             dev_results, monitor_metric = dev_func()
             self.log_epoch(epoch, dev_results)
 
@@ -219,9 +220,9 @@ class Worker:
         assert self.exp.store.metric
         loader = self.controller.get_loader(Phases.dev).eval()
 
-        results_all = self.evaluate(loader, metrics=self.exp.metrics)
-        for metric in results_all:
-            pnt(f'{metric}: {results_all[metric]:.4f}')
+        # results_all = self.evaluate(loader, metrics=self.exp.metrics)
+        # for metric in results_all:
+        #     pnt(f'{metric}: {results_all[metric]:.4f}')
 
         results = self.evaluate(loader, metrics=[self.exp.store.metric])
         return results, results[self.exp.store.metric]

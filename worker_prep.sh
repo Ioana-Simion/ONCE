@@ -5,7 +5,7 @@
 #SBATCH --job-name=Worker
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --time=00:20:00
+#SBATCH --time=00:30:00
 #SBATCH --output=worker_prep_%A.out
 
 cd $HOME/ONCE
@@ -25,4 +25,5 @@ python worker.py \
     --lora 0 \
     --fast_eval 0 \
     --embed_hidden_size 4096 \
-    --page_size 8 \
+    --page_size 2 \
+    --batch_size 2 \

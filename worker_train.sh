@@ -5,7 +5,7 @@
 #SBATCH --job-name=WorkerTrain
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --time=00:10:00
+#SBATCH --time=00:15:00
 #SBATCH --output=worker_train_%A.out
 
 cd $HOME/ONCE
@@ -27,3 +27,4 @@ python worker.py \
     --fast_eval 0 \
     --embed_hidden_size 4096 \
     --page_size 16 \
+    --batch_size 16 \

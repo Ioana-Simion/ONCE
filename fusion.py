@@ -14,8 +14,8 @@ import os
 #     return padded_array
 
 
-news = UniDep(os.path.join("ebnerd-benchmark/data/tokenized_bert_test", 'news'))
-news_llama = UniDep('ebnerd-benchmark/data/tokenized_llama_test/news-llama')
+news = UniDep(os.path.join("ebnerd-benchmark/data/tokenized_bert_large_original", 'news'))
+news_llama = UniDep('ebnerd-benchmark/data/tokenized_llama_large_original/news-llama')
 
 news.rename_col('title', 'title-bert')
 news.rename_col('subtitle', 'subtitle-bert')
@@ -28,7 +28,7 @@ news_llama.rename_col('body', 'body-llama')
 news_llama.rename_col('category', 'category-llama')
 
 news.inject(news_llama, ['title-llama', 'subtitle-llama', 'body-llama', 'category-llama'])
-news.export('ebnerd-benchmark/data/news-fusion')
+news.export('ebnerd-benchmark/data/news_fusion_large_original')
 
 
 # # Convert columns to numpy arrays with padding

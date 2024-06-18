@@ -3,17 +3,8 @@ import os.path
 import pandas as pd
 from tqdm import tqdm
 from transformers import LlamaTokenizer
-
-import sys
-sys.path.append(os.path.abspath(''))
-
-from process.mind.unitok import UniTok 
-from process.mind.column import Column
-from process.mind.vocab import Vocab
-from process.mind.tok.tok import BaseTok
-from process.mind.tok.id_tok import IdTok
-from process.mind.tok.seq_tok import SeqTok
-from process.mind.tok.number_tok import NumberTok
+from UniTok import UniTok, Column, Vocab, UniDep
+from UniTok.tok import BaseTok, IdTok, EntTok, SeqTok, NumberTok
 
 
 class LlamaTok(BaseTok):
@@ -39,7 +30,7 @@ class Processor:
         self.data_dir = data_dir
         self.store_dir = store_dir
 
-        self.news_path = os.path.join(self.data_dir, 'translated_articles_large_all.parquet')
+        self.news_path = os.path.join(self.data_dir, 'articles.parquet')
 
         self.nid = Vocab(name='nid')
         self.uid = Vocab(name='uid')
@@ -88,6 +79,6 @@ class Processor:
 if __name__ == '__main__':
     processor = Processor(
         data_dir="ebnerd-benchmark/data/ebnerd_large",
-        store_dir="ebnerd-benchmark/data/tokenized_llama_large"
+        store_dir="ebnerd-benchmark/data/tokenized_llama_large_original"
     )
     processor.tokenize()

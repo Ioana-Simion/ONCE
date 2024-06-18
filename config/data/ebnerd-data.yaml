@@ -2,7 +2,7 @@ name: EB-NeRD-${version}-Llama
 base_dir: ebnerd-benchmark/data
 item:
   filter_cache: true
-  depot: ${data.base_dir}/news-fusion2
+  depot: ${data.base_dir}/news_fusion_large_original
   order:
     - title-llama
     - category-llama
@@ -13,14 +13,14 @@ user:
   filter_cache: true
   depots:
     train:
-      path: ebnerd-benchmark/data/tokenized_bert_test2/train
+      path: ebnerd-benchmark/data/tokenized_bert_large_original/train
     test:
-      path: ebnerd-benchmark/data/tokenized_bert_test2/valid
+      path: ebnerd-benchmark/data/tokenized_bert_large_original/valid
     dev: 
-      path: ebnerd-benchmark/data/tokenized_bert_test2/valid
+      path: ebnerd-benchmark/data/tokenized_bert_large_original/valid
   union:
-    - ebnerd-benchmark/data/tokenized_bert_test2/user
-    - ebnerd-benchmark/data/tokenized_bert_test2/neg
+    - ebnerd-benchmark/data/tokenized_bert_large_original/user
+    - ebnerd-benchmark/data/tokenized_bert_large_original/neg
   candidate_col: nid
   clicks_col: history
   label_col: click
