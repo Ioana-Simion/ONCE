@@ -1,19 +1,10 @@
 import os.path
 
 import pandas as pd
+from UniTok import UniTok, Column, Vocab, UniDep
+from UniTok.tok import BertTok, IdTok, EntTok, SeqTok, NumberTok, BaseTok
 from tqdm import tqdm
 from transformers import LlamaTokenizer
-
-import sys
-sys.path.append(os.path.abspath(''))
-
-from process.mind.unitok import UniTok 
-from process.mind.column import Column
-from process.mind.vocab import Vocab
-from process.mind.tok.tok import BaseTok
-from process.mind.tok.id_tok import IdTok
-from process.mind.tok.seq_tok import SeqTok
-from process.mind.tok.number_tok import NumberTok
 
 
 class LlamaTok(BaseTok):
@@ -88,6 +79,6 @@ class Processor:
 if __name__ == '__main__':
     processor = Processor(
         data_dir="ebnerd-benchmark/data",
-        store_dir="ebnerd-benchmark/data/tokenized_llama_test"
+        store_dir="ebnerd-benchmark/data/tokenized_llama"
     )
     processor.tokenize()
