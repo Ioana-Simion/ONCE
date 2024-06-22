@@ -205,7 +205,7 @@ class Processor:
 
 if __name__ == '__main__':
     processor = Processor(
-        data_dir="ebnerd-benchmark/data",
+        data_dir="ebnerd-benchmark/data/ebnerd_small",
         store_dir="ebnerd-benchmark/data/tokenized_bert"
     )
     processor.tokenize(load_news=False, load_user=False)

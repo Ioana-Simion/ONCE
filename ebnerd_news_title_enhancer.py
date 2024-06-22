@@ -11,7 +11,7 @@ MIN_INTERVAL = 1.5
 
 # concise
 
-news_list = EbnerdPrompter("data/eb-nerd/ebnerd_demo/preprocessed_and_title_enhanced.parquet").stringify()
+news_list = EbnerdPrompter("ebnerd-benchmark/data/ebnerd_small/articles.parquet").stringify()
 
 system = """You are asked to act as a news title enhancer. I will provide you a piece of news, with its original title, subtitle, category, topics and body. The news format is as below:
 
@@ -27,8 +27,7 @@ where {title}, {subtitle}, {category}, {topics} and {body} will be filled with c
 
 where {newtitle} should be filled with the enhanced title. Now, your role of a news title enhancer formally begins. Any other information should not disturb your role."""
 
-
-save_path = "data/eb-nerd/ebnerd_news_title_enhancer.log"
+save_path = "ebnerd-benchmark/data/small_title_enhanced.log"
 
 # Create the file if it doesn't exist
 if not os.path.exists(save_path):

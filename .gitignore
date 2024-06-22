@@ -194,7 +194,7 @@ venv
 
 ebnerd-benchmark/data/ebnerd_demo
 ebnerd-benchmark/data/ebnerd_large
-ebnerd-benchmark/data/ebnerd_small
+# ebnerd-benchmark/data/ebnerd_small
 ebnerd-benchmark/data/train
 ebnerd-benchmark/data/validation
 ebnerd-benchmark/data/tokenized_bert/

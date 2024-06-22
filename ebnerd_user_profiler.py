@@ -10,11 +10,11 @@ from utils.openai.chat_service import ChatService
 
 MIN_INTERVAL = 0
 
-articles_path = "ebnerd-benchmark/data/ebnerd_large/translated_articles_large_all.parquet"
+articles_path = "ebnerd-benchmark/data/ebnerd_small/articles.parquet"
 ebnerd_prompter = EbnerdPrompter(articles_path)
 
-history_path = "ebnerd-benchmark/data/ebnerd_large/train/history.parquet"
-behaviors_path = "ebnerd-benchmark/data/ebnerd_large/train/behaviors.parquet"
+history_path = "ebnerd-benchmark/data/ebnerd_small/train/history.parquet"
+behaviors_path = "ebnerd-benchmark/data/ebnerd_small/train/behaviors.parquet"
 
 user_list = EbnerdUser(history_path, behaviors_path, ebnerd_prompter).stringify()
 
@@ -59,7 +59,7 @@ When recommending topics, remember that the user's news list is prioritized by r
 
 Only [topics] from the provided list can appear in your response. The topics in your response should be ordered with the most relevant to the user's interests appearing first. You are not allowed to respond with any other words, explanations or notes. Now, your role of a user profiler formally begins. Any other information should not disturb your role."""
 
-save_path = "ebnerd-benchmark/data/user_profiler_train_large.log"
+save_path = "ebnerd-benchmark/data/small_user_profiler.log"
 
 # Create the file if it doesn't exist
 if not os.path.exists(save_path):

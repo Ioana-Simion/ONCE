@@ -1,30 +1,12 @@
 import json
 import os
 import random
-
 import numpy as np
 import pandas as pd
 from nltk import word_tokenize
 
-import sys
-#print(sys.path)  # Print current sys.path
-sys.path.append(os.path.abspath(''))
-#print(sys.path)  # Check if the path has been added
-# sys.path.append(os.path.abspath('../../'))
-# print(sys.path)  # Check if the path has been added
-
-# New imports
-from process.mind.column import Column
-from process.mind.unitok import UniTok 
-from process.mind.vocab import Vocab
-
-from process.mind.tok.tok import BaseTok
-from process.mind.tok.bert_tok import BertTok
-from process.mind.tok.ent_tok import EntTok
-from process.mind.tok.id_tok import IdTok
-from process.mind.tok.seq_tok import SeqTok
-from process.mind.tok.number_tok import NumberTok
-
+from UniTok import UniTok, Column, Vocab, UniDep
+from UniTok.tok import BertTok, IdTok, EntTok, SeqTok, NumberTok, BaseTok
 
 class GloveTok(BaseTok):
     def __init__(self, name: str, path: str):
@@ -68,34 +50,15 @@ class Processor:
         return df
 
     def read_user_data(self, mode):
-
-        column_names = ["article_id", "impression_time", "read_time", "scroll_percentage",
-                         "device_type", "article_ids_inview", "article_ids_clicked", "user_id",
-                           "is_sso_user", "gender", "postcode", "age", "is_subscriber", "session_id",
-                             "next_read_time", "next_scroll_percentage", "__fragment_index", "__batch_index",
-                               "__last_in_fragment", "__filename"]
-
-
         df = pd.read_parquet(
-            os.path.join(self.data_dir, mode, "behaviours_with_user_interests.parquet"),
+            os.path.join(self.data_dir, mode, "behaviours.parquet"),
             columns=["user_id", "article_ids_clicked"]
         )
-        # Previously: columns=["uid", "history"]. History is defined as: The news click history (ID list of clicked news) 
-        # of this user before this impression. The clicked news articles are ordered by time.
-        # Therefore, I (Jort) selected the columns "User ID" and "Clicked Article IDs" to be used as the user data.
         return df
 
     def _read_inter_data(self, mode):
-
-    
-        column_names = ["article_id", "impression_time", "read_time", "scroll_percentage",
-                         "device_type", "article_ids_inview", "article_ids_clicked", "user_id",
-                           "is_sso_user", "gender", "postcode", "age", "is_subscriber", "session_id",
-                             "next_read_time", "next_scroll_percentage", "__fragment_index", "__batch_index",
-                               "__last_in_fragment", "__filename"]
-        
         return pd.read_parquet(
-            os.path.join(self.data_dir, mode, "behaviours_with_user_interests.parquet"),
+            os.path.join(self.data_dir, mode, "behaviours.parquet"),
             columns=["impression_id", "article_id",  "user_id", "article_ids_inview", "article_ids_clicked"]
         )
 
@@ -140,7 +103,7 @@ class Processor:
         user_ut.add_col(Column(tok=IdTok(vocab=self.uid))).add_col(
             Column(
                 name="article_ids_clicked",
-                tok=SeqTok(name="article_ids_clicked")  # Using SeqTok to tokenize the list of clicked article IDs
+                tok=SeqTok(name="article_ids_clicked") 
             )
         )
         return user_ut
@@ -154,14 +117,13 @@ class Processor:
             .add_col(Column(tok=EntTok(vocab=self.uid)))
             .add_col(Column(tok=EntTok(vocab=self.nid)))
             .add_col(Column(tok=NumberTok(name="article_ids_clicked", vocab_size=2)))
-            .add_col(Column(tok=NumberTok(name="max_length_article_ids_clicked", vocab_size=101))) # Jort: The vocab size is based on the max length of the article ids clicked
+            .add_col(Column(tok=NumberTok(name="max_length_article_ids_clicked", vocab_size=101))) 
         )
 
 
     def reassign_inter_df_v2(self):
         inter_train_df = self.read_inter_data("train")
-        inter_df = self.read_inter_data("validation") # Jort: Problem here, maybe val shouldnt be used here
-
+        inter_df = self.read_inter_data("validation")
 
         inter_dev_df = []
         inter_groups = inter_df.groupby("impression_id")
@@ -194,14 +156,6 @@ class Processor:
     
 
 if __name__ == "__main__":
-    # p = Processor(
-    #     data_dir='/data1/qijiong/Data/MIND/',
-    #     store_dir='../../data/MIND-small-v3',
-    # )
-    #
-    # p.tokenize()
-    # p.tokenize_neg()
-
     p = Processor(
         data_dir="ebnerd-benchmark/data",
         store_dir="ebnerd-benchmark/data/tokenized_bert",
@@ -209,25 +163,3 @@ if __name__ == "__main__":
     )
 
     p.tokenize()
-
-
-
-
-    
-#.add_col(Column(name="last_modified_time", tok=NumberTok()))  # Assuming timestamp as number for simplicity
-#.add_col(Column(name="premium", tok=IdTok(vocab=Vocab("bool_vocab"))))  # Map True/False to IDs
-#.add_col(Column(name="published_time", tok=NumberTok()))  # Assuming timestamp as number
-#.add_col(Column(name="image_ids", tok=SplitTok(sep=" ", vocab=Vocab("image_id_vocab"))))
-#.add_col(Column(name="article_type", tok=EntTok()))  # Assuming article types as entities
-#.add_col(Column(name="url", tok=txt_tok))
-#.add_col(Column(name="ner_clusters", tok=SplitTok(sep=" ", vocab=Vocab("ner_vocab"))))
-#.add_col(Column(name="entity_groups", tok=SplitSubcatTok(sep=" ", vocab=Vocab("entity_vocab"))))
-#.add_col(Column(name="topics", tok=SplitTok(sep=" ", vocab=Vocab("topic_vocab"))))
-#.add_col(Column(name="category", tok=NumberTok()))
-#.add_col(Column(name="subcategory", tok=SplitTok(sep=" ", vocab=Vocab("subcat_vocab"))))
-#.add_col(Column(name="category_str", tok=EntTok()))
-#.add_col(Column(name="total_inviews", tok=NumberTok()))
-#.add_col(Column(name="total_pageviews", tok=NumberTok()))
-#.add_col(Column(name="total_read_time", tok=NumberTok()))
-#.add_col(Column(name="sentiment_score", tok=NumberTok()))
-#.add_col(Column(name="sentiment_label", tok=EntTok()))
