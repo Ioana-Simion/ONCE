@@ -192,7 +192,7 @@ venv/
 build
 venv
 
-ebnerd-benchmark/data/ebnerd_demo
+# ebnerd-benchmark/data/ebnerd_demo
 ebnerd-benchmark/data/ebnerd_large
 ebnerd-benchmark/data/tokenized_bert/
 ebnerd-benchmark/data/tokenized_bert_test/
