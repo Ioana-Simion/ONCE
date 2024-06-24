@@ -27,7 +27,7 @@ system = """You are asked to describe user interest based on his/her characteris
 ...
 (n) title: {news_title}, read time: {read_time}, scroll percentage: {scroll_percentage}
 
-You can only respond with the user interests in the following format to descripe the [topics] of users' interest:
+You can only respond in the following format to describe the [topics] of users' interest:
 
 [topics]
 - topic1
@@ -57,7 +57,9 @@ where topics are limited to the following options:
 
 When recommending topics, remember that the user's news list is prioritized by reading time, so give more weight to the top articles.
 
-Only [topics] from the provided list can appear in your response. The topics in your response should be ordered with the most relevant to the user's interests appearing first. You are not allowed to respond with any other words, explanations or notes. Now, your role of a user profiler formally begins. Any other information should not disturb your role."""
+Only [topics] from the provided list can appear in your response. The topics in your response should be ordered with the most relevant to the user's interests appearing first. 
+You are not allowed to respond with any other words, explanations or notes. Now, your role of a user profiler formally begins. Any other information should not disturb your role.
+"""
 
 save_path = "ebnerd-benchmark/data/small_user_profiler.log"
 
