@@ -2,7 +2,7 @@ name: EB-NeRD
 base_dir: ebnerd-benchmark/data
 item:
   filter_cache: true
-  depot: ${data.base_dir}/news-fusion
+  depot: ${data.base_dir}/news_fusion
   order:
     - title-llama
     - category-llama
@@ -13,14 +13,14 @@ user:
   filter_cache: true
   depots:
     train:
-      path: ebnerd-benchmark/data/tokenized_bert_test/train
+      path: ebnerd-benchmark/data/tokenized_bert/train
     test:
-      path: ebnerd-benchmark/data/tokenized_bert_test/validation
+      path: ebnerd-benchmark/data/tokenized_bert/validation
     dev: 
-      path: ebnerd-benchmark/data/tokenized_bert_test/validation
+      path: ebnerd-benchmark/data/tokenized_bert/validation
   union:
-    - ebnerd-benchmark/data/tokenized_bert_test/user
-    - ebnerd-benchmark/data/tokenized_bert_test/neg
+    - ebnerd-benchmark/data/tokenized_bert/user
+    - ebnerd-benchmark/data/tokenized_bert/neg
   candidate_col: nid
   clicks_col: history
   label_col: click

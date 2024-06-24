@@ -9,7 +9,7 @@ load:
   strict: true
   wait: false
 store:
-  metric: GAUC
+  metric: AUC
   maximize: true
   top: 1
   early_stop: ${patience}$
@@ -28,8 +28,7 @@ policy:
   check_interval: -2
   simple_dev: ${simple_dev}$
 metrics:
-  - GAUC
+  - AUC
   - MRR
-  - NDCG@1
   - NDCG@5
   - NDCG@10

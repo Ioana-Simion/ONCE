@@ -16,4 +16,4 @@ news_llama.rename_col('body', 'body-llama')
 news_llama.rename_col('category', 'category-llama')
 
 news.inject(news_llama, ['title-llama', 'subtitle-llama', 'body-llama', 'category-llama'])
-news.export('ebnerd-benchmark/data/news-fusion')
+news.export('ebnerd-benchmark/data/news_fusion')

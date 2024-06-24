@@ -1,10 +1,7 @@
-# name: free
-# embeddings: []
-
 name: llama-full
 embeddings:
   -
     vocab_name: nid
     vocab_type: numpy
-    path: ebnerd-benchmark/data/tokenized_llama/llama-token.npy
+    path: ebnerd-benchmark/data/llama-token.npy
     frozen: true
