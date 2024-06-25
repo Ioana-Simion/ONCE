@@ -5,7 +5,7 @@ item:
   depot: ${data.base_dir}/news_fusion_images
   order:
     - title-llama
-    - image-caption-text-llama
+    - caption-llama
   append:
     - nid
   lm_col: title-llama
