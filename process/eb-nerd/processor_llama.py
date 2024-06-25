@@ -30,7 +30,7 @@ class Processor:
         self.data_dir = data_dir
         self.store_dir = store_dir
 
-        self.news_path = os.path.join(self.data_dir, 'articles.parquet')
+        self.news_path = os.path.join(self.data_dir, 'preprocessed_and_title_enhanced.parquet')
 
         self.nid = Vocab(name='nid')
         self.uid = Vocab(name='uid')
@@ -78,7 +78,7 @@ class Processor:
 
 if __name__ == '__main__':
     processor = Processor(
-        data_dir="ebnerd-benchmark/data/ebnerd_small",
-        store_dir="ebnerd-benchmark/data/tokenized_llama"
+        data_dir="ebnerd-benchmark/data/ebnerd_demo",
+        store_dir="ebnerd-benchmark/data/ebnerd_demo/tokenized_llama"
     )
     processor.tokenize()
