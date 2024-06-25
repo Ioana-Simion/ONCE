@@ -14,7 +14,7 @@ config:
     llm_dir: llama_converted
     layer_split: ${layer}$
     lora: ${lora}$
-    weights_dir: data/EB-NeRD-small-Llama/llama-7b-split
+    weights_dir: data/EB-NeRD/llama-7b-split
   user_config:
     num_attention_heads: 8
     inputer_config:
