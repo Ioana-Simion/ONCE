@@ -83,6 +83,6 @@ class Processor:
 if __name__ == '__main__':
     processor = Processor(
         data_dir="ebnerd-benchmark/data/ebnerd_demo",
-        store_dir="ebnerd-benchmark/data/ebnerd_demo/tokenized_llama"
+        store_dir="ebnerd-benchmark/data/ebnerd_demo/tokenized_llama_images"
     )
     processor.tokenize()
