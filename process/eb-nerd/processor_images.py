@@ -41,8 +41,8 @@ class Processor:
 
     def read_news(self):
         df = pd.read_parquet(self.news_path)
-        df = df[['article_id', 'title', 'subtitle', 'body', 'category_str', 'image_caption_text']]
-        df.columns = ['nid', 'title', 'subtitle', 'body', 'category', 'image_caption_text']
+        df = df[['article_id', 'title', 'subtitle', 'body', 'category_str', 'caption']]
+        df.columns = ['nid', 'title', 'subtitle', 'body', 'category', 'caption']
         return df
 
     def read_user(self, mode='train'):
@@ -120,7 +120,7 @@ class Processor:
             name='category',
             tok=cat_tok,
         )).add_col(Column(
-            name='image_caption_text',
+            name='caption',
             tok=text_tok,
             max_length=max_body_len,
         ))

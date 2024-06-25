@@ -37,8 +37,8 @@ class Processor:
 
     def read_news(self):
         df = pd.read_parquet(self.news_path)
-        df = df[['article_id', 'title', 'subtitle', 'body', 'category_str', 'image_caption_text']]
-        df.columns = ['nid', 'title', 'subtitle', 'body', 'category', 'image_caption_text']
+        df = df[['article_id', 'title', 'subtitle', 'body', 'category_str', 'caption']]
+        df.columns = ['nid', 'title', 'subtitle', 'body', 'category', 'caption']
         return df
 
     def get_news_tok(self, max_title_len=0, max_subtitle_len=0, max_body_len=0, max_cat_len=0):
@@ -63,7 +63,7 @@ class Processor:
             tok=text_tok,
             max_length=max_cat_len,
         )).add_col(Column(
-            name='image_caption_text',
+            name='caption',
             tok=text_tok,
             max_length=max_body_len,
         ))
