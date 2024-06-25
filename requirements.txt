@@ -1,4 +1,4 @@
-torch~=2.0.1
+torch==2.3.1+cu118
 smartdict~=0.0.3
 pandas~=2.2.2
 scikit-learn~=1.4.0
