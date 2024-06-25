@@ -23,6 +23,10 @@ All the recommendation experiments are conducted under the content based recomme
 It involves a set of news recommenders and click-through rate prediction models.
 It is a modular-design framework, supporting the integration with pretrained language models (PLMs) and large language models (LLMs).
 
+## Baselines: NAML and NRMS
+
+To run the [NAML](https://arxiv.org/pdf/1907.05576) and [NRMS](https://aclanthology.org/D19-1671.pdf) baselines on the Eb-NeRD dataset, check out `ebnerd-benchmark\examples\baselines` directory.
+
 
 ## GENRE: Prompting Closed-source LLMs for Content-based Recommendation
 
