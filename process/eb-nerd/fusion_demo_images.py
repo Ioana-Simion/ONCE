@@ -2,8 +2,8 @@ from UniTok import UniDep
 import numpy as np
 import os
 
-news = UniDep(os.path.join("ebnerd-benchmark/data/ebnerd_demo/tokenized_bert", 'news'))
-news_llama = UniDep('ebnerd-benchmark/data/ebnerd_demo/tokenized_llama/news-llama')
+news = UniDep(os.path.join("ebnerd-benchmark/data/ebnerd_demo/tokenized_bert_images", 'news'))
+news_llama = UniDep('ebnerd-benchmark/data/ebnerd_demo/tokenized_llama_images/news-llama')
 
 news.rename_col('title', 'title-bert')
 news.rename_col('subtitle', 'subtitle-bert')
