@@ -21,6 +21,9 @@ class LlamaConcatInputer(NaturalConcatInputer):
             category=[529, 7320, 29958],
             subCat=[529, 1491, 7320, 29958],
             desc=[529, 16595, 29958],
+            body=[1, 529, 2587, 29958],
+            subtitle=[1, 529, 1491, 3257, 29958],
+            image_caption_text=[1, 529, 3027, 29918, 6671, 29918, 726, 29958]
         )
 
 
