@@ -98,7 +98,7 @@ Hyperparameters in running `worker.py`:
 ### Training Preparation (for tuning LLaMA)
 
 ```bash
-python worker.py --embed config/embed/ednerd-llama.yaml --model config/model/llm/ebnerd-model.yaml --exp config/exp/ebnerd-exp-prep.yaml --data config/data/ebnerd-data.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096 --batch_size 16 --page_size 16
+python worker.py --embed config/embed/ebnerd-embed.yaml --model config/model/llm/ebnerd-model-naml.yaml --exp config/exp/ebnerd-exp-prep.yaml --data config/data/ebnerd-data.yaml --version small --llm_ver 7b --hidden_size 64 --layer 0 --lora 0 --fast_eval 0 --embed_hidden_size 4096 --batch_size 16 --page_size 16
 ```
 
 - If using LLaMA-7B, specify `embed` as `config/embed/ednerd-llama.yaml`, `llm_ver` as `7b`, `embed_hidden_size` as`4096`. 
