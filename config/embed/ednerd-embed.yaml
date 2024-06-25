@@ -3,5 +3,5 @@ embeddings:
   -
     vocab_name: nid
     vocab_type: numpy
-    path: ebnerd-benchmark/data/llama-token.npy
+    path: llama-token.npy
     frozen: true
