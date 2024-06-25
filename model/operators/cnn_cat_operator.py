@@ -2,7 +2,7 @@ import torch
 
 from loader.meta import Meta
 from model.inputer.simple_inputer import SimpleInputer
-from model.operators.cnn_operator import CNNOperator, CNNOperatorConfig
+from model.operators.cnn_operator import CNNOperatorConfig, CNNOperator
 
 
 class CNNCatOperatorConfig(CNNOperatorConfig):

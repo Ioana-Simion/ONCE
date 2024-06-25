@@ -1,6 +1,6 @@
 import copy
 from collections import OrderedDict
-from typing import Callable, Union
+from typing import List, Callable, Union
 
 import torch
 
@@ -91,9 +91,10 @@ class FastStacker(Stacker):
         return prototype
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+
     stacker = Stacker(torch.stack)
 
-    a = torch.tensor([1, 2, 3])
-    b = torch.tensor([1, 2, 3])
+    a = torch.tensor([1,2,3])
+    b = torch.tensor([1,2,3])
     print(stacker.stack([a]))

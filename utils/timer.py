@@ -28,7 +28,7 @@ class StatusTimer:
 
     def avgms(self):
         if not self.count:
-            return "unavailable"
+            return 'unavailable'
         return self.total_time * 1000 / self.count
 
 
@@ -53,8 +53,6 @@ class Timer:
 
     def summarize(self):
         for status in self.status_dict:
-            pnt(
-                f"status: {status}, "
-                f"avg time: {self.status_dict[status].avgms():.4f}ms, "
-                f"total time: {self.status_dict[status].total_time:.4f}s"
-            )
+            pnt(f'status: {status}, '
+                f'avg time: {self.status_dict[status].avgms():.4f}ms, '
+                f'total time: {self.status_dict[status].total_time:.4f}s')

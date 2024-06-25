@@ -6,10 +6,10 @@ class BaseMode:
     load_model = False
 
     def __init__(
-        self,
-        legommender: Legommender,
-        controller: Controller,
-        mode_hub,
+            self,
+            legommender: Legommender,
+            controller: Controller,
+            mode_hub,
     ):
         self.legommender = legommender
         self.controller = controller

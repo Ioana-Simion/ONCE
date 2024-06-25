@@ -1,6 +1,6 @@
 import torch
-from torch import nn
 from UniTok import UniDep
+from torch import nn
 
 
 class UserPlugin(nn.Module):
@@ -26,7 +26,8 @@ class UserPlugin(nn.Module):
 
             voc = self.depot.cols[col].voc.name
             self.attr_embeds[voc] = nn.Embedding(
-                num_embeddings=self.depot.cols[col].voc.size, embedding_dim=hidden_size
+                num_embeddings=self.depot.cols[col].voc.size,
+                embedding_dim=hidden_size
             )
             self.col_count += 1
 
@@ -38,9 +39,7 @@ class UserPlugin(nn.Module):
 
     def init_projection(self, user_embed_size):
         self.project = nn.Sequential(
-            nn.Linear(
-                self.col_count * self.hidden_size + user_embed_size, user_embed_size
-            ),
+            nn.Linear(self.col_count * self.hidden_size + user_embed_size, user_embed_size),
             # nn.ReLU(),
         )
 

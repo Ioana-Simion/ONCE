@@ -17,13 +17,8 @@ class SubmissionMode(BaseMode):
         loader = self.controller.get_loader(Phases.test).test()
         self.legommender.eval()
 
-        item_col, group_col = (
-            self.controller.column_map.candidate_col,
-            self.controller.column_map.group_col,
-        )
-        score_series, col_series = self.evaluate(
-            loader=loader, cols=[item_col, group_col]
-        )
+        item_col, group_col = self.controller.column_map.candidate_col, self.controller.column_map.group_col
+        score_series, col_series = self.evaluate(loader=loader, cols=[item_col, group_col])
         item_series, group_series = col_series[item_col], col_series[group_col]
 
         submission = Submission(
@@ -38,4 +33,4 @@ class SubmissionMode(BaseMode):
             model_name=self.controller.model.name,
         )
 
-        pnt(f"export to {export_dir}")
+        pnt(f'export to {export_dir}')

@@ -5,15 +5,15 @@ from model.common.activation import get_activation
 
 class MLPLayer(nn.Module):
     def __init__(
-        self,
-        input_dim,
-        output_dim=None,
-        hidden_units=None,
-        hidden_activations="ReLU",
-        output_activation=None,
-        dropout_rates=0.0,
-        batch_norm=False,
-        use_bias=True,
+            self,
+            input_dim,
+            output_dim=None,
+            hidden_units=None,
+            hidden_activations="ReLU",
+            output_activation=None,
+            dropout_rates=0.0,
+            batch_norm=False,
+            use_bias=True
     ):
         super(MLPLayer, self).__init__()
 
@@ -26,9 +26,7 @@ class MLPLayer(nn.Module):
 
         dense_layers = []
         for i in range(len(hidden_units) - 1):
-            dense_layers.append(
-                nn.Linear(hidden_units[i], hidden_units[i + 1], bias=use_bias)
-            )
+            dense_layers.append(nn.Linear(hidden_units[i], hidden_units[i + 1], bias=use_bias))
             if batch_norm:
                 dense_layers.append(nn.BatchNorm1d(hidden_units[i + 1]))
             if hidden_activations[i]:

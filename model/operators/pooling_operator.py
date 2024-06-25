@@ -3,12 +3,17 @@ from collections import OrderedDict
 import torch
 
 from loader.meta import Meta
-from model.inputer.simple_inputer import SimpleInputer
 from model.operators.base_operator import BaseOperator, BaseOperatorConfig
+from model.inputer.simple_inputer import SimpleInputer
 
 
 class PoolingOperatorConfig(BaseOperatorConfig):
-    def __init__(self, flatten: bool = False, max_pooling: bool = False, **kwargs):
+    def __init__(
+            self,
+            flatten: bool = False,
+            max_pooling: bool = False,
+            **kwargs
+    ):
         super().__init__(**kwargs)
 
         self.flatten = flatten
@@ -24,7 +29,7 @@ class PoolingOperator(BaseOperator):
         super().__init__(**kwargs)
 
     def forward(self, embeddings: OrderedDict, mask: dict = None, **kwargs):
-        assert mask is not None, "mask is required for pooling fusion"
+        assert mask is not None, 'mask is required for pooling fusion'
 
         if isinstance(embeddings, torch.Tensor):
             assert isinstance(mask, torch.Tensor)
@@ -44,19 +49,13 @@ class PoolingOperator(BaseOperator):
             if self.config.max_pooling:
                 pooled_embeddings[col], _ = col_embedding.max(dim=1)
             else:
-                pooled_embeddings[col] = col_embedding.sum(dim=1) / (
-                    col_mask.sum(dim=1).unsqueeze(-1) + 1e-8
-                )
+                pooled_embeddings[col] = col_embedding.sum(dim=1) / (col_mask.sum(dim=1).unsqueeze(-1) + 1e-8)
 
         if self.config.flatten:
             order = embeddings.keys()
-            return torch.cat(
-                [pooled_embeddings[col] for col in order], dim=-1
-            )  # B, D * K
+            return torch.cat([pooled_embeddings[col] for col in order], dim=-1)  # B, D * K
 
-        stack = torch.stack(
-            [pooled_embeddings[col] for col in embeddings.keys()], dim=1
-        )  # B, K, D
+        stack = torch.stack([pooled_embeddings[col] for col in embeddings.keys()], dim=1)  # B, K, D
         if self.config.max_pooling:
             return stack.max(dim=1)[0]  # B, D
         return stack.mean(dim=1)  # B, D

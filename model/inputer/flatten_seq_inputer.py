@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import List, Optional
+from typing import Optional, List
 
 import numpy as np
 import torch
@@ -13,18 +13,16 @@ from model.inputer.concat_inputer import ConcatInputer, Pointer
 class FlattenSeqInputer(ConcatInputer):
     output_single_sequence = True
 
-    vocab = Vocab(name="__flatten_seq_special_ids")
-    PAD = vocab.append("[PAD]")
-    CLS = vocab.append("[CLS]")
-    SEP = vocab.append("[SEP]")
-    ATTR_SEP = vocab.append("[ATTR_SEP]")
+    vocab = Vocab(name='__flatten_seq_special_ids')
+    PAD = vocab.append('[PAD]')
+    CLS = vocab.append('[CLS]')
+    SEP = vocab.append('[SEP]')
+    ATTR_SEP = vocab.append('[ATTR_SEP]')
 
     def __init__(self, item_hub: DataHub, use_attr_sep_token=True, **kwargs):
-        self.order = kwargs["hub"].order
-        self.depot = kwargs["hub"].depot
-        assert (
-            len(self.order) == 1
-        ), "flatten seq inputer only support one column of user history"
+        self.order = kwargs['hub'].order
+        self.depot = kwargs['hub'].depot
+        assert len(self.order) == 1, 'flatten seq inputer only support one column of user history'
         self.history_col = self.order[0]
         self.item_hub = item_hub
         self.use_attr_sep_token = use_attr_sep_token
@@ -39,14 +37,10 @@ class FlattenSeqInputer(ConcatInputer):
         return self.max_history_len * item_length
 
     def get_max_sequence_len(self):
-        return (
-            self.max_content_len
-            + int(self.use_cls_token)
-            + int(self.use_sep_token) * self.max_history_len
-            + int(self.use_attr_sep_token)
-            * self.max_history_len
-            * (len(self.item_hub.order) - 1)
-        )
+        return (self.max_content_len +
+                int(self.use_cls_token) +
+                int(self.use_sep_token) * self.max_history_len +
+                int(self.use_attr_sep_token) * self.max_history_len * (len(self.item_hub.order) - 1))
 
     def get_vocabs(self) -> Optional[List[Vocab]]:
         return [self.vocab]
@@ -76,20 +70,14 @@ class FlattenSeqInputer(ConcatInputer):
                 value = torch.tensor(value, dtype=torch.long)
 
                 pointer.update_input(input_ids[col], value)
-                if (
-                    self.use_attr_sep_token
-                    and attr_index < len(self.item_hub.order) - 1
-                ):
+                if self.use_attr_sep_token and attr_index < len(self.item_hub.order) - 1:
                     pointer.update_special_token(special_ids, self.ATTR_SEP)
             if self.use_sep_token:
                 pointer.update_special_token(special_ids, self.SEP)
 
         input_ids[self.vocab.name] = special_ids
-        attention_mask = torch.tensor(
-            [1] * pointer.pos + [0] * (self.max_sequence_len - pointer.pos),
-            dtype=torch.long,
-        )
-        input_ids[self.vocab.name][pointer.pos :] = self.PAD
+        attention_mask = torch.tensor([1] * pointer.pos + [0] * (self.max_sequence_len - pointer.pos), dtype=torch.long)
+        input_ids[self.vocab.name][pointer.pos:] = self.PAD
 
         return dict(
             input_ids=input_ids,

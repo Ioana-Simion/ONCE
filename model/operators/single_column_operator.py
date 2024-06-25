@@ -22,9 +22,7 @@ class SCSimpleOperator(BaseOperator):
 
     def get_full_placeholder(self, sample_size):
         max_length = self.inputer.depot.cols[self.inputer.order[0]].max_length
-        return torch.zeros(
-            sample_size, max_length, self.config.hidden_size, dtype=torch.float
-        )
+        return torch.zeros(sample_size, max_length, self.config.hidden_size, dtype=torch.float)
 
 
 class SCFlattenOperator(SCSimpleOperator):

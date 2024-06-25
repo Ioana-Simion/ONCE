@@ -14,7 +14,7 @@ class Processor:
         self.data_dir = data_dir
         self.store_dir = store_dir
 
-        self.news_path = os.path.join(self.data_dir, 'preprocessed.parquet')
+        self.news_path = os.path.join(self.data_dir, 'preprocessed_and_images.parquet')
 
         self.nid = Vocab(name='nid')
         self.uid = Vocab(name='uid')

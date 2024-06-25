@@ -2,17 +2,17 @@ from torch import nn
 
 from loader.meta import Meta
 from model.common.attention import AdditiveAttention
-from model.inputer.concat_inputer import ConcatInputer
 from model.operators.base_operator import BaseOperator, BaseOperatorConfig
+from model.inputer.concat_inputer import ConcatInputer
 
 
 class AttentionOperatorConfig(BaseOperatorConfig):
     def __init__(
-        self,
-        num_attention_heads: int = 8,
-        attention_dropout: float = 0.1,
-        additive_hidden_size: int = 256,
-        **kwargs,
+            self,
+            num_attention_heads: int = 8,
+            attention_dropout: float = 0.1,
+            additive_hidden_size: int = 256,
+            **kwargs,
     ):
         super().__init__(**kwargs)
 

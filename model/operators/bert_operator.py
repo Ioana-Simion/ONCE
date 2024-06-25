@@ -1,3 +1,4 @@
+from typing import Optional
 
 import torch
 from peft import get_peft_model
@@ -18,18 +19,16 @@ class BertOperator(BaseLLMOperator):
         self.layer_split(self.transformer.config.num_hidden_layers)
 
     def _slice_transformer_layers(self):
-        self.transformer.encoder.layer = self.transformer.encoder.layer[
-            self.config.layer_split + 1 :
-        ]
+        self.transformer.encoder.layer = self.transformer.encoder.layer[self.config.layer_split + 1:]
 
     def _lora_encoder(self, peft_config):
         self.transformer.encoder = get_peft_model(self.transformer.encoder, peft_config)
         self.transformer.encoder.print_trainable_parameters()
 
     def get_all_hidden_states(
-        self,
-        hidden_states,
-        attention_mask,
+            self,
+            hidden_states,
+            attention_mask,
     ):
         bert = self.transformer
 
@@ -55,9 +54,7 @@ class BertOperator(BaseLLMOperator):
     ):
         bert = self.transformer
 
-        attention_mask = bert.get_extended_attention_mask(
-            attention_mask, hidden_states.size()[:-1]
-        )
+        attention_mask = bert.get_extended_attention_mask(attention_mask, hidden_states.size()[:-1])
         all_hidden_states = ()
 
         for i, layer_module in enumerate(bert.encoder.layer):

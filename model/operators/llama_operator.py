@@ -1,8 +1,6 @@
 import torch
 from transformers import LlamaModel
-from transformers import AutoTokenizer, AutoModelForCausalLM
 
-from transformers import LlamaModel, LlamaConfig
 
 from model.inputer.llm_concat_inputer import LlamaConcatInputer
 from model.operators.base_llm_operator import BaseLLMOperator
@@ -14,27 +12,18 @@ class LlamaOperator(BaseLLMOperator):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-
-        # Load model directly
-        #configuration = LlamaConfig()
-
-        # Initializing a model from the llama-7b style configuration
-        #self.transformer = LlamaModel(configuration)
-
-
         self.transformer = LlamaModel.from_pretrained(self.config.llm_dir)  # type: LlamaModel
-
         self.transformer.embed_tokens = None
 
         self.layer_split(self.transformer.config.num_hidden_layers)
 
     def _slice_transformer_layers(self):
-        self.transformer.layers = self.transformer.layers[self.config.layer_split + 1 :]
+        self.transformer.layers = self.transformer.layers[self.config.layer_split + 1:]
 
     def get_all_hidden_states(
-        self,
-        hidden_states: torch.FloatTensor,
-        attention_mask: torch.Tensor,
+            self,
+            hidden_states: torch.FloatTensor,
+            attention_mask: torch.Tensor,
     ):
         llama = self.transformer  # type: LlamaModel
 

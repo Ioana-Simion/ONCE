@@ -46,10 +46,7 @@ class BasePager:
         features = self.stack_features()
 
         output = self.model(**features)
-        slices = slice(
-            self.cache_count * self.page_size,
-            self.cache_count * self.page_size + self.current_count,
-        )
+        slices = slice(self.cache_count * self.page_size, self.cache_count * self.page_size + self.current_count)
         self.combine(slices, features, output)
 
         self.cache_count += 1
