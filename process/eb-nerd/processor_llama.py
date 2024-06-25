@@ -42,7 +42,7 @@ class Processor:
         return df
 
     def get_news_tok(self, max_title_len=0, max_subtitle_len=0, max_body_len=0, max_cat_len=0):
-        text_tok = LlamaTok(name="llama", vocab_dir="llama_converted_test")
+        text_tok = LlamaTok(name="llama", vocab_dir="llama_converted")
 
         return UniTok().add_col(Column(
             tok=IdTok(vocab=self.nid),
