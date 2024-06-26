@@ -176,6 +176,16 @@ class Worker:
             for step, batch in enumerate(tqdm(loader, disable=self.disable_tqdm)):
                 # if step >= 1000:
                 #     break
+                for key, value in batch.items():
+                    print(f"Key: {key}")
+                    if hasattr(value, 'shape'):
+                        print("Shape of the entire batch:", value.shape)
+                        # Accessing the first element of the batch if it's a tensor
+                        print("Shape of one sample:", value[0].shape if len(value) > 0 else 'Empty batch')
+                        print("Value of one sample:", value[0] if len(value) > 0 else 'Empty batch')
+                    else:
+                        print("Value:", value)
+                
                 loss = self.legommender(batch=batch)
                 loss.backward()
 
