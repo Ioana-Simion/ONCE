@@ -14,7 +14,7 @@ class Processor:
         self.data_dir = data_dir
         self.store_dir = store_dir
 
-        self.news_path = os.path.join(self.data_dir, 'articles.parquet')
+        self.news_path = os.path.join(self.data_dir, 'preprocessed_and_title_enhanced.parquet')
 
         self.nid = Vocab(name='nid')
         self.uid = Vocab(name='uid')
@@ -57,13 +57,13 @@ class Processor:
 
     def read_inters(self, mode='train'):
         columns = ['impression_id', 'user_id', 'article_ids_inview']
-        if mode != 'validation':
+        if mode != 'test':
             columns.append('article_ids_clicked')
         df = pd.read_parquet(
             path=os.path.join(self.data_dir, mode, 'behaviors.parquet'),
             columns=columns
         )
-        if mode == 'validation':
+        if mode == 'test':
             df.columns = ['imp', 'uid', 'interactions']
             df['click'] = 0
             df['click'] = df['click'].apply(lambda x: [])
@@ -82,7 +82,7 @@ class Processor:
                 data['nid'].append(interaction)
                 data['click'].append(int(interaction in clicks))
 
-            if mode == 'validation':
+            if mode == 'test':
                 neg_dict[line.uid] = {self.nid.i2o[0]}
                 continue
 
@@ -178,9 +178,9 @@ class Processor:
         else:
             train_user_df = self.read_user(mode='train')
             valid_user_df = self.read_user(mode='validation')
-            test_user_df = self.read_user(mode='validation')
+            # test_user_df = self.read_user(mode='validation')
 
-            user_df = pd.concat([train_user_df, valid_user_df, test_user_df])
+            user_df = pd.concat([train_user_df, valid_user_df, valid_user_df])
             user_tok = self.get_user_tok(max_history=50)
             user_tok.read(user_df).tokenize().store(os.path.join(self.store_dir, 'user'))
             print('user processed')
@@ -194,11 +194,11 @@ class Processor:
         inter_tok = self.get_inter_tok()
         inter_tok.read(valid_inter_df).tokenize().store(os.path.join(self.store_dir, 'validation'))
 
-        test_inter_df, test_neg_df = self.read_inters(mode='validation')
-        inter_tok = self.get_inter_tok()
-        inter_tok.read(test_inter_df).tokenize().store(os.path.join(self.store_dir, 'validation'))
+        # test_inter_df, test_neg_df = self.read_inters(mode='validation')
+        # inter_tok = self.get_inter_tok()
+        # inter_tok.read(test_inter_df).tokenize().store(os.path.join(self.store_dir, 'validation'))
 
-        neg_df = pd.concat([train_neg_df, valid_neg_df, test_neg_df])
+        neg_df = pd.concat([train_neg_df, valid_neg_df, valid_neg_df])
         neg_tok = self.get_neg_tok(max_neg=250)
         neg_tok.read(neg_df).tokenize().store(os.path.join(self.store_dir, 'neg'))
 
@@ -206,6 +206,6 @@ class Processor:
 if __name__ == '__main__':
     processor = Processor(
         data_dir="ebnerd-benchmark/data/ebnerd_small",
-        store_dir="ebnerd-benchmark/data/tokenized_bert"
+        store_dir="ebnerd-benchmark/data/ebnerd_small/tokenized_bert"
     )
     processor.tokenize(load_news=False, load_user=False)
