@@ -194,6 +194,7 @@ class Worker:
                     #Optionally print shape if you need to confirm it aligns with your batch size or other dimensions
                     #print("Shape of click data:", batch['click'].shape)
 
+                wsedrfgth
                 loss = self.legommender(batch=batch)
                 loss.backward()
 
