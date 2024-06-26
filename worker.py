@@ -185,16 +185,15 @@ class Worker:
                 #         print("Value of one sample:", value[0] if len(value) > 0 else 'Empty batch')
                 #     else:
                 #         print("Value:", value)
-                print("Columns in this batch:", list(batch.keys()))
-                if 'click' in batch:
-                    unique_values, counts = torch.unique(batch['click'], return_counts=True)
-                    print("Unique values in 'click' data:", unique_values)
-                    print("Counts of each unique value:", counts)
-                    print(batch['click'])
-                    #Optionally print shape if you need to confirm it aligns with your batch size or other dimensions
-                    #print("Shape of click data:", batch['click'].shape)
+                # print("Columns in this batch:", list(batch.keys()))
+                # if 'click' in batch:
+                #     unique_values, counts = torch.unique(batch['click'], return_counts=True)
+                #     print("Unique values in 'click' data:", unique_values)
+                #     print("Counts of each unique value:", counts)
+                #     print(batch['click'])
+                #     #Optionally print shape if you need to confirm it aligns with your batch size or other dimensions
+                #     #print("Shape of click data:", batch['click'].shape)
 
-                wsedrfgth
                 loss = self.legommender(batch=batch)
                 loss.backward()
 
