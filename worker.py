@@ -190,6 +190,7 @@ class Worker:
                     unique_values, counts = torch.unique(batch['click'], return_counts=True)
                     print("Unique values in 'click' data:", unique_values)
                     print("Counts of each unique value:", counts)
+                    print(batch['click'])
                     #Optionally print shape if you need to confirm it aligns with your batch size or other dimensions
                     #print("Shape of click data:", batch['click'].shape)
 
