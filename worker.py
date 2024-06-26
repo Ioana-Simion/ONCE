@@ -176,16 +176,23 @@ class Worker:
             for step, batch in enumerate(tqdm(loader, disable=self.disable_tqdm)):
                 # if step >= 1000:
                 #     break
-                for key, value in batch.items():
-                    print(f"Key: {key}")
-                    if hasattr(value, 'shape'):
-                        print("Shape of the entire batch:", value.shape)
-                        # Accessing the first element of the batch if it's a tensor
-                        print("Shape of one sample:", value[0].shape if len(value) > 0 else 'Empty batch')
-                        print("Value of one sample:", value[0] if len(value) > 0 else 'Empty batch')
-                    else:
-                        print("Value:", value)
-                
+                # for key, value in batch.items():
+                #     print(f"Key: {key}")
+                #     if hasattr(value, 'shape'):
+                #         print("Shape of the entire batch:", value.shape)
+                #         # Accessing the first element of the batch if it's a tensor
+                #         print("Shape of one sample:", value[0].shape if len(value) > 0 else 'Empty batch')
+                #         print("Value of one sample:", value[0] if len(value) > 0 else 'Empty batch')
+                #     else:
+                #         print("Value:", value)
+                print("Columns in this batch:", list(batch.keys()))
+                if 'click' in batch:
+                    unique_values, counts = torch.unique(batch['click'], return_counts=True)
+                    print("Unique values in 'click' data:", unique_values)
+                    print("Counts of each unique value:", counts)
+                    #Optionally print shape if you need to confirm it aligns with your batch size or other dimensions
+                    #print("Shape of click data:", batch['click'].shape)
+
                 loss = self.legommender(batch=batch)
                 loss.backward()
 
