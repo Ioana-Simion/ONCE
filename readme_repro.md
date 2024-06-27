@@ -44,6 +44,7 @@ Furthermore, we call GPT-3.5-turbo API provided by OpenAI as closed-source LLM. 
 |   Eb-NeRD |       Title enhancer           |       `ebnerd_news_title_enhancer.py`       |                `ebnerd-benchmark\data\ebnerd_small\preprocessed_and_title_enhanced.parquet`                    |
 |   Eb-NeRD |       User profiler            |       `ebnerd_user_profiler.py`       |                   `ebnerd-benchmark\data\ebnerd_small\train\behaviors_with_user_interests.parquet`                    |
 |   Eb-NeRD |       Personalized Content Generator       |       `ebnerd_personalized_news_generator.py`       |                   -                   |
+|   Eb-NeRD |       Image Captions Generator          |       `ebnerd-benchmark\image_pipeline.ipynb`       |                   `ebnerd-benchmark\article_captions_complete.parquet`                    |
 
 ## DIRE: Finetuning Open-source LLMs for Content-based Recommendation
 
@@ -120,3 +121,7 @@ python worker.py --embed config/embed/ebnerd-embed.yaml --model config/model/llm
 - Specify `embed`, `llm_ver`, and `embed_hidden_size` as the instruction above.
 - You can increase/decrease the batch size and page size values depending on your resources.
 - Specify `layer` as the layer that was cached during preparation and `weights_dir` as the storing directory from the preparation.
+
+### Image data configuration
+
+Please refer to `ebnerd-benchmark/image_pipeline.ipynb` for the image retrieval and captioning pipeline using [BLIP](https://huggingface.co/Salesforce/blip-image-captioning-base). A captions parquet file will be saved in the `ebnerd-benchmark` folder that can be concatenated with any chosen parsing of articles.parquet over article_id.
